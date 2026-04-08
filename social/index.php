@@ -79,6 +79,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "INSERT INTO social_posts (author_type, user_id, content, created_at)
                      VALUES ('user', ?, ?, NOW())"
                 )->execute([$userId, $content]);
+                $newPostId = (int)$db->lastInsertId();
+
+                // 觸發導師自動回覆（fire-and-forget）
+                session_write_close();
+                $replyUrl  = $baseUrl . '/api/tutor_reply.php';
+                $replyData = json_encode(['post_id' => $newPostId], JSON_UNESCAPED_UNICODE);
+                $ch = curl_init($replyUrl);
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST           => true,
+                    CURLOPT_POSTFIELDS     => $replyData,
+                    CURLOPT_TIMEOUT        => 1,
+                    CURLOPT_HTTPHEADER     => [
+                        'Content-Type: application/json',
+                        'Cookie: PHPSESSID=' . $sessionId,
+                    ],
+                ]);
+                curl_exec($ch);
+                curl_close($ch);
+
                 header('Location: ' . BASE_URL . '/social/index.php');
                 exit;
             }
@@ -92,6 +112,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "INSERT INTO social_comments (post_id, author_type, user_id, content, created_at)
                      VALUES (?, 'user', ?, ?, NOW())"
                 )->execute([$postId, $userId, $content]);
+
+                // 觸發導師自動回覆留言（fire-and-forget）
+                session_write_close();
+                $replyUrl  = $baseUrl . '/api/tutor_reply.php';
+                $replyData = json_encode(['post_id' => $postId, 'comment_context' => $content], JSON_UNESCAPED_UNICODE);
+                $ch = curl_init($replyUrl);
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST           => true,
+                    CURLOPT_POSTFIELDS     => $replyData,
+                    CURLOPT_TIMEOUT        => 1,
+                    CURLOPT_HTTPHEADER     => [
+                        'Content-Type: application/json',
+                        'Cookie: PHPSESSID=' . $sessionId,
+                    ],
+                ]);
+                curl_exec($ch);
+                curl_close($ch);
             }
             header('Location: ' . BASE_URL . '/social/index.php#post-' . $postId);
             exit;
@@ -209,6 +247,9 @@ require __DIR__ . '/../includes/partials/header.php';
             <p class="page-subtitle">所有用戶共享同一動態牆，古代文豪亦會定時發帖</p>
         </div>
         <div style="font-size:0.8rem;color:var(--dark-color);">
+            <a href="<?= BASE_URL ?>/social/leaderboard.php" class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem;margin-right:8px;">
+                <i class="fas fa-trophy" style="color:var(--warning-color);"></i> 龍虎榜
+            </a>
             <i class="fas fa-database" style="margin-right:4px;"></i>
             動態上限：<?= (int)getSetting('max_posts', MAX_POSTS) ?> 篇（FIFO 自動清理）
         </div>

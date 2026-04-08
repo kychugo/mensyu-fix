@@ -53,7 +53,10 @@ if ($cached) {
 
 // ── 呼叫 AI ─────────────────────────────────────────────────────────────────
 $prompt = buildTranslationPrompt($title, $content);
-$result = callAiForTranslation([['role' => 'user', 'content' => $prompt]]);
+$result = callAiForTranslation([
+    ['role' => 'system', 'content' => '你是一個文言文翻譯助手，嚴格按照用戶要求的格式輸出翻譯，不要輸出任何思考過程或說明。'],
+    ['role' => 'user', 'content' => $prompt]
+]);
 
 if ($result === null) {
     jsonResponse(['success' => false, 'message' => 'AI 翻譯服務暫時不可用，請稍後再試'], 503);
@@ -76,24 +79,32 @@ jsonResponse([
 
 function buildTranslationPrompt(string $title, string $content): string
 {
-    $t = $title ? "《{$title}》" : '以下文言文';
-    return "請為{$t}提供詳細的文言文翻譯解析，格式如下：
+    return "請將以下文言文逐字翻譯並解釋(直譯，不要意譯)，格式要求：
 
-【原文】
-{$content}
+原文：
+[顯示原文句子]
 
-請按以下格式輸出（使用繁體中文）：
+語譯：
+[顯示完整句子翻譯]
 
-一、逐句對譯
-對每個句子先列出原文，然後提供白話文翻譯。
+逐字解釋：
+[對每個文字進行解釋，格式為「字：解釋」，常見文言字詞用**粗體**標示，切勿解釋標點符號]
 
-二、重要字詞解釋
-列出文中重要的文言字詞，格式：字詞 → 解釋（現代含義）
+要求：
+1. 為每一句(以，。？!：；作為分隔)進行語譯
+2. 如果該行有常見文言字詞，請為該字及其詞解粗體
+3. 用繁體中文顯示所有內容
+4. 保持嚴格的格式，使用標題和清晰的分段
+5. 不要在任何地方使用多餘的星號(*)
+6. 不要使用任何裝飾性符號或分隔線
+7. 確保每部分都有明確的標題（原文、語譯、逐字解釋）
+8. 逐字解釋只解釋文字字符，不解釋標點符號如，。？!等
 
-三、全文大意
-用3-5句白話文概括全文主旨。
+必須注意以下要求，務必跟從：
+為每一句(以，。？!：；作為分隔)進行語譯，嚴禁整句進行語譯。
 
-請直接輸出解析內容，不要添加任何前言或後記。";
+需要翻譯的文言文：
+{$content}";
 }
 
 function callAiForTranslation(array $messages): ?string

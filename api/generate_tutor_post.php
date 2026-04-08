@@ -83,6 +83,7 @@ $promptContent = buildTutorPostPrompt($tutor);
 
 // ── 呼叫 AI（直接在此執行，不經前端代理）────────────────────────────────
 $aiContent = callAiDirectly([
+    ['role' => 'system', 'content' => '你是一個古代文豪，直接輸出社交媒體動態內容，絕對不要輸出任何思考過程、分析、解釋或前置說明。只輸出最終動態文字。'],
     ['role' => 'user', 'content' => $promptContent]
 ], 512, 0.8);
 
@@ -90,9 +91,29 @@ if ($aiContent === null) {
     jsonResponse(['success' => false, 'message' => 'AI 生成失敗，請稍後再試'], 503);
 }
 
-// 清理輸出
+// 清理輸出：移除 <think> 標籤和常見思考前綴
 $aiContent = trim(preg_replace('/<think>.*?<\/think>/s', '', $aiContent));
 $aiContent = preg_replace('/[*#【】\[\]]/u', '', $aiContent);
+
+// 移除常見的思考過程前綴（AI echoing instructions or reasoning）
+$aiContent = preg_replace('/^(首先[，,]?.*?\n)+/su', '', $aiContent);
+$aiContent = preg_replace('/^(我需要.*?\n)+/su', '', $aiContent);
+$aiContent = preg_replace('/^(要求[:：].*?\n.*?\n)+/su', '', $aiContent);
+// 若內容超過 200 字（包含思考過程），取最後一段非空段落
+if (mb_strlen($aiContent) > 200) {
+    $paragraphs = array_filter(array_map('trim', preg_split('/\n{2,}/', $aiContent)));
+    if (!empty($paragraphs)) {
+        // 取最後一段，確保不超過 200 字
+        $lastPara = array_pop($paragraphs);
+        if (mb_strlen($lastPara) <= 200) {
+            $aiContent = $lastPara;
+        } else {
+            // 若最後一段仍過長，截取至 150 字
+            $aiContent = mb_substr($lastPara, 0, 150);
+        }
+    }
+}
+$aiContent = trim($aiContent);
 
 // ── FIFO：強制執行動態上限 ───────────────────────────────────────────────
 enforceSocialPostLimit();
@@ -127,20 +148,7 @@ function buildTutorPostPrompt(array $tutor): string
     $personality = $tutor['personality'] ?? '性格鮮明';
     $style       = $tutor['language_style'] ?? '語言生動';
 
-    return "你現在是{$name}，請以{$name}的身份在現代社交媒體發布一條動態。
-
-性格特點：{$personality}
-語言風格：{$style}
-
-要求：
-1. 不超過70字，用繁體中文
-2. 只有引用詩文時才用文言文，其他情況一概用生活化的香港粵語
-3. 體現{$name}的性格，展現對現代生活的思考與感受
-4. 絕對不要在內容後加入任何括號解釋、「（註：...）」或「注：」
-5. 不含「*」「#」「【】」「[」「]」等特殊符號
-6. 內容必須是完整的一段文字，語句流暢自然
-
-請直接輸出動態內容，不要任何前置說明：";
+    return "以{$name}身份寫一條現代社交媒體動態（不超過70字，繁體中文，生活化香港粵語，只有引用詩文時才用文言文，體現{$name}性格：{$personality}，語言風格：{$style}，不加括號解釋，不含*#等符號，直接輸出動態內容）：";
 }
 
 /**
