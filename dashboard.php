@@ -246,7 +246,7 @@ require __DIR__ . '/includes/partials/header.php';
     </div><!-- end grid -->
 
     <!-- 快速入口 -->
-    <div class="grid-3" style="margin-top:24px;">
+    <div class="grid-4" style="margin-top:24px;">
         <a href="<?= BASE_URL ?>/translate/index.php" class="card" style="text-decoration:none;text-align:center;cursor:pointer;transition:var(--transition);padding:20px;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
             <i class="fas fa-language" style="font-size:2rem;color:var(--primary-color);margin-bottom:10px;display:block;"></i>
             <div style="font-weight:700;color:var(--text-color);">文言翻譯</div>
@@ -261,6 +261,11 @@ require __DIR__ . '/includes/partials/header.php';
             <i class="fas fa-users" style="font-size:2rem;color:var(--accent-color);margin-bottom:10px;display:block;"></i>
             <div style="font-weight:700;color:var(--text-color);">古人社群</div>
             <div style="font-size:0.8rem;color:var(--dark-color);margin-top:4px;">與古代文豪互動</div>
+        </a>
+        <a href="<?= BASE_URL ?>/social/leaderboard.php" class="card" style="text-decoration:none;text-align:center;cursor:pointer;transition:var(--transition);padding:20px;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <i class="fas fa-trophy" style="font-size:2rem;color:#f9ca24;margin-bottom:10px;display:block;"></i>
+            <div style="font-weight:700;color:var(--text-color);">龍虎榜</div>
+            <div style="font-size:0.8rem;color:var(--dark-color);margin-top:4px;">學習排行榜</div>
         </a>
     </div>
 
