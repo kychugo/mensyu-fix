@@ -381,7 +381,8 @@ function unstar(btn) {
     const ch = btn.dataset.char;
     delete starredWords[ch];
     saveStarred();
-    document.querySelectorAll('.star-btn[data-char="' + ch + '"]').forEach(b => {
+    const selector = '.star-btn[data-char="' + CSS.escape(ch) + '"]';
+    document.querySelectorAll(selector).forEach(b => {
         b.classList.remove('starred');
         b.title = '收藏此字';
     });

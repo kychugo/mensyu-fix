@@ -47,8 +47,6 @@ $myRankRow->execute([$userId]);
 $myRank = (int)$myRankRow->fetchColumn();
 
 $myXp = getUserXp($userId);
-$myCompletedLevels = 0;
-foreach ($db->prepare('SELECT COUNT(*) FROM user_progress WHERE user_id = ? AND completed = 1') as $dummy) {}
 $stMyLevels = $db->prepare('SELECT COUNT(*) FROM user_progress WHERE user_id = ? AND completed = 1');
 $stMyLevels->execute([$userId]);
 $myCompletedLevels = (int)$stMyLevels->fetchColumn();

@@ -98,8 +98,7 @@ if ($aiContent === null) {
 
 // 清理輸出
 $aiContent = trim(preg_replace('/<think>[\s\S]*?<\/think>/u', '', $aiContent));
-$aiContent = preg_replace('/[*#【】\[\]]/u', '', $aiContent);
-$aiContent = trim($aiContent);
+$aiContent = trim(preg_replace('/[*#【】\[\]]/u', '', $aiContent));
 
 if (empty($aiContent)) {
     jsonResponse(['success' => false, 'message' => 'AI 回覆為空'], 503);
