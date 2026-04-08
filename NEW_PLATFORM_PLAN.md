@@ -40,8 +40,7 @@
 │
 ├── /games/
 │   ├── index.php              ← 小遊戲大廳
-│   ├── matching.php           ← 遊戲一：文言配對
-│   └── fill.php               ← 遊戲二：文言填充（未來擴展）
+│   └── matching.php           ← 遊戲：文言配對
 │
 ├── /admin/
 │   ├── index.php              ← 管理後台主頁（需管理員登入）
@@ -314,9 +313,7 @@
 - 完成後顯示分數（正確數、用時、星級評分）
 - 配對詞組可與關卡文章關聯
 
-#### 遊戲二：文言填充（未來擴展）
-- 給出文句，填入缺失字詞
-- 此版本先設計入口，功能留後期開發
+> 遊戲二（文言填充）已從計劃中移除。
 
 ### 5.5 古人社群 `/social/`
 
@@ -576,6 +573,183 @@ loadSocialFeed()
 startMatchingGame()
 checkMatchingPair()
 callAiApi()
+```
+
+---
+
+## 十二A、補充說明與邏輯細節
+
+### A1. 社群動態（Social Posts）— 共享還是個人？
+
+**答：全平台共用同一份動態牆（Global Shared Feed）。**
+
+- 所有社群動態均存儲於 MySQL `social_posts` 表
+- 所有已登入用戶看到的是完全相同的動態（不是各人獨立的 feed）
+- 古人動態由伺服器 AI 生成，對所有人可見
+- 用戶自己發布的動態所有人都能看到
+- 比喻：類似一個公開的班級討論板，而非 Facebook 個人化 feed
+
+**為什麼設計成共享？**
+- 有助於學習社群氛圍：學生看到同學與古人的互動，增加真實感
+- 資料庫管理更簡單
+- 古人的動態具有教育意義，應對所有用戶可見
+
+### A2. 社群動態自動刪除（FIFO，最多80篇）
+
+**規則：**
+- 資料庫最多存儲 **80 篇動態**（`social_posts` 表）
+- 每次新增動態前，先查詢當前總數
+- 若總數 ≥ 80，**刪除最舊的一篇**（按 `created_at` 升序排序，刪除第一筆）
+- 此為先進先出（FIFO）機制
+- 相關留言（`social_comments`）同步刪除（`ON DELETE CASCADE`）
+
+**PHP 邏輯（在 `api/social_post.php` 中執行）：**
+```
+1. 計算 social_posts 總數
+2. 若 COUNT(*) >= 80：
+   DELETE FROM social_posts WHERE id = (SELECT id FROM social_posts ORDER BY created_at ASC LIMIT 1)
+   （同時通過 CASCADE 刪除對應留言）
+3. INSERT 新動態
+```
+
+### A3. 如何觸發古人動態生成？
+
+**採用雙重觸發機制：**
+
+#### 機制一：偽定時觸發（Pseudo-Cron，頁面訪問驅動）
+- 由於 InfinityFree 共享主機不支援系統 Cron Job
+- 每次任何用戶**載入社群頁面**（`/social/index.php`）時，PHP 會自動檢查：
+  - 上次每位導師最後生成動態的時間（存於 `settings` 表，key: `last_post_{tutor_id}`）
+  - 若距上次生成已超過設定間隔（預設60分鐘），自動觸發 AI 生成新動態
+- 此機制不依賴真實 Cron，依靠用戶訪問驅動
+
+**具體流程：**
+```
+用戶載入 /social/index.php
+    → PHP 後台靜默檢查每位啟用導師
+    → 讀取 settings 表: last_post_{tutor_id}
+    → 若 (NOW - last_post) > post_interval_minutes
+       → 非同步呼叫 /api/generate_tutor_post.php?tutor_id=X
+       → 更新 last_post_{tutor_id} = NOW
+    → 正常返回頁面給用戶（不阻塞頁面載入）
+```
+
+#### 機制二：管理後台手動觸發
+- 管理員登入後台 → 進入「社群管理」頁面
+- 每位導師旁邊有「立即生成動態」按鈕
+- 點擊後：
+  - 呼叫 `/api/generate_tutor_post.php?tutor_id=X`
+  - 顯示「正在生成...」loading 狀態
+  - 完成後顯示「已成功生成新動態」通知
+- 後台亦可設定「動態生成間隔（分鐘）」
+
+#### 間隔設定表 `settings`
+| key | value | 說明 |
+|---|---|---|
+| post_interval_minutes | 60 | 自動觸發間隔（分鐘） |
+| last_post_{tutor_id} | 2026-04-08 10:00:00 | 各導師上次生成時間 |
+| max_posts | 80 | 最大動態數量上限 |
+
+### A4. 遊戲二：文言填充
+
+**已從計劃中移除。** 小遊戲模組只保留**遊戲一：文言配對**。
+
+### A5. 詳細邏輯說明
+
+#### 登入流程邏輯
+```
+用戶提交登入表單
+    → 驗證 CSRF Token
+    → 查詢 users 表 WHERE email = ?
+    → 若找不到用戶 → 返回錯誤「電郵或密碼不正確」（不指明哪個錯，防止枚舉攻擊）
+    → 若找到 → password_verify($input, $hash)
+    → 若密碼錯誤 → 返回相同錯誤（不區分）
+    → 若成功：
+        session_regenerate_id(true)  // 防 Session Fixation
+        $_SESSION['user_id'] = $user['id']
+        $_SESSION['role'] = $user['role']
+        $_SESSION['username'] = $user['username']
+    → 若 role = 'admin' → 重定向至 /admin/index.php
+    → 若 role = 'user' → 重定向至 /dashboard.php
+```
+
+#### 注冊流程邏輯（含首位用戶成為管理員）
+```
+用戶提交注冊表單
+    → 驗證 CSRF Token
+    → 服務端驗證：用戶名非空、電郵格式、密碼≥8字元、兩次密碼一致
+    → 查詢 users 表是否存在相同電郵（防重複）
+    → 查詢 users 表總數：SELECT COUNT(*) FROM users
+        → 若 COUNT = 0：role = 'admin'（首位用戶）
+        → 若 COUNT > 0：role = 'user'
+    → password_hash($password, PASSWORD_BCRYPT)
+    → INSERT INTO users (username, email, password_hash, role)
+    → 自動登入並重定向
+```
+
+#### 關卡通關邏輯
+```
+用戶提交測驗
+    → 計算正確題數 / 總題數 × 100 = 得分
+    → 若得分 ≥ 60：
+        → UPSERT user_progress (user_id, tutor_id, level_id, completed=1, score, completed_at)
+        → 查詢該 tutor_id 下 completed=1 的關卡數
+        → 若此前 = 0（即首次通關此導師）：
+            → 呼叫 /api/generate_tutor_post.php（立即為該導師生成首篇動態）
+        → 返回通關訊息 + 解鎖提示
+    → 若得分 < 60：
+        → 記錄 attempts + 1（但 completed = 0）
+        → 返回失敗訊息，可重新挑戰
+```
+
+#### 翻譯緩存邏輯
+```
+用戶發起翻譯請求
+    → 計算 MD5(essay_title + "_" + text) 作為 cache_key
+    → 查詢 translation_cache WHERE text_hash = cache_key
+        → 若找到且 created_at > NOW() - 7 days：
+            直接返回緩存結果（不呼叫 AI API）
+        → 若找不到或已過期：
+            呼叫 AI API 進行翻譯
+            儲存結果至 translation_cache
+            返回翻譯結果
+```
+
+#### AI API 自動切換邏輯（`/api/ai_call.php`）
+```
+初始狀態：key_index = 0, model_index = 0
+呼叫 API：
+    → 使用 API_KEYS[key_index] + API_MODELS[model_index]
+    → 若成功（HTTP 200）→ 返回結果
+    → 若失敗：
+        model_index++
+        → 若 model_index < count(API_MODELS)：重試同一 key 的下一個 model
+        → 若 model_index >= count(API_MODELS)：
+            key_index++
+            model_index = 0
+            → 若 key_index < count(API_KEYS)：重試下一個 key 的第一個 model
+            → 若 key_index >= count(API_KEYS)：所有嘗試均失敗，返回錯誤
+```
+
+#### 文言配對遊戲邏輯
+```
+用戶進入配對遊戲
+    → 選擇難度
+    → 從 matching_pairs 表隨機抽取 N 對（按難度決定 N）
+    → 打亂順序，分別顯示左列（文言詞）和右列（現代語譯）
+    → 開始計時
+
+用戶點擊配對：
+    → 點擊左列一個詞：記錄為 selected_left
+    → 點擊右列一個語譯：記錄為 selected_right
+    → 查詢 matching_pairs 是否 classical_term = selected_left AND modern_meaning = selected_right
+        → 若匹配：兩個卡片高亮並從板面消除，matched_count++
+        → 若不匹配：兩個卡片短暫顯示紅色錯誤，然後重置
+    → 若 matched_count = total_pairs：
+        停止計時
+        計算得分（正確配對數 + 剩餘時間加成）
+        顯示結果（星級評分、用時、得分）
+        儲存成績至 user_progress（可選）
 ```
 
 ---
