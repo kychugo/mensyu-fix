@@ -1,0 +1,3428 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文樞</title>
+<link rel="manifest" href="manifest.json">
+
+
+<!-- 引入 Font Awesome 圖示庫 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+
+<!-- 引入 Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-color: #7fb3d5;
+--secondary-color: #a2d9ce;
+--accent-color: #a9cce3;
+--highlight-color: #7dcea0;
+--soft-color: #76d7c4;
+--light-accent: #aed6f1;
+--background-color: #f8fafa;
+--text-color: #2c3e50;
+--light-color: #ffffff;
+--dark-color: #34495e;
+--error-color: #e74c3c;
+--success-color: #2ecc71;
+--warning-color: #f1c40f;
+--hidden-bg: #ecf0f1;
+--shadow-light: 0 2px 12px rgba(127, 179, 213, 0.15);
+--shadow-medium: 0 4px 24px rgba(127, 179, 213, 0.2);
+--shadow-heavy: 0 8px 36px rgba(127, 179, 213, 0.25);
+--gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+--gradient-accent: linear-gradient(135deg, var(--highlight-color), var(--soft-color));
+--border-radius: 12px;
+--border-radius-small: 6px;
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+--overlay-bg: rgba(44, 62, 80, 0.7);
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+body {
+font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+background: linear-gradient(to bottom right, #f8fafa 0%, #f0f8ff 100%);
+color: var(--text-color);
+line-height: 1.6;
+padding: 20px;
+min-height: 100vh;
+}
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 20px;
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 30px;
+}
+.copyright-footer {
+position: fixed;
+bottom: 0;
+right: 0;
+padding: 5px 10px;
+background-color: #f1f1f1;
+}
+.copyright-footer p {
+margin: 0;
+font-size: 14px;
+}
+/* 響應式設計 */
+@media (max-width: 1024px) {
+.container {
+grid-template-columns: 1fr;
+width: 95%;
+margin: 0 auto;
+}
+}
+@media (max-width: 768px) {
+.container {
+width: 95%;
+padding: 10px;
+}
+body {
+padding: 10px;
+}
+.copyright-footer p {
+font-size: 12px;
+}
+}
+header {
+text-align: center;
+margin-bottom: 40px;
+padding: 40px 20px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-medium);
+position: relative;
+overflow: hidden;
+grid-column: 1 / -1;
+}
+header::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+pointer-events: none;
+}
+h1 {
+margin-bottom: 15px;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 300;
+letter-spacing: 3px;
+font-family: 'Noto Serif TC', serif;
+position: relative;
+z-index: 1;
+}
+.input-section {
+background: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-light);
+padding: 30px;
+border: 2px solid rgba(127, 179, 213, 0.1);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+grid-column: 1;
+}
+@media (max-width: 1024px) {
+.input-section {
+position: static;
+}
+}
+@media (max-width: 768px) {
+.input-section {
+padding: 20px;
+}
+}
+.input-section::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: var(--gradient-primary);
+}
+.input-section:hover {
+box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+}
+.section-title {
+color: var(--primary-color);
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 2px solid var(--light-accent);
+font-size: 1.4rem;
+font-weight: 500;
+font-family: 'Noto Serif TC', serif;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.section-title::before {
+content: '';
+width: 8px;
+height: 8px;
+background: var(--secondary-color);
+border-radius: 50%;
+}
+textarea {
+width: 100%;
+padding: 20px;
+border: 2px solid var(--light-accent);
+border-radius: var(--border-radius-small);
+font-size: 18px;
+line-height: 1.8;
+transition: var(--transition);
+background: linear-gradient(to bottom, #fafafa, #ffffff);
+font-family: 'Noto Serif TC', serif;
+resize: none;
+/* Disable manual resize */
+overflow-y: hidden;
+/* Hide scrollbar, JS will handle height */
+}
+@media (max-width: 768px) {
+
+textarea {
+font-size: 16px;
+padding: 15px;
+}
+}
+textarea:focus {
+outline: none;
+border-color: var(--primary-color);
+background: var(--light-color);
+box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.1);
+}
+#classical-text {
+min-height: 250px;
+/* Specific initial height for the main textarea */
+}
+#ai-prompt {
+min-height: 80px;
+/* Smaller initial height for the prompt textarea */
+font-size: 16px;
+/* Slightly smaller font for prompt */
+}
+.button-group {
+display: flex;
+gap: 15px;
+margin-top: 25px;
+flex-wrap: wrap;
+}
+button {
+padding: 14px 28px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border: none;
+border-radius: var(--border-radius-small);
+cursor: pointer;
+font-size: 16px;
+font-weight: 500;
+transition: var(--transition);
+flex: 1;
+min-width: 130px;
+box-shadow: var(--shadow-light);
+position: relative;
+overflow: hidden;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+@media (max-width: 768px) {
+button {
+padding: 12px 20px;
+font-size: 13px;
+min-width: 100px;
+}
+}
+button::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+transition: left 0.5s;
+}
+button:hover::before {
+left: 100%;
+}
+button:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-medium);
+}
+button:active {
+transform: translateY(-1px);
+}
+button:disabled {
+background: #bdc3c7;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+.clear-btn {
+background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+.history-btn {
+background: linear-gradient(135deg, #015F78, #3886A8);
+}
+.ai-search-btn {
+width: 100%;
+margin-bottom: 20px;
+background: var(--gradient-accent);
+}
+.toggle-translations-btn {
+background: linear-gradient(135deg, #1F7A55, #0B4F4A);
+margin-top: -15px; /* Adjust position */
+width: auto;
+min-width: 50px;
+flex: 0;
+padding: 10px 12px;
+align-self: flex-start;
+}
+.section-divider {
+border: 0;
+height: 1px;
+background-color: var(--light-accent);
+margin: 30px 0;
+}
+.form-group {
+margin-bottom: 20px;
+}
+.form-group label {
+display: block;
+margin-bottom: 10px;
+font-weight: 500;
+color: var(--dark-color);
+}
+.rating-dots {
+display: flex;
+gap: 12px;
+cursor: pointer;
+}
+.rating-dot {
+width: 28px;
+height: 28px;
+border-radius: 50%;
+border: 2px solid #ccc;
+transition: all 0.2s ease-in-out;
+}
+.rating-dots:hover .rating-dot,
+.rating-dots .rating-dot.selected {
+border-color: var(--primary-color);
+background-color: var(--primary-color);
+transform: scale(1.1);
+}
+.rating-dots:hover .rating-dot:hover~.rating-dot {
+background-color: transparent;
+border-color: #ccc;
+}
+.loader {
+width: 20px;
+height: 20px;
+border: 3px solid rgba(255, 255, 255, 0.3);
+border-radius: 50%;
+border-top-color: #fff;
+animation: spin 1s ease-in-out infinite;
+margin-right: 8px;
+/* Add margin to separate from text */
+}
+.btn-text {
+transition: opacity 0.2s;
+}
+.output-section {
+background: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-light);
+padding: 30px;
+border: 2px solid rgba(127, 179, 213, 0.1);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+grid-column: 2;
+display: flex;
+flex-direction: column;
+}
+@media (max-width: 1024px) {
+.output-section {
+grid-column: 1;
+}
+}
+@media (max-width: 768px) {
+.output-section {
+padding: 20px;
+}
+}
+.output-section::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: var(--gradient-primary);
+}
+.output-section:hover {
+box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+}
+.output-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+}
+.output-header .section-title {
+flex-grow: 1;
+}
+.output-content {
+min-height: 200px;
+flex-grow: 1;
+}
+.content-group-container {
+padding: 20px;
+border-radius: var(--border-radius-small);
+border: 1px solid transparent;
+}
+.content-group-container:not(:empty) {
+border-color: var(--light-accent);
+background: linear-gradient(to bottom, #fafafa, #ffffff);
+}
+.content-group-container+.content-group-container:not(:empty) {
+margin-top: 30px;
+}
+@media (max-width: 768px) {
+.output-content {
+padding: 0;
+}
+.content-group-container {
+padding: 15px;
+}
+}
+@media (min-width: 1025px) {
+.container {
+height: calc(100vh - 10px);
+grid-template-rows: auto 1fr;
+}
+.input-section,
+.output-section {
+min-height: 0;
+overflow-y: auto;
+}
+.output-content {
+overflow-y: visible;
+}
+}
+.loading {
+display: none;
+text-align: center;
+padding: 50px;
+color: var(--primary-color);
+}
+.spinner {
+border: 4px solid rgba(127, 179, 213, 0.2);
+border-radius: 50%;
+border-top: 4px solid var(--primary-color);
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+margin: 0 auto 20px;
+}
+@keyframes spin {
+0% {
+transform: rotate(0deg);
+}
+100% {
+transform: rotate(360deg);
+}
+}
+.error-message {
+color: var(--error-color);
+margin-top: 20px;
+display: none;
+padding: 15px;
+background: #fadbd8;
+border: 2px solid #f1948a;
+border-radius: var(--border-radius-small);
+}
+.introduction-section {
+margin-bottom: 25px;
+padding: 20px;
+background: linear-gradient(135deg, #f8f9f9, #eef5f9);
+border-left: 5px solid var(--highlight-color);
+border-radius: var(--border-radius-small);
+}
+.introduction-wrapper .introduction-section:last-child {
+margin-bottom: 0;
+}
+.introduction-title {
+font-weight: 600;
+color: var(--primary-color);
+margin-bottom: 10px;
+font-size: 1.2rem;
+font-family: 'Noto Serif TC', serif;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.introduction-content {
+font-size: 16px;
+line-height: 1.7;
+color: var(--dark-color);
+}
+.translation-block {
+margin-bottom: 35px;
+border-bottom: 2px dashed var(--light-accent);
+padding-bottom: 25px;
+}
+.translation-block:last-child {
+border-bottom: none;
+margin-bottom: 0;
+padding-bottom: 0;
+}
+.original-title,
+.translation-title {
+font-weight: 600;
+color: var(--primary-color);
+margin-bottom: 15px;
+font-size: 1.3rem;
+font-family: 'Noto Serif TC', serif;
+}
+.original-text {
+font-size: 18px;
+line-height: 2;
+margin-bottom: 25px;
+padding: 20px;
+background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3));
+border-left: 5px solid var(--primary-color);
+border-radius: var(--border-radius-small);
+font-family: 'Noto Serif TC', serif;
+}
+@media (max-width: 768px) {
+.original-text {
+font-size: 16px;
+padding: 15px;
+}
+}
+.translation-text {
+padding: 20px;
+border-radius: var(--border-radius-small);
+line-height: 1.8;
+font-size: 16px;
+border-left: 5px solid var(--secondary-color);
+background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(245,245,245,0.5));
+}
+@media (max-width: 768px) {
+.translation-text {
+padding: 15px;
+font-size: 14px;
+}
+}
+.character-breakdown {
+margin-top: 20px;
+padding: 20px;
+background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160, 0.1));
+border-radius: var(--border-radius-small);
+font-size: 15px;
+border-left: 5px solid var(--highlight-color);
+}
+@media (max-width: 768px) {
+.character-breakdown {
+padding: 15px;
+font-size: 14px;
+}
+}
+.character-item {
+margin-bottom: 12px;
+display: flex;
+align-items: flex-start;
+padding: 8px 0;
+border-bottom: 1px solid rgba(127, 179, 213, 0.1);
+}
+.character-item:last-child {
+border-bottom: none;
+}
+.floating-original {
+display: none;
+position: fixed;
+background: var(--light-color);
+border: 2px solid var(--primary-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-heavy);
+z-index: 1000;
+}
+@media (min-width: 1025px) {
+.floating-original {
+top: 50%;
+right: 20px;
+transform: translateY(-50%);
+width: 350px;
+max-height: 70vh;
+overflow-y: auto;
+}
+}
+@media (max-width: 768px) {
+.floating-original {
+top: 0;
+left: 0;
+right: 0;
+width: 100%;
+max-width: none;
+border-radius: 0 0 var(--border-radius) var(--border-radius);
+border-top: none;
+overflow: hidden;
+min-height: 150px;
+resize: vertical;
+}
+.floating-original.resizable {
+height: 33.33vh;
+}
+}
+.floating-original.show {
+display: block;
+animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-50%) scale(0.9);
+}
+to {
+opacity: 1;
+transform: translateY(-50%) scale(1);
+}
+}
+@media (max-width: 768px) {
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+}
+.floating-header {
+background: var(--gradient-primary);
+color: var(--light-color);
+padding: 15px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+@media (max-width: 768px) {
+.floating-header {
+border-radius: 0;
+}
+}
+.floating-title {
+font-weight: 600;
+font-size: 1.1rem;
+}
+.floating-controls {
+display: flex;
+gap: 10px;
+align-items: center;
+}
+.floating-toggle {
+background: none;
+border: none;
+color: var(--light-color);
+font-size: 1.2rem;
+cursor: pointer;
+padding: 5px;
+border-radius: 50%;
+transition: var(--transition);
+width: 30px;
+height: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.floating-toggle:hover {
+background: rgba(255, 255, 255, 0.2);
+transform: scale(1.1);
+}
+.floating-content {
+padding: 20px;
+overflow-y: auto;
+}
+@media (max-width: 768px) {
+.floating-content {
+padding: 15px;
+font-size: 16px;
+height: calc(100% - 55px);
+}
+}
+.floating-original-text {
+font-size: 16px;
+line-height: 1.8;
+color: var(--text-color);
+font-family: 'Noto Serif TC', serif;
+}
+@media (max-width: 768px) {
+.floating-original-text {
+font-size: 17px;
+line-height: 1.9;
+}
+}
+.reopen-floating {
+position: fixed;
+top: 20px;
+left: 20px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border: none;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+font-size: 1.2rem;
+cursor: pointer;
+box-shadow: var(--shadow-medium);
+z-index: 999;
+display: none;
+transition: var(--transition);
+}
+.reopen-floating:hover {
+transform: scale(1.1);
+box-shadow: var(--shadow-heavy);
+}
+@media (max-width: 768px) {
+.reopen-floating.show {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+}
+.word-with-explanation {
+position: relative;
+display: inline;
+color: var(--primary-color);
+font-weight: 600;
+cursor: pointer;
+border-bottom: 2px dotted var(--primary-color);
+margin: 0 2px;
+padding: 2px 4px;
+border-radius: 3px;
+transition: var(--transition);
+}
+.word-with-explanation:hover {
+background: rgba(127, 179, 213, 0.1);
+}
+.explanation-icon {
+color: var(--secondary-color);
+font-size: 0.9em;
+margin-left: 4px;
+cursor: pointer;
+opacity: 0.8;
+transition: var(--transition);
+padding: 2px;
+border-radius: 50%;
+}
+.explanation-icon:hover {
+opacity: 1;
+background: rgba(162, 217, 206, 0.3);
+transform: scale(1.1);
+}
+.word-explanation {
+display: none;
+position: absolute;
+bottom: 120%;
+left: 50%;
+transform: translateX(-50%);
+background: var(--dark-color);
+color: var(--light-color);
+padding: 12px 16px;
+border-radius: var(--border-radius-small);
+font-size: 14px;
+white-space: nowrap;
+z-index: 1001;
+box-shadow: var(--shadow-medium);
+max-width: 300px;
+white-space: normal;
+}
+.word-explanation::after {
+content: '';
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+border: 6px solid transparent;
+border-top-color: var(--dark-color);
+}
+.word-explanation.show {
+display: block;
+animation: fadeInUp 0.3s ease-out;
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateX(-50%) translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+}
+.hidden-text {
+background: var(--hidden-bg);
+color: transparent;
+border-radius: 4px;
+padding: 4px 8px;
+transition: var(--transition);
+user-select: none;
+cursor: pointer;
+}
+.hidden-text:hover {
+background: rgba(127, 179, 213, 0.2);
+}
+.hidden-text.revealed {
+background: transparent;
+color: inherit;
+cursor: default;
+}
+.test-mode .hidden-text {
+cursor: not-allowed;
+}
+.test-mode .hidden-text:hover {
+background: var(--hidden-bg);
+}
+.sentence-container {
+margin-bottom: 15px;
+}
+.character {
+color: var(--primary-color);
+font-weight: 600;
+cursor: pointer;
+border-bottom: 2px dotted var(--primary-color);
+padding: 2px 4px;
+border-radius: 3px;
+transition: var(--transition);
+}
+.character:hover {
+background: rgba(127, 179, 213, 0.1);
+}
+.explanation {
+display: none;
+padding-left: 20px;
+color: var(--dark-color);
+font-style: italic;
+margin-top: 8px;
+border-left: 3px solid var(--secondary-color);
+padding: 8px 0 8px 15px;
+}
+.explanation.revealed {
+display: block;
+animation: slideDown 0.3s ease-out;
+}
+@keyframes slideDown {
+from {
+opacity: 0;
+max-height: 0;
+}
+to {
+opacity: 1;
+max-height: 100px;
+}
+}
+.common-word {
+background: linear-gradient(135deg, rgba(127, 179, 213, 0.2), rgba(162, 217, 206, 0.2));
+padding: 2px 6px;
+border-radius: 4px;
+font-weight: 600;
+}
+.history-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: var(--overlay-bg);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.3s, visibility 0s 0.3s;
+}
+.history-modal.is-visible {
+opacity: 1;
+visibility: visible;
+transition-delay: 0s;
+}
+.history-container {
+width: 90%;
+max-width: 700px;
+max-height: 80vh;
+border-radius: var(--border-radius);
+padding: 1.5rem 2rem;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-heavy);
+transform: scale(0.95);
+transition: transform 0.3s, background-color 0.4s;
+background-color: var(--light-color);
+border: 2px solid var(--primary-color);
+}
+.history-modal.is-visible .history-container {
+transform: scale(1);
+}
+.history-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-bottom: 1rem;
+margin-bottom: 1rem;
+border-bottom: 1px solid var(--light-accent);
+}
+.history-header h2 {
+font-size: 1.5rem;
+font-weight: 500;
+color: var(--primary-color);
+}
+.history-controls {
+display: flex;
+gap: 1rem;
+margin-bottom: 1rem;
+}
+#history-search,
+#history-sort {
+flex-grow: 1;
+padding: 0.5rem 0.75rem;
+border-radius: var(--border-radius-small);
+font-size: 1rem;
+font-family: 'Noto Sans TC', sans-serif;
+background-color: #f8fafa;
+border: 1px solid var(--light-accent);
+color: var(--text-color);
+}
+#history-search:focus,
+#history-sort:focus {
+outline: none;
+border-color: var(--primary-color);
+}
+.history-list {
+list-style: none;
+overflow-y: auto;
+flex-grow: 1;
+}
+.history-list li {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 1rem;
+padding: 1rem;
+border-radius: 5px;
+transition: background-color 0.2s;
+border-bottom: 1px solid var(--light-accent);
+}
+.history-list li:hover {
+background-color: #f0f8ff;
+}
+.history-list li:last-child {
+border-bottom: none;
+}
+.history-item-content {
+flex-grow: 1;
+cursor: pointer;
+min-width: 0; /* Fix for flexbox overflow */
+}
+.history-list-item-title {
+font-family: 'Noto Serif TC', serif;
+font-size: 1.2rem;
+font-weight: 600;
+color: var(--dark-color);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+display: flex;
+align-items: center;
+}
+.history-title-edit {
+width: 100%;
+font-family: 'Noto Serif TC', serif;
+font-size: 1.2rem;
+padding: 4px 6px;
+border: 1px solid var(--primary-color);
+border-radius: 4px;
+outline: none;
+}
+.history-list-item-meta {
+font-family: 'Noto Sans TC', sans-serif;
+font-size: 0.9rem;
+margin-top: 0.25rem;
+color: #7f8c8d;
+}
+.no-history-msg {
+padding: 2rem;
+text-align: center;
+justify-content: center;
+color: #7f8c8d;
+cursor: default;
+}
+.no-history-msg:hover {
+background-color: transparent;
+}
+.history-item-actions {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+flex-shrink: 0;
+}
+.icon-btn {
+min-width: unset;
+flex: none;
+background: transparent;
+border: none;
+cursor: pointer;
+padding: 6px;
+border-radius: 50%;
+display: inline-flex;
+justify-content: center;
+align-items: center;
+transition: background-color 0.2s, transform 0.2s;
+opacity: 0.8;
+line-height: 1;
+color: var(--dark-color);
+}
+.icon-btn:hover {
+background-color: var(--hidden-bg);
+opacity: 1;
+}
+.icon-btn:active {
+transform: scale(0.95);
+}
+#history-close-btn, .regenerate-history-btn, .edit-history-btn, .delete-history-btn,
+#mode-selection-close-btn {
+/* Inherits from .icon-btn */
+}
+.regenerate-history-btn .fas { color: var(--highlight-color); }
+.edit-history-btn .fas { color: var(--primary-color); }
+.delete-history-btn .fas { color: var(--error-color); }
+#delete-all-history-btn {
+min-width: unset;
+flex: none;
+width: auto;
+padding: 6px 12px;
+border-radius: var(--border-radius-small);
+gap: 0.5rem;
+color: var(--error-color);
+opacity: 0.8;
+background: transparent;
+border: 1px solid transparent;
+transition: all 0.2s ease;
+}
+#delete-all-history-btn:hover {
+opacity: 1;
+background-color: rgba(231, 76, 60, 0.1);
+color: var(--error-color);
+transform: none;
+}
+#delete-all-history-btn .fas {
+color: var(--error-color);
+}
+@media (max-width: 768px) {
+.floating-original::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 50px;
+height: 5px;
+background: var(--primary-color);
+border-radius: 3px 3px 0 0;
+cursor: ns-resize;
+}
+.history-controls {
+flex-direction: column;
+}
+}
+::-webkit-scrollbar {
+width: 10px;
+}
+::-webkit-scrollbar-track {
+background: rgba(127, 179, 213, 0.1);
+border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+background: var(--primary-color);
+border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--secondary-color);
+}
+.test-mode .character-breakdown {
+border-left-color: var(--warning-color);
+padding-bottom: 10px;
+}
+.test-mode .character-item {
+cursor: pointer;
+transition: background-color 0.2s, border-left-color 0.3s;
+border-radius: var(--border-radius-small);
+padding: 10px;
+border-left: 3px solid transparent;
+margin-bottom: 8px;
+}
+.test-mode .character-item:hover {
+background-color: rgba(241, 196, 15, 0.1);
+border-left-color: var(--warning-color);
+}
+.test-mode .character-item.found-correctly {
+background-color: rgba(46, 204, 113, 0.1);
+border-left-color: var(--success-color);
+cursor: not-allowed;
+}
+.test-mode .character-item.answered-incorrectly {
+background-color: rgba(231, 76, 60, 0.1);
+border-left-color: var(--error-color);
+cursor: not-allowed;
+}
+.test-mode .character-item.reveal-correct {
+background-color: rgba(46, 204, 113, 0.1);
+border-left-color: var(--success-color);
+cursor: default;
+}
+.test-mode .character-item.reveal-user-error {
+background-color: rgba(231, 76, 60, 0.1);
+border-left-color: var(--error-color);
+cursor: default;
+}
+.test-chances-counter {
+text-align: center;
+font-size: 1.2rem;
+font-weight: 500;
+margin-top: -15px;
+margin-bottom: 25px;
+padding: 10px;
+background: rgba(169, 204, 227, 0.1);
+border-radius: var(--border-radius-small);
+color: var(--dark-color);
+}
+.test-chances-counter span {
+font-weight: 700;
+color: var(--primary-color);
+margin: 0 5px;
+font-size: 1.5rem;
+}
+#test-result-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: var(--overlay-bg);
+z-index: 3000;
+display: none;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: white;
+text-align: center;
+padding: 20px;
+opacity: 0;
+transition: opacity 0.3s ease;
+cursor: pointer;
+}
+#test-result-overlay.is-visible {
+display: flex;
+opacity: 1;
+}
+#test-result-content {
+background: var(--light-color);
+color: var(--text-color);
+padding: 40px;
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-heavy);
+width: 90%;
+max-width: 500px;
+cursor: default;
+}
+#test-result-content h2 {
+font-size: 2.2rem;
+margin-bottom: 15px;
+font-family: 'Noto Serif TC', serif;
+}
+#test-result-content p {
+font-size: 1.1rem;
+line-height: 1.7;
+margin-bottom: 1.5rem;
+}
+#test-result-content .success-icon { color: var(--success-color); }
+#test-result-content .failure-icon { color: var(--error-color); }
+#test-result-content .success-icon,
+#test-result-content .failure-icon {
+font-size: 4rem;
+margin-bottom: 20px;
+}
+.failure-answer-key {
+margin-top: 25px;
+text-align: left;
+font-size: 1rem;
+}
+.failure-answer-key .original-mistake {
+color: var(--error-color);
+text-decoration: line-through;
+}
+.failure-answer-key .correct-answer {
+color: var(--success-color);
+font-weight: bold;
+}
+.title-with-icon-wrapper {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 2px solid var(--light-accent);
+}
+.title-with-icon-wrapper .section-title {
+margin-bottom: 0;
+padding-bottom: 0;
+border-bottom: none;
+}
+#history-icon-btn {
+color: #015F78;
+font-size: 1.3rem;
+padding: 8px;
+}
+#history-icon-btn:hover {
+background-color: transparent;
+transform: none;
+opacity: 0.8;
+}
+/* ===== 新增及修訂：遊戲模式專用樣式 ===== */
+#game-modal {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* Desktop Background - default */
+    background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/SDhgHzTF/Whats-App-Image-2025-08-05-at-07-31-58.jpg');
+}
+@media (max-width: 1024px) {
+    #game-modal {
+        /* Tablet Background */
+        background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/23d32t1Y/Whats-App-Image-2025-08-05-at-07-33-22.jpg');
+    }
+}
+@media (max-width: 768px) {
+    #game-modal {
+        /* Mobile Background */
+        background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/5XJLyN9S/Whats-App-Image-2025-08-05-at-07-32-15.jpg');
+    }
+}
+.game-touch-panel-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh; /* Responsive height */
+    max-height: 200px;
+    display: flex;
+    z-index: 4001;
+    pointer-events: none;
+}
+.game-touch-panel {
+    width: 50%;
+    height: 100%;
+    background-color: rgba(153, 161, 175, 0.15);
+    border-top: 2px solid rgba(153, 161, 175, 0.3);
+    pointer-events: auto;
+    /*修訂三：增加 flex 屬性以置中圖示*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*修訂三：為觸控提示圖示增加樣式*/
+.game-touch-panel > i {
+    font-size: 3rem;
+    color: rgba(44, 62, 80, 0.3);
+    user-select: none; /* 防止用戶選取圖示 */
+}
+
+/* Hide on non-touch (hover-capable) desktop devices */
+@media (hover: hover) and (pointer: fine) {
+    .game-touch-panel-container {
+        display: none;
+    }
+}
+.game-answer-brick {
+width: 180px; /* 寬度調整為適合容納文字 */
+height: 45px; /* 高度調整 */
+color: var(--text-color);
+text-align: center;
+line-height: 45px; /* 與高度一致以垂直居中 */
+font-size: 18px; /* 字體大小調整 */
+font-family: 'Noto Sans TC', sans-serif;
+font-weight: 500;
+border-radius: 8px;
+padding: 0 10px; /* 增加內邊距防止文字貼邊 */
+overflow: hidden; /* 超出部分隱藏 */
+text-overflow: ellipsis; /* 超出部分顯示省略號 */
+white-space: nowrap; /* 不換行 */
+}
+
+
+@media (max-width: 768px) {
+.game-answer-brick {
+font-size: 14px; /* 手機版的文字大小 */
+}
+}
+
+#game-close-icon-btn {
+pointer-events: auto;
+background: transparent;
+border: none;
+font-size: clamp(20px, 2.5vw, 26px);
+cursor: pointer;
+color: var(--text-color);
+padding: 0 15px;
+opacity: 0.7;
+transition: opacity 0.2s, transform 0.2s;
+}
+#game-close-icon-btn:hover {
+opacity: 1;
+transform: scale(1.1);
+}
+
+/* ===== 新增：文言文輸入懸浮視窗獨立 CSS ===== */
+.ocr-modal-overlay {
+    display: none; /* 預設隱藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(44, 62, 80, 0.75); /* 使用與文樞一致的 overlay 背景色 */
+    z-index: 2500; /* 設定一個較高的 z-index */
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+}
+
+.ocr-modal-content {
+    background-color: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    width: 90%;
+    max-width: 750px; /* 視窗最大寬度 */
+    height: 85vh; /* 視窗高度佔視窗的 85% */
+    max-height: 800px;
+    position: relative;
+    animation: ocrModalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column; /* 讓內部元素垂直排列 */
+}
+
+@keyframes ocrModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.ocr-modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    border-bottom: 2px solid var(--light-accent);
+    padding-bottom: 15px;
+}
+
+#ocr-modal-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.2em; /* 稍大的字體，方便閱讀 */
+    line-height: 1.8;
+    border: 2px solid var(--light-accent);
+    border-radius: 8px;
+    padding: 15px;
+    flex-grow: 1; /* 佔據所有剩餘空間 */
+    resize: none; /* 禁止手動調整大小 */
+    font-family: 'Noto Serif TC', serif;
+    background-color: #fcfdff;
+    transition: all 0.3s ease;
+}
+
+#ocr-modal-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.15);
+}
+
+/* ===== 最終修訂：文言文輸入懸浮視窗按鈕 (完全隔離樣式) ===== */
+
+.ocr-modal-buttons {
+    /* 移除所有 display: flex 相關屬性 */
+    text-align: right; /* 核心：這會讓所有 inline-block 的子元素靠右對齊 */
+    margin-top: 20px;
+}
+
+/* 2. 按鈕本身 */
+.ocr-modal-btn {
+    /* --- 佈局與外觀 --- */
+    display: inline-block; /* 必須是 inline 或 inline-block 才能被 text-align 影響 */
+    vertical-align: middle; /* 確保垂直對齊一致 */
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--shadow-light);
+    text-decoration: none; /* 移除可能的下劃線 */
+    
+    /* --- 為按鈕之間添加間距 --- */
+    margin-left: 10px; /* 為每個按鈕左側添加間距 */
+
+    /* --- 強制尺寸隔離 (使用 !important) --- */
+    /* 這些規則確保按鈕大小不受任何通用樣式影響 */
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    min-width: 0 !important;
+    width: auto !important;
+    flex: none !important; /* 確保 flex 屬性被重置 */
+}
+
+/* 讓第一個按鈕沒有左邊距，更美觀 */
+.ocr-modal-btn:first-child {
+    margin-left: 0;
+}
+
+.ocr-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    filter: brightness(110%);
+}
+
+/* 3. 按鈕的圖示 (需要手動添加) */
+.ocr-modal-btn .fas {
+    margin-right: 8px; /* 讓圖示和文字之間有空隙 */
+}
+
+
+/* 4. 按鈕顏色 (保持不變) */
+.ocr-btn-confirm {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.ocr-btn-special {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: white;
+}
+
+
+/* 5. 簡化手機版 CSS */
+@media (max-width: 768px) {
+    .ocr-modal-content {
+        height: 90vh;
+        padding: 20px;
+    }
+    #ocr-modal-textarea {
+        font-size: 1.1em;
+    }
+    /* 按鈕容器和按鈕的樣式已在上方全局定義，此處無需再做任何修改，
+       它們會自然地適應並保持在右上角。*/
+}
+
+.ocr-modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.ocr-modal-close-btn:hover {
+    color: var(--dark-color);
+    transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+    .ocr-modal-content {
+        height: 90vh;
+        padding: 20px;
+    }
+    #ocr-modal-textarea {
+        font-size: 1.1em;
+    }
+    .ocr-modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .ocr-modal-btn {
+        width: 100%;
+        padding: 14px;
+    }
+}
+
+	
+</style>
+</head>
+<body>
+<!-- 引入 Three.js 函式庫 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- 引入 Three.js CSS2DRenderer，用於在 3D 場景中顯示 HTML 標籤 -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
+
+<div class="container">
+<div class="input-section">
+<div class="title-with-icon-wrapper">
+<h2 class="section-title">尋找篇章</h2>
+<button id="history-icon-btn" class="icon-btn" title="閱讀紀錄">
+<i class="fas fa-history"></i>
+</button>
+</div>
+<div class="form-group">
+<label>難度</label>
+<div class="rating-dots" id="difficulty-rating" data-rating="3">
+<div class="rating-dot" data-value="1"></div>
+<div class="rating-dot" data-value="2"></div>
+<div class="rating-dot" data-value="3"></div>
+<div class="rating-dot" data-value="4"></div>
+<div class="rating-dot" data-value="5"></div>
+</div>
+</div>
+<div class="form-group">
+<label for="ai-prompt">主題</label>
+<textarea id="ai-prompt" placeholder="可輸入主題，留空則隨機推薦..."></textarea>
+</div>
+<button id="ai-search-btn" class="ai-search-btn">
+<span class="btn-text">尋找篇章</span>
+</button>
+<hr class="section-divider">
+<h2 class="section-title">或 手動輸入文言篇章</h2>
+<textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..."></textarea>
+<div class="button-group">
+<button id="translate-btn">
+<i class="fas fa-language"></i> 翻譯
+</button>
+<button id="clear-btn" class="clear-btn">
+<i class="fas fa-eraser"></i> 清除
+</button>
+</div>
+<div class="error-message" id="error-message"></div>
+</div>
+<div class="output-section">
+<div class="output-header">
+<h2 class="section-title">翻譯結果</h2>
+<button id="toggle-translations-btn" class="toggle-translations-btn" style="display: none;" title="顯示所有翻譯及解釋">
+<i class="fas fa-eye"></i>
+</button>
+</div>
+<div class="loading" id="loading">
+<div class="spinner"></div>
+<p>正在生成中，請稍候...</p>
+</div>
+<div id="output-content">
+<div id="introduction-area" class="content-group-container"></div>
+<div id="translation-area" class="content-group-container"></div>
+</div>
+</div>
+<footer>
+<div class="copyright-footer">
+<p>Copyright © 2025 黃子謙、陳冠健. All rights reserved</p>
+</div>
+</footer>
+</div>
+<!-- 懸浮式原文顯示 -->
+<div id="floating-original" class="floating-original resizable">
+<div class="floating-header">
+<div class="floating-title">原文</div>
+<div class="floating-controls">
+<button id="floating-toggle" class="floating-toggle" title="關閉懸浮窗">
+<i class="fas fa-times"></i>
+</button>
+</div>
+</div>
+<div class="floating-content">
+<div id="floating-original-text" class="floating-original-text"></div>
+</div>
+</div>
+<!-- 重新開啟懸浮窗按鈕 -->
+<button id="reopen-floating" class="reopen-floating" title="開啟原文懸浮窗">
+<i class="fas fa-scroll"></i>
+</button>
+<!-- 歷史紀錄彈出層 (Modal) -->
+<div class="history-modal" id="history-modal">
+<div class="history-container">
+<div class="history-header">
+<h2>閱讀紀錄</h2>
+<button class="icon-btn" id="history-close-btn" title="關閉">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="history-controls">
+<input type="search" id="history-search" placeholder="搜尋標題或作者...">
+<select id="history-sort">
+<option value="date_desc">按生成日期 (新到舊)</option>
+<option value="date_asc">按生成日期 (舊到新)</option>
+</select>
+</div>
+<ul class="history-list" id="history-list"></ul>
+<button class="icon-btn" id="delete-all-history-btn" title="刪除全部紀錄" style="margin-top: 1rem; align-self: flex-end;">
+<i class="fas fa-trash-alt"></i> 刪除全部
+</button>
+</div>
+</div>
+
+<!-- 模式選擇彈出層 (Modal) -->
+<div id="mode-selection-modal" class="history-modal">
+<div class="history-container" style="max-width: 400px; text-align: center;">
+<div class="history-header">
+<h2 id="mode-selection-title">選擇模式</h2>
+<button class="icon-btn" id="mode-selection-close-btn" title="關閉">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<p style="margin: 20px 0 30px;">請選擇模式：</p>
+<div class="button-group" style="flex-direction: column; gap: 20px;">
+<button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
+<button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
+<button id="game-mode-btn" style="width: 100%; background: linear-gradient(135deg, #A3B3FF, #7C86FF);"><i class="fas fa-gamepad"></i> 遊戲模式</button>
+</div>
+</div>
+</div>
+
+<!-- 測試結果覆蓋層 -->
+<div id="test-result-overlay">
+<div id="test-result-content">
+<!-- 內容由 JS 動態生成 -->
+</div>
+</div>
+
+<!-- ===== 3D 打磚塊遊戲模式 Modal ===== -->
+<div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; color: var(--text-color); cursor: default;">
+<div id="game-canvas-container" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
+
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+<!-- 頁面頂部 (Top of Page) -->
+<!--修訂：減少 padding-top 以便將容器上移，使其不超出頂部牆界-->
+<div id="game-top-area" style="width: 100%; text-align: center; padding: 15px 20px;">
+<div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 5px; color: var(--text-color);">
+<div id="game-score" style="flex: 1; text-align: left;">分數: 0</div>
+<button id="game-close-icon-btn" title="關閉遊戲">
+<i class="fas fa-times"></i>
+</button>
+<div id="game-lives" style="flex: 1; text-align: right;">生命: ♥ ♥ ♥</div>
+</div>
+<!--修訂：增加 max-width 和 width，使容器寬度與頁面（遊戲區域）更相符-->
+<div id="game-question-container" style="background: rgba(255, 255, 255, 0.5); border-radius: var(--border-radius-small); padding: 10px 20px; box-shadow: var(--shadow-light); max-width: 800px; width: 95%; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(127, 179, 213, 0.2);">
+    <div id="game-question" style="font-size: clamp(26px, 2.5vw, 32px); text-align: left; font-family: 'Noto Serif TC', serif; line-height: 1.5; color: var(--text-color); width: 100%;"></div>
+</div>
+</div>
+
+<div id="game-loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto;">
+<div class="spinner" style="width: 80px; height: 80px; border-top-color: var(--primary-color); margin: 0 auto 20px;"></div>
+<p style="font-size: 24px; color: var(--text-color);">正在準備遊戲，請稍候...</p>
+</div>
+
+<div id="game-over-screen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #2c3e50; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; pointer-events: auto; color: white;">
+<h2 style="font-size: clamp(32px, 5vw, 48px); font-family: 'Noto Serif TC', serif;">遊戲結束</h2>
+<p id="game-final-score" style="font-size: clamp(24px, 3.5vw, 32px); margin: 20px 0;">最終得分: 0</p>
+<div class="button-group" style="flex-direction: row; justify-content: center; gap: 20px;">
+<button id="game-restart-btn">重新開始</button>
+<button id="game-close-btn" class="clear-btn">關閉遊戲</button>
+</div>
+</div>
+</div>
+
+<!-- 半透明觸控面板，增加提示圖示 -->
+<div class="game-touch-panel-container">
+	<div id="game-touch-left" class="game-touch-panel">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+	<div id="game-touch-right" class="game-touch-panel">
+        <i class="fas fa-chevron-right"></i>
+    </div>
+</div>
+</div>
+
+<script>
+// API 配置信息
+
+	const API_KEYS = [
+   "c43794c4fd6f460c9e154f81034e6ae4.0tLyirbYWKDqUAcw"
+
+
+];
+// let currentApiKeyIndex = 0; // 這個變數不再需要，可以刪除或註解掉
+const API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+const MODEL = "glm-4.7-flash";
+
+// 懸浮窗狀態管理
+let isFloatingEnabled = true;
+let currentOriginalTexts = [];
+
+// App 狀態管理
+const HISTORY_KEY = 'wenshu_history_v3';
+let state = {
+difficulty: 3,
+history: [],
+};
+
+// 測試模式狀態變數
+let testState = {
+isActive: false,
+chances: 7,
+mistakesFound: 0,
+totalMistakes: 5,
+currentItemId: null,
+wronglyClickedItems: [],
+mistakeItems: [],
+};
+
+// ===== 遊戲模式狀態變數 =====
+let gameState = {
+isActive: false,
+isBallLaunched: false,
+lives: 3,
+score: 0,
+baseSpeed: 0.22, // MODIFIED: 預設速度稍為加快
+speedMultiplier: 1.0, 
+currentItemId: null,
+};
+
+
+document.addEventListener('DOMContentLoaded', function() {
+// --- DOM Elements ---
+const translateBtn = document.getElementById('translate-btn');
+const clearBtn = document.getElementById('clear-btn');
+const toggleTranslationsBtn = document.getElementById('toggle-translations-btn');
+const classicalText = document.getElementById('classical-text');
+const loading = document.getElementById('loading');
+const errorMessage = document.getElementById('error-message');
+const introductionArea = document.getElementById('introduction-area');
+const translationArea = document.getElementById('translation-area');
+const floatingOriginal = document.getElementById('floating-original');
+const floatingToggle = document.getElementById('floating-toggle');
+const floatingOriginalText = document.getElementById('floating-original-text');
+const reopenFloating = document.getElementById('reopen-floating');
+const aiSearchBtn = document.getElementById('ai-search-btn');
+const difficultyRating = document.getElementById('difficulty-rating');
+const ratingDots = difficultyRating.querySelectorAll('.rating-dot');
+const aiPromptTextarea = document.getElementById('ai-prompt');
+const historyModal = document.getElementById('history-modal');
+const historyCloseBtn = document.getElementById('history-close-btn');
+const historyList = document.getElementById('history-list');
+const historySearch = document.getElementById('history-search');
+const historySort = document.getElementById('history-sort');
+const deleteAllHistoryBtn = document.getElementById('delete-all-history-btn');
+const historyIconBtn = document.getElementById('history-icon-btn');
+
+// --- 模式選擇 DOM Elements ---
+const modeSelectionModal = document.getElementById('mode-selection-modal');
+const modeSelectionCloseBtn = document.getElementById('mode-selection-close-btn');
+const modeSelectionTitle = document.getElementById('mode-selection-title');
+const readModeBtn = document.getElementById('read-mode-btn');
+const testModeBtn = document.getElementById('test-mode-btn');
+const testResultOverlay = document.getElementById('test-result-overlay');
+
+// --- 遊戲模式 DOM Elements ---
+const gameModeBtn = document.getElementById('game-mode-btn');
+const gameModal = document.getElementById('game-modal');
+const gameCanvasContainer = document.getElementById('game-canvas-container');
+const gameLoader = document.getElementById('game-loader');
+const gameOverScreen = document.getElementById('game-over-screen');
+const gameQuestion = document.getElementById('game-question');
+const gameLives = document.getElementById('game-lives');
+const gameScore = document.getElementById('game-score');
+const gameFinalScore = document.getElementById('game-final-score');
+const gameRestartBtn = document.getElementById('game-restart-btn');
+const gameCloseBtn = document.getElementById('game-close-btn');
+const gameCloseIconBtn = document.getElementById('game-close-icon-btn');
+
+
+// --- Initialization ---
+initializeApp();
+
+// --- Main App Initializer ---
+function initializeApp() {
+loadHistory();
+initFloatingWindow();
+updateRatingDots();
+setupEventListeners();
+autoResizeTextarea.call(classicalText);
+autoResizeTextarea.call(aiPromptTextarea);
+}
+
+function setupEventListeners() {
+translateBtn.addEventListener('click', handleManualTranslateClick);
+clearBtn.addEventListener('click', handleClearClick);
+toggleTranslationsBtn.addEventListener('click', handleToggleTranslations);
+window.addEventListener('resize', handleWindowResize);
+classicalText.addEventListener('input', autoResizeTextarea);
+aiPromptTextarea.addEventListener('input', autoResizeTextarea);
+floatingToggle.addEventListener('click', handleFloatingToggle);
+reopenFloating.addEventListener('click', handleReopenFloating);
+if (getDeviceType() === 'mobile') {
+floatingOriginal.addEventListener('mousedown', startResize);
+floatingOriginal.addEventListener('touchstart', startResize);
+}
+aiSearchBtn.addEventListener('click', handleAiSearch);
+ratingDots.forEach(dot => {
+dot.addEventListener('click', () => {
+state.difficulty = parseInt(dot.dataset.value);
+difficultyRating.dataset.rating = state.difficulty;
+updateRatingDots();
+});
+dot.addEventListener('mouseover', () => {
+const hoverValue = parseInt(dot.dataset.value);
+ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverValue));
+});
+});
+difficultyRating.addEventListener('mouseout', updateRatingDots);
+historyIconBtn.addEventListener('click', showHistory); 
+historyCloseBtn.addEventListener('click', hideHistory);
+deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
+historyModal.addEventListener('click', (e) => {
+if (e.target === historyModal) hideHistory();
+});
+historyList.addEventListener('click', handleHistoryListClick);
+historySearch.addEventListener('input', renderHistory);
+historySort.addEventListener('change', renderHistory);
+
+// --- 模式選擇事件監聽 ---
+modeSelectionCloseBtn.addEventListener('click', hideModeSelection);
+modeSelectionModal.addEventListener('click', (e) => {
+if (e.target === modeSelectionModal) hideModeSelection();
+});
+readModeBtn.addEventListener('click', handleReadMode);
+testModeBtn.addEventListener('click', handleTestMode);
+testResultOverlay.addEventListener('click', () => {
+testResultOverlay.classList.remove('is-visible');
+});
+translationArea.addEventListener('click', handleTestAnswer);
+
+// --- 遊戲模式事件監聽 ---
+gameModeBtn.addEventListener('click', prepareGame);
+gameCloseBtn.addEventListener('click', closeGame);
+gameCloseIconBtn.addEventListener('click', closeGame);
+gameRestartBtn.addEventListener('click', () => {
+gameOverScreen.style.display = 'none';
+prepareGame();
+});
+
+// ===== 新增：文言文輸入懸浮視窗與 OCR 邏輯 =====
+
+// 1. 獲取相關 DOM 元素
+const classicalTextInput = document.getElementById('classical-text');
+const ocrModal = document.getElementById('ocr-input-modal');
+const ocrModalTextarea = document.getElementById('ocr-modal-textarea');
+const ocrModalSaveBtn = document.getElementById('ocr-modal-save-btn');
+const ocrModalCloseBtn = document.getElementById('ocr-modal-close-btn');
+const ocrModalOcrBtn = document.getElementById('ocr-modal-ocr-btn');
+
+let ocrWindow = null; // 用於存放 OCR 子視窗的參照
+const OCR_TOOL_URL = 'https://gemini-ocr-proxy.vercel.app/'; // 您的 OCR 工具 URL
+
+// 2. 為原文輸入框添加點擊事件監聽
+classicalTextInput.addEventListener('click', (event) => {
+    event.preventDefault(); // 防止可能的預設行為
+    openOcrModal();
+});
+
+// 3. 定義開啟懸浮視窗的函數
+function openOcrModal() {
+    // 將原文輸入框的現有內容，複製到懸浮視窗的 textaera 中
+    ocrModalTextarea.value = classicalTextInput.value;
+    
+    // 顯示懸浮視窗
+    ocrModal.style.display = 'flex';
+    ocrModalTextarea.focus(); // 自動聚焦，方便用戶立即輸入
+}
+
+// 4. 定義關閉懸浮視窗的函數
+function closeOcrModal() {
+    ocrModal.style.display = 'none';
+}
+
+// 5. 定義保存並關閉的函數
+function saveAndCloseOcrModal() {
+    // 將懸浮視窗 textaera 的內容，回寫到原文輸入框
+    classicalTextInput.value = ocrModalTextarea.value;
+    
+    // 手動觸發 input 事件，以確保 autoResizeTextarea 等相關監聽器能夠被觸發
+    classicalTextInput.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    closeOcrModal();
+}
+
+// 6. 為懸浮視窗的各個按鈕綁定事件
+ocrModalSaveBtn.addEventListener('click', saveAndCloseOcrModal);
+ocrModalCloseBtn.addEventListener('click', closeOcrModal);
+ocrModal.addEventListener('click', (event) => {
+    // 如果點擊的是半透明的背景層，則關閉視窗
+    if (event.target === ocrModal) {
+        closeOcrModal();
+    }
+});
+
+// 7. OCR 功能邏輯
+ocrModalOcrBtn.addEventListener('click', () => {
+    if (ocrWindow && !ocrWindow.closed) {
+        ocrWindow.focus();
+        return;
+    }
+    // 打開一個新的子視窗來載入 OCR 工具
+    ocrWindow = window.open(OCR_TOOL_URL, 'OCRWindow', 'width=650,height=850,scrollbars=yes,resizable=yes');
+});
+
+// 8. 監聽來自 OCR 子視窗的訊息
+window.addEventListener('message', (event) => {
+    // 安全性檢查：確保訊息來自於我們信任的 OCR 工具源
+    if (event.origin !== new URL(OCR_TOOL_URL).origin) {
+        return;
+    }
+
+    // 檢查訊息格式是否為我們定義的 OCR 結果
+    if (event.data && event.data.type === 'ocrResult') {
+        const ocrText = event.data.text;
+        
+        // 將辨識結果附加到懸浮視窗的 textarea 中
+        ocrModalTextarea.value += (ocrModalTextarea.value.trim() ? '\n\n' : '') + ocrText;
+        
+        // 收到結果後，自動關閉 OCR 子視窗
+        if (ocrWindow) {
+            ocrWindow.close();
+        }
+        
+        // 將焦點移回輸入框，方便用戶繼續編輯
+        ocrModalTextarea.focus();
+    }
+});
+
+	
+}
+
+
+
+
+
+// --- Event Handlers & Core Logic ---
+function autoResizeTextarea() {
+this.style.height = 'auto';
+this.style.height = (this.scrollHeight) + 'px';
+}
+
+function handleManualTranslateClick() {
+const text = classicalText.value.trim();
+if (!text) {
+showError('請輸入文言文內容');
+return;
+}
+const articleInfo = {
+title: `手動輸入: ${text.substring(0, 15)}...`,
+author: 'N/A',
+content: text,
+isManual: true,
+id: new Date().toISOString()
+};
+processAndDisplay(articleInfo);
+}
+
+async function handleAiSearch() {
+setAiSearchLoading(true);
+hideError();
+try {
+const article = await generateProse();
+if (article && article.title && article.content) {
+await processAndDisplay(article);
+} else {
+showError("AI 未能返回有效的篇章，請稍後再試。");
+}
+} catch (error) {
+console.error('AI 尋找篇章時發生錯誤:', error);
+showError(`AI 尋找篇章時發生錯誤: ${error.message}`);
+} finally {
+setAiSearchLoading(false);
+}
+}
+
+function handleClearClick() {
+classicalText.value = '';
+aiPromptTextarea.value = '';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+currentOriginalTexts = [];
+hideFloatingOriginal();
+hideError();
+toggleTranslationsBtn.style.display = 'none';
+translationArea.classList.remove('test-mode');
+const counter = document.querySelector('.test-chances-counter');
+if (counter) counter.remove();
+autoResizeTextarea.call(classicalText);
+autoResizeTextarea.call(aiPromptTextarea);
+}
+
+function handleToggleTranslations() {
+if (testState.isActive) return;
+
+const sentences = document.querySelectorAll('.hidden-text');
+const explanations = document.querySelectorAll('.explanation');
+if (sentences.length === 0 && explanations.length === 0) return;
+
+const areRevealed = sentences.length > 0 ? sentences[0].classList.contains('revealed') : explanations[0].classList.contains('revealed');
+
+sentences.forEach(s => s.classList.toggle('revealed', !areRevealed));
+explanations.forEach(e => e.classList.toggle('revealed', !areRevealed));
+
+const icon = toggleTranslationsBtn.querySelector('i');
+if (!areRevealed) {
+icon.className = 'fas fa-eye-slash';
+toggleTranslationsBtn.title = '隱藏所有翻譯及解釋';
+} else {
+icon.className = 'fas fa-eye';
+toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
+}
+}
+
+
+function handleWindowResize() {
+initFloatingWindow();
+if (currentOriginalTexts.length > 0) {
+showFloatingOriginal();
+}
+// Handle game resize if active
+if (gameState.isActive && game.camera) {
+const width = gameCanvasContainer.clientWidth;
+const height = gameCanvasContainer.clientHeight;
+const isMobile = window.innerWidth <= 768;
+
+game.camera.aspect = width / height;
+// 修改：將手機的攝影機拉得更遠，從 55 改為 68
+game.camera.position.z = isMobile ? 80 : 35; // Adjust camera on resize
+game.camera.updateProjectionMatrix();
+
+game.renderer.setSize(width, height);
+game.labelRenderer.setSize(width, height);
+}
+}
+
+
+async function processAndDisplay(articleInfo) {
+loading.style.display = 'block';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+hideError();
+translateBtn.disabled = true;
+aiSearchBtn.disabled = true;
+
+classicalText.value = articleInfo.content;
+autoResizeTextarea.call(classicalText);
+
+let introContent = '';
+let translationContent = '';
+
+if (!articleInfo.isManual) {
+try {
+const intros = await generateIntroductions(articleInfo.title, articleInfo.author);
+introContent = formatIntroHtml(intros);
+} catch (introError) {
+console.error('生成簡介時發生錯誤:', introError);
+introContent = formatIntroHtml({
+authorIntro: '（作者簡介生成失敗，請稍後再試。）',
+articleIntro: '（文章簡介生成失敗，請稍後再試。）'
+});
+}
+}
+introductionArea.innerHTML = introContent;
+
+try {
+const translationData = await fetchTranslationData(articleInfo.content);
+translationContent = formatTranslationResult(translationData);
+} catch (translationError) {
+console.error('生成翻譯時發生錯誤:', translationError);
+showError(`翻譯過程中發生錯誤: ${translationError.message}`);
+translationContent = `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯失敗，請稍後重試或重新生成。</div>`;
+}
+translationArea.innerHTML = translationContent;
+
+setupDynamicContent();
+addToHistory({
+...articleInfo,
+id: articleInfo.id || new Date().toISOString(),
+introHtml: introContent,
+translationHtml: translationContent,
+testSuccess: articleInfo.testSuccess || false,
+});
+
+loading.style.display = 'none';
+translateBtn.disabled = false;
+aiSearchBtn.disabled = false;
+}
+
+// --- API Calling ---
+async function callApi(prompt) {
+    // 檢查 API_KEYS 陣列是否為空
+    if (API_KEYS.length === 0 || !API_KEYS[0]) {
+        throw new Error('請在 API_KEYS 陣列中設定至少一個有效的 API Key。');
+    }
+
+    // 從 API_KEYS 陣列中隨機抽取一個 KEY
+    const apiKey = API_KEYS[Math.floor(Math.random() * API_KEYS.length)];
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}` // 使用隨機抽取的 apiKey
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{
+                    role: "user",
+                    content: prompt
+                }],
+                temperature: 0.5,
+                max_tokens: 64000
+            })
+        });
+        if (!response.ok) throw new Error(`API 請求失敗: ${response.status}`);
+        const data = await response.json();
+        if (data.error) throw new Error(`API 返回錯誤: ${data.error.message}`);
+        return data;
+    } catch (error) {
+        // 將原始錯誤向上拋出，由 callApiWithRetry 函式來決定是否重試。
+        // 每次重試時，都會重新執行此函式並再次隨機抽取一個 Key。
+        console.error('API 調用錯誤:', error);
+        throw error;
+    }
+}
+
+function extractJson(text) {
+const startIndex = text.indexOf('{');
+const endIndex = text.lastIndexOf('}');
+if (startIndex > -1 && endIndex > -1 && endIndex > startIndex) {
+const jsonString = text.substring(startIndex, endIndex + 1);
+try {
+return JSON.parse(jsonString);
+} catch (e) {
+console.error("無法解析提取的 JSON 字串:", jsonString, e);
+throw new Error("API 返回了格式錯誤的 JSON。");
+}
+}
+console.error("在API回應中找不到有效的JSON對象:", text);
+throw new Error("API 回應中不包含有效的 JSON 對象。");
+}
+
+async function callApiWithRetry(prompt, retries = 3) {
+let lastError = null;
+for (let i = 0; i < retries; i++) {
+try {
+console.log(`JSON API 呼叫嘗試 ${i + 1}/${retries}...`);
+const response = await callApi(prompt);
+if (response && response.choices && response.choices[0].message.content) {
+const content = response.choices[0].message.content;
+const jsonData = extractJson(content);
+return jsonData;
+} else {
+throw new Error("API 回應為空或格式不正確。");
+}
+} catch (error) {
+lastError = error;
+console.error(`嘗試 ${i + 1} 失敗:`, error.message);
+if (i < retries - 1) {
+console.log("正在重試...");
+await new Promise(resolve => setTimeout(resolve, 500));
+}
+}
+}
+console.error("所有 JSON API 呼叫嘗試均失敗。");
+throw lastError || new Error(`經過 ${retries} 次重試後，所有 JSON API 呼叫均失敗。`);
+}
+
+async function generateProse() {
+const userPromptText = aiPromptTextarea.value.trim();
+const historyTitles = state.history.map(item => item.title).filter(t => !t.startsWith('手動輸入'));
+const promptInstruction = userPromptText ? `用戶的個性化主題要求： "${userPromptText}"。` : '請隨機推薦一篇符合上述難度的文章。';
+const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。
+用戶的文學鑑賞難度偏好（1星最淺白，5星最艱深）：${state.difficulty}顆星。
+${promptInstruction}
+已閱覽過的文章標題（請勿重複推薦）：[${historyTitles.join(', ')}]
+重要指示：
+1. 你必須找出現實世界中，由真實作家所寫的文言文作品。禁止虛構內容。
+2. 節錄の段落長度需適中，適合一次閱讀完畢。
+3. 你的回傳內容必須嚴格遵循以下 JSON 格式，不要包含任何 markdown 語法或額外說明。
+4. 所有文字都必須是繁體中文。
+JSON 格式如下：
+{
+"title": "作品標題",
+"author": "作家姓名",
+"content": "完整的文言文節錄段落"
+}`;
+const article = await callApiWithRetry(systemPrompt, 3);
+if (article && typeof article.title === 'string' && typeof article.content === 'string' && typeof article.author === 'string') {
+return { ...article, isManual: false };
+}
+throw new Error("API 返回的 JSON 物件結構不正確。");
+}
+
+async function generateIntroductions(title, author) {
+const prompt = `你是一個負責生成 JSON 資料的 AI。根據以下提供的作品標題和作者，生成一段作者簡介和文章簡介。
+作品標題: "${title}"
+作者: "${author}"
+嚴格遵循以下要求：
+- 您的回覆 **必須** 是一個單一的 JSON 物件。
+- JSON 物件必須包含 "authorIntro" 和 "articleIntro" 兩個鍵。
+- 鍵值必須是使用繁體中文書寫的簡介文字，長度約 50 到 100 字。
+- **絕對不要** 在 JSON 物件前後添加任何說明、註釋或 markdown 語法（例如 \`\`\`json）。
+範例輸出格式：
+{
+"authorIntro": "（此處為關於作者的簡介）",
+"articleIntro": "（此處為關於文章的簡介）"
+}`;
+try {
+const intros = await callApiWithRetry(prompt, 3);
+if (intros && typeof intros.authorIntro === 'string' && typeof intros.articleIntro === 'string') {
+return intros;
+} else {
+throw new Error("返回的簡介 JSON 物件結構不正確。");
+}
+} catch (error) {
+console.error("生成簡介失敗 (多次重試後):", error);
+throw error;
+}
+}
+
+async function fetchTranslationData(text) {
+const prompt = `你是一個專門生成 JSON 的 AI。請將以下文言文的每一句（以標點符號如 ，。？！；： 分隔）進行分析，並嚴格按照指定的 JSON 格式輸出。
+
+你的回覆**必須**是一個單一的、完整的 JSON 物件，不要包含任何 JSON 區塊之外的說明或 markdown 語法，而且必須用繁體中文輸出。
+
+JSON 物件應包含一個名為 "translations" 的 key，其值為一個陣列 (array)。陣列中的每個元素都是一個物件，代表原文中的一個句子片段。每個句子物件都必須包含以下三個 key：
+1. \`"original"\`：字串 (string)，包含原始的文言文句子片段。
+2. \`"translation"\`：字串 (string)，包含該片段的完整白話文翻譯。
+3. \`"breakdown"\`：一個字串陣列 (array of strings)，其中每個字串是對句子中一個詞的解釋，格式為「詞：解釋」。「解釋」在去除標點符號後，不可以與「詞」完全一樣，反例如「遠：遠。」，合理例子如「遠：遙遠地。」。請將常見的文言實詞或虛詞用 markdown 粗體標示，例如「**之**：的」。
+
+待處理的文言文如下：
+\`\`\`
+${text}
+\`\`\`
+
+範例輸出格式：
+{
+"translations": [
+{
+"original": "國無常強，無常弱。",
+"translation": "國家不會永遠強盛，也不會永遠衰弱。",
+"breakdown": [
+"國：國家。",
+"**無**：沒有，不會。",
+"常：永遠，恆常。",
+"強：強盛。",
+"弱：衰弱。"
+]
+},
+{
+"original": "奉法者強，則國強；",
+"translation": "遵循法令的人強大，國家就會強盛；",
+"breakdown": [
+"奉：遵守、遵循。",
+"法：法令。",
+"者：...的人。",
+"強：強大。",
+"**則**：那麼，就。",
+"國：國家。",
+"強：強盛。"
+]
+}
+]
+}`;
+const translationJson = await callApiWithRetry(prompt, 3);
+if (!translationJson || !Array.isArray(translationJson.translations)) {
+throw new Error("API 返回的翻譯 JSON 結構不正確或為空。");
+}
+return translationJson;
+}
+
+// --- History Feature ---
+function loadHistory() {
+state.history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+}
+
+function saveHistory() {
+localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history));
+}
+
+function addToHistory(item) {
+const existingIndex = state.history.findIndex(h => h.id === item.id);
+if (existingIndex > -1) {
+state.history[existingIndex] = item;
+} else {
+state.history.unshift(item);
+}
+if (state.history.length > 50) state.history.pop();
+saveHistory();
+}
+
+
+function showHistory() {
+renderHistory();
+historyModal.classList.add('is-visible');
+}
+
+function hideHistory() {
+historyModal.classList.remove('is-visible');
+}
+
+function renderHistory() {
+let items = [...state.history];
+const term = historySearch.value.toLowerCase();
+if (term) {
+items = items.filter(i => i.title.toLowerCase().includes(term) || (i.author && i.author.toLowerCase().includes(term)));
+}
+items.sort((a, b) => {
+const dateA = new Date(a.id);
+const dateB = new Date(b.id);
+return historySort.value === 'date_asc' ? dateA - dateB : dateB - a;
+});
+historyList.innerHTML = items.length === 0 ?
+`<li class="no-history-msg">${term ? '找不到符合條件的紀錄。' : '目前沒有閱讀紀錄。'}</li>` :
+items.map(item => `
+<li data-history-id="${item.id}">
+<div class="history-item-content">
+<div class="history-list-item-title">
+<span>${item.title}</span>
+${item.testSuccess ? '<i class="fas fa-medal" title="挑戰成功" style="color: #f1c40f; margin-left: 8px; font-size: 1.1rem;"></i>' : ''}
+</div>
+<div class="history-list-item-meta">
+<span>${item.author === 'N/A' ? '手動輸入' : item.author}</span> | <span>${new Date(item.id).toLocaleDateString('zh-TW')}</span>
+</div>
+</div>
+<div class="history-item-actions">
+<button class="icon-btn regenerate-history-btn" title="重新生成">
+<i class="fas fa-sync-alt"></i>
+</button>
+<button class="icon-btn edit-history-btn" title="修訂標題">
+<i class="fas fa-pencil-alt"></i>
+</button>
+<button class="icon-btn delete-history-btn" title="刪除此紀錄">
+<i class="fas fa-trash-alt"></i>
+</button>
+</div>
+</li>`).join('');
+}
+
+function handleHistoryListClick(e) {
+const li = e.target.closest('li[data-history-id]');
+if (!li) return;
+
+const id = li.dataset.historyId;
+const item = state.history.find(h => h.id === id);
+if (!item) return;
+
+const deleteBtn = e.target.closest('.delete-history-btn');
+const regenerateBtn = e.target.closest('.regenerate-history-btn');
+const editBtn = e.target.closest('.edit-history-btn');
+const contentArea = e.target.closest('.history-item-content');
+
+if (deleteBtn) {
+if (confirm(`您確定要刪除「${item.title}」這篇紀錄嗎？`)) {
+state.history = state.history.filter(h => h.id !== id);
+saveHistory();
+renderHistory();
+}
+return;
+}
+
+if (regenerateBtn) {
+if (confirm(`您確定要重新生成「${item.title}」的翻譯結果嗎？這將會發起新的請求。`)) {
+hideHistory();
+processAndDisplay({...item, testSuccess: item.testSuccess || false});
+}
+return;
+}
+
+if (editBtn) {
+const titleSpan = li.querySelector('.history-list-item-title > span');
+const currentTitle = titleSpan.textContent;
+const input = document.createElement('input');
+input.type = 'text';
+input.className = 'history-title-edit';
+input.value = currentTitle;
+
+const saveChanges = () => {
+const newTitle = input.value.trim();
+if (newTitle && newTitle !== item.title) {
+item.title = newTitle;
+saveHistory();
+}
+renderHistory();
+};
+
+input.addEventListener('blur', saveChanges);
+input.addEventListener('keydown', (e) => {
+if (e.key === 'Enter') {
+input.blur();
+} else if (e.key === 'Escape') {
+renderHistory();
+}
+});
+
+titleSpan.replaceWith(input);
+input.focus();
+input.select();
+return;
+}
+
+if (contentArea) {
+showModeSelection(id);
+}
+}
+
+
+function handleDeleteAllHistory() {
+if (state.history.length === 0) return;
+if (confirm('您確定要刪除所有閱讀紀錄嗎？此操作無法復原。')) {
+state.history = [];
+saveHistory();
+renderHistory();
+}
+}
+
+// --- 模式選擇功能 ---
+function showModeSelection(itemId) {
+const item = state.history.find(h => h.id === itemId);
+if (!item) return;
+modeSelectionModal.dataset.currentItemId = itemId;
+modeSelectionTitle.textContent = item.title;
+modeSelectionModal.classList.add('is-visible');
+}
+
+function hideModeSelection() {
+modeSelectionModal.classList.remove('is-visible');
+}
+
+function handleReadMode() {
+const itemId = modeSelectionModal.dataset.currentItemId;
+const item = state.history.find(h => h.id === itemId);
+if(item) {
+hideModeSelection();
+loadContent(item);
+}
+}
+
+function handleTestMode() {
+const itemId = modeSelectionModal.dataset.currentItemId;
+const item = state.history.find(h => h.id === itemId);
+if(item) {
+hideModeSelection();
+startTestMode(item);
+}
+}
+
+function loadContent(item, callback) {
+hideHistory();
+loading.style.display = 'block';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+translationArea.classList.remove('test-mode');
+
+const existingCounter = document.querySelector('.test-chances-counter');
+if (existingCounter) existingCounter.remove();
+testState.isActive = false;
+
+setTimeout(() => {
+classicalText.value = item.content;
+autoResizeTextarea.call(classicalText);
+introductionArea.innerHTML = item.introHtml || '';
+translationArea.innerHTML = item.translationHtml || '';
+currentOriginalTexts = [];
+const originalTextElements = translationArea.querySelectorAll('.original-text');
+originalTextElements.forEach(el => {
+currentOriginalTexts.push(el.innerHTML);
+});
+setupDynamicContent();
+loading.style.display = 'none';
+if(typeof callback === 'function') {
+callback();
+}
+}, 200);
+}
+
+// --- 測試模式核心功能 ---
+function startTestMode(item) {
+loadContent(item, () => {
+prepareTestEnvironment(item.id);
+});
+}
+
+function prepareTestEnvironment(itemId) {
+translationArea.classList.add('test-mode');
+testState = {
+isActive: true,
+chances: 7,
+mistakesFound: 0,
+totalMistakes: 5,
+currentItemId: itemId,
+wronglyClickedItems: [],
+mistakeItems: [],
+};
+document.querySelectorAll('.explanation').forEach(el => el.classList.add('revealed'));
+const toggleIcon = toggleTranslationsBtn.querySelector('i');
+toggleIcon.className = 'fas fa-eye-slash';
+toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
+
+const allItems = Array.from(document.querySelectorAll('.character-item'));
+if (allItems.length < testState.totalMistakes) {
+showError("此篇章解釋數量不足，無法開啟測驗模式。");
+translationArea.classList.remove('test-mode');
+return;
+}
+
+const counterDiv = document.createElement('div');
+counterDiv.className = 'test-chances-counter';
+const firstChild = translationArea.firstChild;
+translationArea.insertBefore(counterDiv, firstChild);
+updateChancesCounter();
+
+const allExplanations = allItems.map(item => {
+const explanationSpan = item.querySelector('.explanation');
+return explanationSpan ? explanationSpan.textContent.trim() : '';
+});
+
+const shuffledIndices = [...Array(allItems.length).keys()].sort(() => 0.5 - Math.random());
+const mistakeIndices = shuffledIndices.slice(0, testState.totalMistakes);
+
+mistakeIndices.forEach(index => {
+const itemToCorrupt = allItems[index];
+const explanationSpan = itemToCorrupt.querySelector('.explanation');
+const originalText = explanationSpan.textContent;
+
+let newExplanation;
+let randomIndex;
+do {
+randomIndex = Math.floor(Math.random() * allExplanations.length);
+newExplanation = allExplanations[randomIndex];
+} while (newExplanation === originalText || !newExplanation);
+
+itemToCorrupt.dataset.isMistake = 'true';
+itemToCorrupt.dataset.originalExplanation = originalText;
+itemToCorrupt.dataset.corruptedExplanation = newExplanation;
+explanationSpan.textContent = newExplanation;
+testState.mistakeItems.push(itemToCorrupt);
+});
+}
+
+function handleTestAnswer(event) {
+if (!testState.isActive) return;
+const clickedItem = event.target.closest('.character-item');
+if (!clickedItem || clickedItem.dataset.answered) return;
+
+clickedItem.dataset.answered = 'true';
+const isMistake = clickedItem.dataset.isMistake === 'true';
+
+if (isMistake) {
+testState.mistakesFound++;
+clickedItem.classList.add('found-correctly');
+const explanationSpan = clickedItem.querySelector('.explanation');
+const correctText = clickedItem.dataset.originalExplanation;
+explanationSpan.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color);"></i> <strong>正確解釋：</strong> ${correctText}`;
+if (testState.mistakesFound === testState.totalMistakes) {
+handleTestSuccess();
+}
+} else {
+testState.chances--;
+clickedItem.classList.add('answered-incorrectly');
+testState.wronglyClickedItems.push(clickedItem);
+updateChancesCounter();
+if (testState.chances < (testState.totalMistakes - testState.mistakesFound)) {
+handleTestFailure();
+} else if (testState.chances === 0) {
+handleTestFailure();
+} else {
+const explanationSpan = clickedItem.querySelector('.explanation');
+explanationSpan.innerHTML = `<i class="fas fa-times-circle" style="color:var(--error-color);"></i> ${explanationSpan.textContent}`;
+}
+}
+}
+
+function updateChancesCounter() {
+const counterDiv = document.querySelector('.test-chances-counter');
+if (counterDiv) {
+counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤，剩餘機會: <span>${testState.chances}</span>`;
+}
+}
+
+function endTest() {
+testState.isActive = false;
+document.querySelectorAll('.character-item').forEach(item => item.dataset.answered = 'true');
+}
+
+function handleTestSuccess() {
+endTest();
+const item = state.history.find(h => h.id === testState.currentItemId);
+if(item) {
+item.testSuccess = true;
+addToHistory(item);
+renderHistory();
+}
+const resultDiv = document.getElementById('test-result-content');
+resultDiv.innerHTML = `
+<div class="success-icon"><i class="fas fa-trophy"></i></div>
+<h2>挑戰成功！</h2>
+<p>恭喜您找出所有錯誤解釋！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+`;
+testResultOverlay.classList.add('is-visible');
+}
+
+function handleTestFailure() {
+endTest();
+testState.mistakeItems.forEach(item => {
+if (item.classList.contains('found-correctly')) {
+item.classList.add('reveal-correct');
+return;
+}
+item.classList.add('reveal-correct');
+const explanationSpan = item.querySelector('.explanation');
+const corrupted = item.dataset.corruptedExplanation;
+const original = item.dataset.originalExplanation;
+explanationSpan.innerHTML = `原顯示錯誤解釋：<span class="original-mistake">${corrupted}</span><br><strong>正確解釋應為：<span class="correct-answer">${original}</span></strong>`;
+});
+testState.wronglyClickedItems.forEach(item => {
+item.classList.add('reveal-user-error');
+});
+const resultDiv = document.getElementById('test-result-content');
+resultDiv.innerHTML = `
+<div class="failure-icon"><i class="fas fa-times-circle"></i></div>
+<h2>挑戰失敗</h2>
+<p>別氣餒，再接再厲！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+`;
+setTimeout(() => {
+testResultOverlay.classList.add('is-visible');
+}, 500);
+}
+
+
+// --- UI & Display Formatting ---
+function setAiSearchLoading(isLoading) {
+aiSearchBtn.disabled = isLoading;
+const btnText = aiSearchBtn.querySelector('.btn-text');
+let loader = aiSearchBtn.querySelector('.loader');
+if (isLoading) {
+if (!loader) {
+loader = document.createElement('div');
+loader.className = 'loader';
+aiSearchBtn.insertBefore(loader, btnText);
+}
+btnText.textContent = '尋找中...';
+} else {
+if (loader) loader.remove();
+btnText.textContent = '尋找篇章';
+}
+}
+
+function showError(message) {
+errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+errorMessage.style.display = 'block';
+}
+
+function hideError() {
+errorMessage.style.display = 'none';
+}
+
+function updateRatingDots() {
+ratingDots.forEach(dot => {
+dot.classList.toggle('selected', dot.dataset.value <= state.difficulty);
+});
+}
+
+function setupDynamicContent() {
+setupWordExplanationToggle();
+setupSentenceReveal();
+
+const hasContentToToggle = document.querySelector('.hidden-text, .explanation');
+if (hasContentToToggle) {
+toggleTranslationsBtn.style.display = 'inline-flex';
+toggleTranslationsBtn.querySelector('i').className = 'fas fa-eye';
+toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
+} else {
+toggleTranslationsBtn.style.display = 'none';
+}
+showFloatingOriginal();
+}
+
+function setupWordExplanationToggle() {
+document.querySelectorAll('.character').forEach(character => {
+character.addEventListener('click', function(e) {
+if (translationArea.classList.contains('test-mode')) {
+e.stopPropagation();
+return;
+}
+this.nextElementSibling?.classList.toggle('revealed');
+});
+});
+}
+
+function setupSentenceReveal() {
+document.querySelectorAll('#translation-area .hidden-text').forEach(sentence => {
+sentence.addEventListener('click', function() {
+if (testState.isActive) return;
+this.classList.toggle('revealed');
+});
+});
+}
+
+
+function formatIntroHtml(intros) {
+if (!intros || (!intros.authorIntro && !intros.articleIntro)) return '';
+const authorHtml = intros.authorIntro ? `
+<div class="introduction-section">
+<div class="introduction-title"><i class="fas fa-user-edit"></i> 作者簡介</div>
+<div class="introduction-content">${intros.authorIntro.replace(/\n/g, '<br>')}</div>
+</div>` : '';
+const articleHtml = intros.articleIntro ? `
+<div class="introduction-section">
+<div class="introduction-title"><i class="fas fa-file-alt"></i> 文章簡介</div>
+<div class="introduction-content">${intros.articleIntro.replace(/\n/g, '<br>')}</div>
+</div>` : '';
+return `<div class="introduction-wrapper">${authorHtml}${articleHtml}</div>`;
+}
+
+function formatTranslationResult(data) {
+if (!data || !data.translations || !Array.isArray(data.translations) || data.translations.length === 0) {
+return `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯結果為空或格式不正確。</div>`;
+}
+
+currentOriginalTexts = [];
+let htmlOutput = '';
+
+data.translations.forEach(block => {
+if (!block.original || !block.translation || !block.breakdown) {
+console.warn('Skipping malformed translation block:', block);
+return;
+}
+
+currentOriginalTexts.push(block.original);
+
+const breakdownHtml = block.breakdown.map(line => {
+const parts = line.replace(/^\*+/, '').trim().split(/:|：/);
+if (parts.length >= 2) {
+const charPart = parts[0].trim().replace(/\*\*(.*?)\*\*/g, '$1');
+const explanationPart = parts.slice(1).join(':').trim();
+return `<div class="character-item">
+<span class="character">${charPart}</span><span class="explanation">：${explanationPart}</span>
+</div>`;
+}
+return `<div>${line}</div>`;
+}).join('');
+
+const translationSentences = block.translation.replace(/\n/g, '<br>').split('<br>').filter(s => s.trim());
+const translationHtml = translationSentences.map(sentence =>
+`<div class="sentence-container"><span class="hidden-text">${sentence.trim()}</span></div>`
+).join('');
+
+htmlOutput += `
+<div class="translation-block">
+<div class="original-title"><i class="fas fa-scroll"></i> 原文</div>
+<div class="original-text">${block.original.replace(/\n/g, '<br>')}</div>
+
+<div class="translation-title"><i class="fas fa-language"></i> 語譯</div>
+<div class="translation-text">${translationHtml}</div>
+
+<div class="character-breakdown">
+<strong><i class="fas fa-search"></i> 逐字解釋</strong>
+${breakdownHtml}
+</div>
+</div>`;
+});
+
+return htmlOutput;
+}
+
+// --- Floating Window ---
+function getDeviceType() {
+return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+}
+
+function initFloatingWindow() {
+if (getDeviceType() === 'mobile') {
+isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
+updateFloatingToggleIcon();
+updateReopenButton();
+} else {
+isFloatingEnabled = false;
+reopenFloating.style.display = 'none';
+}
+}
+
+function updateFloatingToggleIcon() {
+const icon = floatingToggle.querySelector('i');
+icon.className = isFloatingEnabled ? 'fas fa-times' : 'fas fa-expand';
+floatingToggle.title = isFloatingEnabled ? '關閉懸浮窗' : '開啟懸浮窗';
+}
+
+function updateReopenButton() {
+if (getDeviceType() === 'mobile') {
+reopenFloating.classList.toggle('show', !isFloatingEnabled && currentOriginalTexts.length > 0);
+}
+}
+
+function showFloatingOriginal() {
+if (getDeviceType() !== 'mobile' || !isFloatingEnabled || currentOriginalTexts.length === 0) {
+hideFloatingOriginal();
+return;
+}
+floatingOriginalText.innerHTML = currentOriginalTexts.join('<br><br>');
+floatingOriginal.classList.add('show');
+updateReopenButton();
+}
+
+function hideFloatingOriginal() {
+floatingOriginal.classList.remove('show');
+updateReopenButton();
+}
+
+function handleFloatingToggle() {
+if (getDeviceType() === 'mobile') {
+isFloatingEnabled = !isFloatingEnabled;
+localStorage.setItem('floatingEnabled', isFloatingEnabled);
+updateFloatingToggleIcon();
+isFloatingEnabled && currentOriginalTexts.length > 0 ? showFloatingOriginal() : hideFloatingOriginal();
+} else {
+hideFloatingOriginal();
+}
+}
+
+function handleReopenFloating() {
+isFloatingEnabled = true;
+localStorage.setItem('floatingEnabled', true);
+updateFloatingToggleIcon();
+showFloatingOriginal();
+}
+
+let isResizing = false,
+startY = 0,
+startHeight = 0;
+
+function startResize(e) {
+if (getDeviceType() !== 'mobile') return;
+const rect = floatingOriginal.getBoundingClientRect();
+const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+if (clientY > rect.bottom - 20) {
+isResizing = true;
+startY = clientY;
+startHeight = floatingOriginal.offsetHeight;
+document.addEventListener('mousemove', resize);
+document.addEventListener('touchmove', resize, {
+passive: false
+});
+document.addEventListener('mouseup', stopResize);
+document.addEventListener('touchend', stopResize);
+e.preventDefault();
+}
+}
+
+function resize(e) {
+if (!isResizing) return;
+e.preventDefault();
+const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+const newHeight = startHeight + (clientY - startY);
+if (newHeight >= 150 && newHeight <= window.innerHeight * 0.8) {
+floatingOriginal.style.height = newHeight + 'px';
+}
+}
+
+function stopResize() {
+isResizing = false;
+document.removeEventListener('mousemove', resize);
+document.removeEventListener('touchmove', resize);
+document.addEventListener('mouseup', stopResize);
+document.removeEventListener('touchend', stopResize);
+}
+
+// =================================================================
+// ===== 3D GAME MODE LOGIC (REVISED) ==============================
+// =================================================================
+
+let game = {}; // 全局遊戲物件
+let animationFrameId; // 動畫循環ID
+
+function prepareGame() {
+const itemId = modeSelectionModal.dataset.currentItemId;
+if (!itemId) {
+alert("找不到篇章內容，無法開始遊戲。");
+return;
+}
+
+gameState.currentItemId = itemId;
+hideModeSelection();
+hideHistory();
+
+gameLoader.style.display = 'flex';
+gameQuestion.textContent = ''; // Clear previous text
+
+// 使用 setTimeout 確保 UI 更新，並開始準備資料
+setTimeout(() => {
+const gameData = prepareGameData(itemId);
+
+if (!gameData) {
+gameLoader.style.display = 'none';
+alert("此篇章無足夠的「逐字解釋」內容來生成遊戲（至少需要4個不同解釋），請選擇其他篇章。");
+return;
+}
+
+// 將準備好的資料存到全域遊戲物件中
+game.questionQueue = gameData.questionQueue;
+game.allAnswers = gameData.allAnswers;
+
+gameLoader.style.display = 'none';
+gameModal.style.display = 'block';
+document.body.style.overflow = 'hidden'; 
+initGame();
+}, 100);
+}
+
+// 一次性準備所有遊戲資料的函數
+function prepareGameData(itemId) {
+const item = state.history.find(h => h.id === itemId);
+if (!item || !item.translationHtml) return null;
+
+const tempDiv = document.createElement('div');
+tempDiv.innerHTML = item.translationHtml;
+
+const allBreakdowns = [];
+tempDiv.querySelectorAll('.character-item').forEach(b_item => {
+const character = b_item.querySelector('.character')?.textContent.trim();
+const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[。？！；：.,?!;:]/g, '');
+const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim().replace(/\*/g, '');
+
+// 確保問題和答案不會太長
+if (character && explanation && originalSentence && explanation.length < 10) {
+allBreakdowns.push({
+question: `在「${originalSentence}」中，「${character}」的意思是？`,
+answer: explanation
+});
+}
+});
+
+// 至少需要1個正確答案和3個不同的錯誤答案
+if (allBreakdowns.length < 4) return null; 
+
+// 提取所有不重複的答案作為答案池
+const allAnswers = [...new Set(allBreakdowns.map(b => b.answer))];
+
+// 如果去重後答案少于4個，也無法進行
+if (allAnswers.length < 4) return null;
+
+// 打亂問題順序
+const questionQueue = [...allBreakdowns].sort(() => Math.random() - 0.5);
+
+return { questionQueue, allAnswers };
+}
+
+function initGame() {
+if (typeof THREE === 'undefined') {
+alert("Three.js 函式庫未成功載入，無法啟動遊戲。");
+return;
+}
+
+// 清理舊場景
+if (game.renderer) {
+while(gameCanvasContainer.firstChild){
+gameCanvasContainer.removeChild(gameCanvasContainer.firstChild);
+}
+}
+if (animationFrameId) {
+cancelAnimationFrame(animationFrameId);
+}
+
+const isMobile = window.innerWidth <= 768;
+
+game.scene = new THREE.Scene();
+game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
+game.camera.position.z = isMobile ? 80 : 35;
+
+game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+game.renderer.setClearColor(0x000000, 0); 
+gameCanvasContainer.appendChild(game.renderer.domElement);
+
+game.labelRenderer = new THREE.CSS2DRenderer();
+game.labelRenderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+game.labelRenderer.domElement.style.position = 'absolute';
+game.labelRenderer.domElement.style.top = '0px';
+game.labelRenderer.domElement.style.pointerEvents = 'none';
+gameCanvasContainer.appendChild(game.labelRenderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+game.scene.add(ambientLight);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+directionalLight.position.set(5, 10, 7.5);
+game.scene.add(directionalLight);
+
+game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+game.bricksGroup = new THREE.Group();
+game.scene.add(game.bricksGroup);
+game.particles = new THREE.Group();
+game.scene.add(game.particles);
+
+createWalls();
+createPaddle();
+createBall();
+
+const moveHandler = (e) => onPointerMove(e.touches ? e.touches[0] : e);
+window.addEventListener('mousemove', moveHandler, false);
+window.addEventListener('touchmove', moveHandler, false);
+
+startGame();
+}
+
+function startGame() {
+gameState.isActive = true;
+gameState.lives = 3;
+gameState.score = 0;
+gameState.speedMultiplier = 1.0;
+updateHUD();
+
+clearBricks();
+loadNextQuestionAndBricks(); // Show first question immediately
+resetBallAndPaddle();
+
+gameOverScreen.style.display = 'none';
+
+if (animationFrameId) cancelAnimationFrame(animationFrameId);
+animate();
+}
+
+function launchBallOnClick() {
+if (!gameState.isActive || gameState.isBallLaunched) return;
+
+gameState.isBallLaunched = true;
+
+const initialAngle = (Math.random() * 0.6 - 0.3) * Math.PI;
+const speed = gameState.baseSpeed * gameState.speedMultiplier;
+game.ball.velocity = new THREE.Vector3(Math.sin(initialAngle) * speed, Math.cos(initialAngle) * speed, 0);
+
+playCollisionSound('paddle');
+}
+
+function closeGame() {
+gameState.isActive = false;
+if (animationFrameId) {
+cancelAnimationFrame(animationFrameId);
+}
+gameModal.style.display = 'none';
+gameOverScreen.style.display = 'none';
+document.body.style.overflow = 'auto'; 
+}
+
+
+function createWalls() {
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x733E0A, transparent: true, opacity: 0.5 });
+const worldWidth = 60; 
+const worldHeight = 45; 
+
+game.leftWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+game.leftWall.position.set(-worldWidth / 2, 0, 0);
+game.scene.add(game.leftWall);
+
+game.rightWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+game.rightWall.position.set(worldWidth / 2, 0, 0);
+game.scene.add(game.rightWall);
+
+game.topWall = new THREE.Mesh(new THREE.BoxGeometry(worldWidth, 1, 5), wallMaterial);
+game.topWall.position.set(0, worldHeight / 2, 0);
+game.scene.add(game.topWall);
+
+game.bottomBoundary = -worldHeight/2 + 2;
+}
+
+function createPaddle() {
+const geometry = new THREE.BoxGeometry(12, 1.2, 3);
+const material = new THREE.MeshStandardMaterial({ color: 0x7fb3d5, metalness: 0.5, roughness: 0.2 });
+game.paddle = new THREE.Mesh(geometry, material);
+game.scene.add(game.paddle);
+}
+
+function createBall() {
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+// MODIFIED: Changed ball color to the requested teal.
+const material = new THREE.MeshStandardMaterial({ color: 0x006400, emissive: 0x566573, metalness: 0.2, roughness: 0.1 });
+game.ball = new THREE.Mesh(geometry, material);
+
+const pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
+game.ball.add(pointLight);
+
+game.scene.add(game.ball);
+}
+
+function resetBallAndPaddle() {
+gameState.isBallLaunched = false;
+game.paddle.position.set(0, game.bottomBoundary + 2, 0);
+game.ball.position.set(0, game.paddle.position.y + 1.5, 0);
+game.ball.velocity = new THREE.Vector3(0, 0, 0);
+
+gameModal.addEventListener('click', launchBallOnClick, { once: true });
+}
+
+function onPointerMove(event) {
+if (!gameState.isActive) return;
+const pointerX = (event.clientX / window.innerWidth) * 2 - 1;
+const paddleLimit = game.rightWall.position.x - game.paddle.geometry.parameters.width / 2 - 1;
+game.paddle.position.x = THREE.MathUtils.clamp(pointerX * paddleLimit * 1.5, -paddleLimit, paddleLimit);
+
+if (!gameState.isBallLaunched) {
+game.ball.position.x = game.paddle.position.x;
+}
+}
+
+function clearBricks() {
+for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+const obj = game.bricksGroup.children[i];
+if (obj.isCSS2DObject && obj.element) {
+obj.element.remove();
+}
+game.bricksGroup.remove(obj);
+}
+}
+
+function loadNextQuestionAndBricks() {
+clearBricks();
+
+if (game.questionQueue.length === 0) {
+gameQuestion.textContent = "恭喜！已完成所有題目！";
+setTimeout(triggerGameOver, 2000);
+return;
+}
+
+const currentQA = game.questionQueue.shift();
+gameQuestion.textContent = currentQA.question;
+
+const correctAnswer = currentQA.answer;
+const wrongAnswerPool = game.allAnswers.filter(ans => ans !== correctAnswer);
+const incorrectAnswers = wrongAnswerPool.sort(() => Math.random() - 0.5).slice(0, 3);
+
+let brickData = [];
+brickData.push({ text: correctAnswer, isCorrect: true });
+incorrectAnswers.forEach(ans => {
+brickData.push({ text: ans, isCorrect: false });
+});
+
+const isMobile = window.innerWidth <= 768;
+const cols = isMobile ? 4 : 5;
+const rows = isMobile ? 5 : 4;
+const totalBricks = cols * rows;
+const answerBrickCount = brickData.length;
+
+for (let i = 0; i < totalBricks - answerBrickCount; i++) {
+brickData.push({ text: '', isCorrect: null }); // null for blank bricks
+}
+brickData.sort(() => Math.random() - 0.5);
+
+const brickWidth = 11;
+const brickHeight = 4;
+const colGap = 1;
+const rowGap = 1;
+const totalGridWidth = cols * brickWidth + (cols - 1) * colGap;
+const startX = -totalGridWidth / 2 + brickWidth / 2;
+const startY = game.topWall.position.y - 12;
+
+brickData.forEach((data, index) => {
+const r = Math.floor(index / cols);
+const c = index % cols;
+const x = startX + c * (brickWidth + colGap);
+const y = startY - r * (brickHeight + rowGap);
+createBrick(x, y, data.text, data.isCorrect);
+});
+}
+
+function createBrick(x, y, text, isCorrect) {
+const geometry = new THREE.BoxGeometry(10, 3, 2); 
+let material;
+
+if (isCorrect !== null) { // Answer bricks (correct or incorrect)
+material = new THREE.MeshStandardMaterial({ 
+color: 0xa9cce3, // Unified color for all answer bricks
+metalness: 0.3, 
+roughness: 0.4 
+});
+} else { // Blank bricks
+material = new THREE.MeshStandardMaterial({ 
+color: 0x566573, 
+metalness: 0.1, 
+roughness: 0.7, 
+transparent: true, 
+opacity: 0.7
+});
+}
+
+const brickMesh = new THREE.Mesh(geometry, material);
+brickMesh.position.set(x, y, 0);
+brickMesh.isBrick = true;
+brickMesh.isCorrect = isCorrect;
+brickMesh.hit = false;
+
+game.bricksGroup.add(brickMesh);
+
+if (isCorrect !== null) {
+const el = document.createElement('div');
+el.className = 'game-answer-brick';
+el.textContent = text;
+
+const label = new THREE.CSS2DObject(el);
+label.position.set(x, y, 1.01); // Slightly in front of the brick
+
+brickMesh.label = label;
+game.bricksGroup.add(label);
+}
+}
+
+function updateHUD() {
+gameScore.textContent = `分數: ${gameState.score}`;
+// ▼▼▼ 修改後的程式碼 ▼▼▼
+gameLives.innerHTML = `生命: <span style="color: #e74c3c;">${'♥ '.repeat(Math.max(0, gameState.lives))}</span>`;
+}
+
+function handleBallBrickCollision(brick) {
+if (brick.hit) return; 
+brick.hit = true;
+
+if (brick.label) {
+brick.label.element.style.transition = 'opacity 0.3s';
+brick.label.element.style.opacity = '0';
+setTimeout(() => {
+if (brick.label) {
+game.bricksGroup.remove(brick.label);
+brick.label.element.remove();
+}
+}, 300);
+}
+
+if (brick.isCorrect === true) {
+// MODIFIED: Handle correct answer hit
+playCollisionSound('correct');
+gameState.score += 100;
+// Increase speed multiplier for the next launch
+gameState.speedMultiplier = Math.min(2.5, gameState.speedMultiplier * 1.05);
+createParticleExplosion(brick.position, 0x2ecc71);
+updateHUD();
+game.bricksGroup.remove(brick);
+
+// Stop the ball's movement immediately
+game.ball.velocity.set(0, 0, 0);
+
+// After a delay, load next question and reset ball for a new serve
+setTimeout(() => {
+loadNextQuestionAndBricks();
+resetBallAndPaddle();
+}, 500);
+
+} else if (brick.isCorrect === false) { // Incorrect answer
+playCollisionSound('lose');
+createParticleExplosion(brick.position, 0xe74c3c); // Red explosion for error
+game.bricksGroup.remove(brick);
+loseLife(); 
+} else { // Blank bricks
+playCollisionSound('wall');
+gameState.score += 10;
+createParticleExplosion(brick.position, 0xaaaaaa);
+updateHUD();
+game.bricksGroup.remove(brick);
+}
+}
+
+
+function loseLife() {
+gameState.lives--;
+updateHUD();
+playCollisionSound('lose');
+if (gameState.lives <= 0) {
+triggerGameOver();
+} else {
+resetBallAndPaddle();
+}
+}
+
+function triggerGameOver() {
+gameState.isActive = false;
+game.ball.velocity.set(0,0,0);
+gameFinalScore.textContent = `最終得分: ${gameState.score}`;
+gameOverScreen.style.display = 'flex';
+}
+
+function animate() {
+animationFrameId = requestAnimationFrame(animate);
+if (!gameState.isActive) return;
+
+game.particles.children.forEach(p => {
+p.position.add(p.velocity);
+p.material.opacity -= 0.02;
+});
+game.particles.children = game.particles.children.filter(p => p.material.opacity > 0);
+
+if (gameState.isBallLaunched) {
+game.ball.position.add(game.ball.velocity);
+}
+
+const ballBox = new THREE.Box3().setFromObject(game.ball);
+
+// Wall collisions
+if (game.ball.position.x < game.leftWall.position.x + 1 || game.ball.position.x > game.rightWall.position.x - 1) {
+game.ball.velocity.x *= -1;
+playCollisionSound('wall');
+}
+if (game.ball.position.y > game.topWall.position.y - 1) {
+game.ball.velocity.y *= -1;
+playCollisionSound('wall');
+}
+
+// Bottom boundary (lose life)
+if (game.ball.position.y < game.bottomBoundary) {
+if(gameState.isBallLaunched) loseLife();
+}
+
+// Paddle collision
+const paddleBox = new THREE.Box3().setFromObject(game.paddle);
+if (ballBox.intersectsBox(paddleBox) && game.ball.velocity.y < 0) {
+game.ball.velocity.y *= -1;
+let offset = (game.ball.position.x - game.paddle.position.x) / (game.paddle.geometry.parameters.width / 2);
+game.ball.velocity.x = offset * gameState.baseSpeed * gameState.speedMultiplier;
+playCollisionSound('paddle');
+}
+
+// Brick collisions
+for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+const brick = game.bricksGroup.children[i];
+if (!brick.isBrick || brick.hit) continue;
+
+const brickBox = new THREE.Box3().setFromObject(brick);
+if (ballBox.intersectsBox(brickBox)) {
+const ballCenter = game.ball.position.clone();
+const brickCenter = brick.position.clone();
+const dx = ballCenter.x - brickCenter.x;
+const dy = ballCenter.y - brickCenter.y;
+const combinedHalfWidths = game.ball.geometry.parameters.radius + brick.geometry.parameters.width / 2;
+const combinedHalfHeights = game.ball.geometry.parameters.radius + brick.geometry.parameters.height / 2;
+
+if (Math.abs(dx) / combinedHalfWidths > Math.abs(dy) / combinedHalfHeights) {
+game.ball.velocity.x *= -1; 
+} else {
+game.ball.velocity.y *= -1;
+}
+
+handleBallBrickCollision(brick);
+break; 
+}
+}
+
+game.renderer.render(game.scene, game.camera);
+game.labelRenderer.render(game.scene, game.camera);
+}
+
+// --- 特效與音效 ---
+function createParticleExplosion(position, color) {
+const particleCount = 50;
+const particleMaterial = new THREE.PointsMaterial({ color: color, size: 0.5, transparent: true, blending: THREE.AdditiveBlending });
+
+for (let i = 0; i < particleCount; i++) {
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+let p = new THREE.Points(geometry, particleMaterial.clone());
+p.position.copy(position);
+p.velocity = new THREE.Vector3(
+(Math.random() - 0.5) * 0.2,
+(Math.random() - 0.5) * 0.2,
+(Math.random() - 0.5) * 0.2
+);
+game.particles.add(p);
+}
+}
+
+function playCollisionSound(type) {
+if (!game.audioContext || game.audioContext.state === 'suspended') {
+game.audioContext.resume().catch(e => console.error("Audio resume failed:", e));
+}
+if (!game.audioContext) return;
+const oscillator = game.audioContext.createOscillator();
+const gainNode = game.audioContext.createGain();
+oscillator.connect(gainNode);
+gainNode.connect(game.audioContext.destination);
+
+const now = game.audioContext.currentTime;
+gainNode.gain.setValueAtTime(0.3, now);
+
+switch (type) {
+case 'paddle':
+oscillator.frequency.setValueAtTime(200, now);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+break;
+case 'wall':
+oscillator.frequency.setValueAtTime(150, now);
+gainNode.gain.setValueAtTime(0.1, now);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+break;
+case 'correct':
+oscillator.type = 'square';
+oscillator.frequency.setValueAtTime(440, now);
+oscillator.frequency.linearRampToValueAtTime(880, now + 0.1);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+break;
+case 'lose':
+oscillator.type = 'sawtooth';
+oscillator.frequency.setValueAtTime(120, now);
+oscillator.frequency.linearRampToValueAtTime(60, now + 0.3);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+break;
+}
+oscillator.start(now);
+oscillator.stop(now + 0.4);
+}
+
+});
+</script>
+
+<!-- ===== 新增：文言文輸入懸浮視窗 ===== -->
+<div id="ocr-input-modal" class="ocr-modal-overlay">
+    <div class="ocr-modal-content">
+        <h3 id="ocr-modal-title">手動輸入文言篇章</h3>
+        <textarea id="ocr-modal-textarea"></textarea>
+        <div class="ocr-modal-buttons">
+            <button id="ocr-modal-ocr-btn" class="ocr-modal-btn ocr-btn-special">
+                <i class="fas fa-camera"></i> OCR
+            </button>
+            <button id="ocr-modal-save-btn" class="ocr-modal-btn ocr-btn-confirm">
+                <i class="fas fa-check"></i> 輸入
+            </button>
+        </div>
+        <button id="ocr-modal-close-btn" class="ocr-modal-close-btn" title="關閉">&times;</button>
+    </div>
+</div>
+
+	
+</body>
+</html>

@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文樞 - 古典文學互動學習平台（修訂版）</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #7fb3d5;
+            --secondary-color: #a2d9ce;
+            --accent-color: #a9cce3;
+            --highlight-color: #7dcea0;
+            --soft-color: #76d7c4;
+            --light-accent: #aed6f1;
+            --background-color: #f8fafa;
+            --text-color: #2c3e50;
+            --light-color: #ffffff;
+            --dark-color: #34495e;
+            --error-color: #e74c3c;
+            --shadow-light: 0 2px 12px rgba(127, 179, 213, 0.15);
+            --shadow-medium: 0 4px 24px rgba(127, 179, 213, 0.2);
+            --shadow-heavy: 0 8px 36px rgba(127, 179, 213, 0.25);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-secondary: linear-gradient(135deg, var(--highlight-color), var(--soft-color));
+            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--light-accent));
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(to bottom right, var(--background-color) 0%, #f0f8ff 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+
+
+.comment-section {
+    border-top: 1px solid rgba(127, 179, 213, 0.2);
+    padding-top: 1rem;
+}
+.comments-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+.comment {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.comment-input input {
+    border: 1px solid var(--light-accent);
+    outline: none;
+}
+.comment-input button {
+    transition: var(--transition);
+}
+.comment-input button:hover {
+    background: var(--primary-color);
+}
+
+        .translation-section {
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border-left: 5px solid;
+            background: linear-gradient(135deg, rgba(162, 217, 206, 0.2), rgba(118, 215, 196, 0.1));
+        }
+
+        .translation-section h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .translation-section .text-base {
+            font-size: 1rem;
+        }
+
+        .translation-section .leading-relaxed {
+            line-height: 1.625;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(127, 179, 213, 0.3);
+        }
+        
+        .gradient-primary { background: var(--gradient-primary); }
+        .gradient-secondary { background: var(--gradient-secondary); }
+        .gradient-accent { background: var(--gradient-accent); }
+        
+        .character-card {
+            transform: perspective(1000px) rotateY(0deg);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .character-card:hover {
+            transform: perspective(1000px) rotateY(-5deg) translateY(-10px);
+        }
+        
+        .locked-card {
+            filter: grayscale(100%) opacity(0.5);
+        }
+        
+        .unlocked-card {
+            animation: unlockGlow 2s ease-in-out;
+        }
+        
+        @keyframes unlockGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(127, 179, 213, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(127, 179, 213, 0.8); }
+        }
+        
+        .post-card {
+            transition: var(--transition);
+        }
+        
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .difficulty-badge {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .difficulty-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .difficulty-badge:hover::before {
+            left: 100%;
+        }
+
+        .max-container {
+            max-width: 90vw;
+            width: 90%;
+        }
+
+        .floating-original {
+            display: none;
+            position: fixed;
+            background: var(--light-color);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-heavy);
+            z-index: 1000;
+        }
+
+        @media (min-width: 769px) {
+            .floating-original {
+                top: 80px;
+                right: 5%;
+                width: 30%;
+                max-height: calc(100vh - 100px);
+                overflow-y: auto;
+            }
+            
+            .translation-main-content {
+                width: 65%;
+                margin-right: 35%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .floating-original {
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: none;
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+                border-top: none;
+                height: 33vh;
+                min-height: 150px;
+                resize: vertical;
+                overflow: hidden;
+            }
+            
+            .translation-main-content {
+                width: 100%;
+                margin-top: 35vh;
+                padding-top: 20px;
+            }
+
+            .floating-original.hidden-mobile {
+                display: none !important;
+            }
+
+            .translation-main-content.no-margin {
+                margin-top: 0;
+            }
+        }
+
+        .floating-original.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .floating-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .floating-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .floating-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .floating-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .floating-content {
+            padding: 16px;
+            overflow-y: auto;
+            height: calc(100% - 48px);
+        }
+
+        .floating-original-text {
+            font-family: 'Noto Serif TC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reopen-floating {
+            position: fixed;
+            background: var(--gradient-primary);
+            color: var(--light-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            z-index: 999;
+            display: none;
+            transition: var(--transition);
+        }
+
+        @media (min-width: 769px) {
+            .reopen-floating {
+                top: 80px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .reopen-floating {
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        .reopen-floating:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .reopen-floating.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hidden-text {
+            background: #ecf0f1;
+            color: #ecf0f1;
+            border-radius: 4px;
+            padding: 4px 8px;
+            transition: var(--transition);
+            user-select: none;
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            margin: 2px;
+            min-height: 1.5em;
+            min-width: 80px;
+        }
+
+        .hidden-text::before {
+            content: '點擊顯示';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+            font-size: 12px;
+            opacity: 1;
+            pointer-events: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .hidden-text:hover {
+            background: rgba(127, 179, 213, 0.2);
+        }
+
+        .hidden-text.revealed {
+            background: transparent;
+            color: var(--text-color);
+        }
+
+        .hidden-text.revealed::before {
+            display: none;
+        }
+
+        .common-word {
+            background: linear-gradient(135deg, rgba(127, 179, 213, 0.2), rgba(162, 217, 206, 0.2));
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .progress-display {
+            background: rgba(127, 179, 213, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid rgba(127, 179, 213, 0.2);
+        }
+
+        .progress-circles {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .progress-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-circle.completed {
+            background: var(--highlight-color);
+            color: white;
+        }
+
+        .character {
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px dotted var(--primary-color);
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .character:hover {
+            background: rgba(127, 179, 213, 0.1);
+        }
+
+        .explanation {
+            display: none;
+            padding-left: 20px;
+            color: var(--dark-color);
+            font-style: italic;
+            margin-top: 8px;
+            border-left: 3px solid var(--secondary-color);
+            padding: 8px 0 8px 15px;
+        }
+
+        .explanation.revealed {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 100px;
+            }
+        }
+
+        .character-item {
+            margin-bottom: 12px;
+            display: block;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(127, 179, 213, 0.1);
+        }
+
+        .character-item:last-child {
+            border-bottom: none;
+        }
+
+        .sentence-container {
+            margin-bottom: 15px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(127, 179, 213, 0.1);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-space {
+                padding-top: 35vh;
+            }
+
+            .mobile-top-space.no-space {
+                padding-top: 0;
+            }
+        }
+
+        /* 新增測試控制區域樣式 */
+        .test-control-panel {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: var(--gradient-accent);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--shadow-medium);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .test-control-panel h4 {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .test-control-panel button {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .test-control-panel button:hover {
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .test-control-panel input {
+            width: 100%;
+            padding: 6px 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .test-control-panel label {
+            color: white;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hide-test-panel {
+            display: none !important;
+        }
+
+        /* POST生成狀態提示 */
+        .post-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            z-index: 1001;
+            display: none;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .locked-character-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #856404;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 測試控制面板 -->
+    <div id="test-control-panel" class="test-control-panel">
+        <h4><i class="fas fa-cogs mr-2"></i>測試控制</h4>
+        
+        <button onclick="unlockAllCharacters()">
+            <i class="fas fa-unlock mr-2"></i>全部通關
+        </button>
+        
+        <button onclick="resetProgress()">
+            <i class="fas fa-redo mr-2"></i>重置進度
+        </button>
+        
+        <label for="post-interval">POST間距（分鐘）：</label>
+        <input type="number" id="post-interval" value="60" min="1" max="1440">
+        
+        <button onclick="updatePostInterval()">
+            <i class="fas fa-clock mr-2"></i>更新間距
+        </button>
+        
+        <button onclick="generateTestPost()">
+            <i class="fas fa-plus mr-2"></i>立即生成POST
+        </button>
+
+<button onclick="generateTestComment()">
+    <i class="fas fa-comment mr-2"></i>生成測試留言
+</button>
+
+<button onclick="triggerAICommentsForLatestPost()">
+    <i class="fas fa-comment mr-2"></i>觸發古人留言
+</button>
+
+        
+        <button onclick="toggleTestPanel()">
+            <i class="fas fa-eye-slash mr-2"></i>隱藏面板
+        </button>
+    </div>
+
+function triggerAICommentsForLatestPost() {
+    if (posts.length === 0) {
+        showNotification('請先創建或生成一個POST');
+        return;
+    }
+    const latestPost = posts[0];
+    triggerAICommentsForPost(latestPost.id);
+    showNotification('已觸發古人留言');
+}
+
+
+
+
+
+
+    <!-- POST通知 -->
+    <div id="post-notification" class="post-notification">
+        <i class="fas fa-bell mr-2"></i>
+        <span id="notification-text">新動態已生成</span>
+    </div>
+
+    <!-- 導航欄 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect">
+        <div class="max-container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold" style="font-family: 'Noto Serif TC', serif; color: var(--primary-color);">文樞</h1>
+                    <span class="text-sm" style="color: var(--dark-color);">古典文學互動學習平台</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button onclick="showPage('home')" class="nav-btn transition-colors" style="color: var(--dark-color);">
+                        <i class="fas fa-home mr-2"></i>首頁
+                    </button>
+                    <button onclick="showPage('authors')" class="nav-btn transition-colors" style="color: var(--dark-color);">
+                        <i class="fas fa-user-graduate mr-2"></i>作家
+                    </button>
+                    <button onclick="showPage('social')" class="nav-btn transition-colors" style="color: var(--dark-color);">
+                        <i class="fas fa-users mr-2"></i>社群
+                    </button>
+                    <a href="https://kenchan20141.github.io/mensyu/" class="nav-btn transition-colors" style="color: var(--dark-color); text-decoration: none;">
+                        <i class="fas fa-language mr-2"></i>翻譯
+                    </a>
+                    <button onclick="toggleTestPanel()" class="nav-btn transition-colors text-xs" style="color: var(--accent-color);">
+                        <i class="fas fa-cogs mr-1"></i>測試
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容區域 -->
+    <main class="pt-16">
+        
+        <!-- 首頁 -->
+        <div id="home-page" class="page">
+            <div class="min-h-screen flex items-center justify-center">
+                <div class="max-container mx-auto text-center px-4">
+                    <div class="mb-8">
+                        <h2 class="text-5xl font-bold mb-4" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                            與古代文豪為友
+                        </h2>
+                        <p class="text-xl mb-8" style="color: var(--dark-color);">
+                            透過學習古典文學，解鎖歷史人物，與他們在虛擬社群中互動
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8 mb-12">
+                        <div class="gradient-primary rounded-2xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="showPage('authors')">
+                            <i class="fas fa-book-open text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3">開始學習</h3>
+                            <p>選擇你喜愛的作家，開始文言文學習之旅</p>
+                        </div>
+                        <div class="gradient-secondary rounded-2xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="showPage('social')">
+                            <i class="fas fa-comments text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3">古人社群</h3>
+                            <p>與解鎖的古代文豪在虛擬世界中交流互動</p>
+                        </div>
+                        <div class="gradient-accent rounded-2xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="window.location.href='https://kenchan20141.github.io/mensyu/'">
+                            <i class="fas fa-language text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3">文言翻譯</h3>
+                            <p>專業的文言文翻譯工具，助您理解古文精髓</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-8" style="box-shadow: var(--shadow-light);">
+                        <h3 class="text-2xl font-bold mb-6" style="color: var(--text-color);">平台特色</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold" style="color: var(--primary-color);">互動學習</div>
+                                <div style="color: var(--dark-color);">逐字解析，深入理解</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold" style="color: var(--highlight-color);">社群互動</div>
+                                <div style="color: var(--dark-color);">與古代文豪對話</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作家選擇頁面 -->
+        <div id="authors-page" class="page hidden">
+            <div class="min-h-screen py-12">
+                <div class="max-container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-center mb-12" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                        選擇你的文學導師
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <!-- 蘇軾 -->
+                        <div class="character-card bg-white rounded-3xl overflow-hidden" style="box-shadow: var(--shadow-medium);">
+                            <div class="gradient-primary p-8 text-white text-center">
+    <div class="w-32 h-32 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+        <img src="https://i.ibb.co/wrhVfCjJ/image.png" alt="蘇軾頭像" class="w-full h-full object-cover rounded-full">
+    </div>
+    <h3 class="text-3xl font-bold mb-2">蘇軾</h3>
+    <p class="opacity-90">北宋文學家、書畫家</p>
+</div>
+                            <div class="p-8">
+                                <p style="color: var(--dark-color);" class="mb-6">
+                                    蘇軾（1037-1101），字子瞻，號東坡居士，北宋著名文學家、書法家、畫家。唐宋八大家之一，豪放派詞人代表。
+                                </p>
+                                <div class="mb-6">
+                                    <h4 class="font-bold mb-3" style="color: var(--text-color);">可學習作品：</h4>
+                                    <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                        <li>• 超然臺記</li>
+                                        <li>• 方山子傳</li>
+                                        <li>• 前赤壁賦</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-5 gap-2 mb-6">
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(125, 206, 160, 0.2); color: var(--highlight-color);">初級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(127, 179, 213, 0.2); color: var(--primary-color);">進階</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(162, 217, 206, 0.2); color: var(--secondary-color);">中級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(169, 204, 227, 0.2); color: var(--accent-color);">高級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(118, 215, 196, 0.2); color: var(--soft-color);">專家</div>
+                                </div>
+                                <div class="progress-display">
+                                    <div class="text-center">
+                                        <h5 class="font-semibold mb-2" style="color: var(--primary-color);">學習進度</h5>
+                                        <div class="text-sm" style="color: var(--dark-color);">
+                                            <span id="sushe-progress-text">0/5 關卡完成</span>
+                                        </div>
+                                        <div class="progress-circles">
+                                            <div class="progress-circle" id="sushe-progress-1">1</div>
+                                            <div class="progress-circle" id="sushe-progress-2">2</div>
+                                            <div class="progress-circle" id="sushe-progress-3">3</div>
+                                            <div class="progress-circle" id="sushe-progress-4">4</div>
+                                            <div class="progress-circle" id="sushe-progress-5">5</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectAuthor('sushe')" class="w-full gradient-primary text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all mt-4">
+                                    開始學習
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 韓愈 -->
+                        <div class="character-card bg-white rounded-3xl overflow-hidden" style="box-shadow: var(--shadow-medium);">
+                           <div class="gradient-secondary p-8 text-white text-center">
+    <div class="w-32 h-32 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+        <img src="https://i.ibb.co/LhqsVb40/image.png" alt="韓愈頭像" class="w-full h-full object-cover rounded-full">
+    </div>
+    <h3 class="text-3xl font-bold mb-2">韓愈</h3>
+    <p class="opacity-90">唐代文學家、思想家</p>
+</div>
+                            <div class="p-8">
+                                <p style="color: var(--dark-color);" class="mb-6">
+                                    韓愈（768-824），字退之，河南河陽人，唐代傑出的文學家、思想家。唐宋八大家之首，古文運動的倡導者。
+                                </p>
+                                <div class="mb-6">
+                                    <h4 class="font-bold mb-3" style="color: var(--text-color);">可學習作品：</h4>
+                                    <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                        <li>• 雜說四（馬說）</li>
+                                        <li>• 送孟東野序</li>
+                                        <li>• 答李翊書</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-5 gap-2 mb-6">
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(125, 206, 160, 0.2); color: var(--highlight-color);">初級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(127, 179, 213, 0.2); color: var(--primary-color);">進階</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(162, 217, 206, 0.2); color: var(--secondary-color);">中級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(169, 204, 227, 0.2); color: var(--accent-color);">高級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(118, 215, 196, 0.2); color: var(--soft-color);">專家</div>
+                                </div>
+                                <div class="progress-display">
+                                    <div class="text-center">
+                                        <h5 class="font-semibold mb-2" style="color: var(--highlight-color);">學習進度</h5>
+                                        <div class="text-sm" style="color: var(--dark-color);">
+                                            <span id="hanyu-progress-text">0/5 關卡完成</span>
+                                        </div>
+                                        <div class="progress-circles">
+                                            <div class="progress-circle" id="hanyu-progress-1">1</div>
+                                            <div class="progress-circle" id="hanyu-progress-2">2</div>
+                                            <div class="progress-circle" id="hanyu-progress-3">3</div>
+                                            <div class="progress-circle" id="hanyu-progress-4">4</div>
+                                            <div class="progress-circle" id="hanyu-progress-5">5</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectAuthor('hanyu')" class="w-full gradient-secondary text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all mt-4">
+                                    開始學習
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 學習頁面 -->
+        <div id="learning-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <button onclick="showPage('authors')" class="mb-6 flex items-center transition-colors" style="color: var(--primary-color);">
+                        <i class="fas fa-arrow-left mr-2"></i>返回作家選擇
+                    </button>
+                    
+                    <div class="bg-white rounded-2xl p-8 mb-8" style="box-shadow: var(--shadow-light);">
+                        <div class="flex items-center mb-6">
+                            <div id="author-avatar" class="w-16 h-16 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-user-tie text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h2 id="author-name" class="text-3xl font-bold" style="color: var(--text-color);"></h2>
+                                <p id="author-desc" style="color: var(--dark-color);"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                            <div id="level-1" class="level-card cursor-pointer" onclick="selectLevel(1)">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors" style="background: rgba(125, 206, 160, 0.1); border-color: var(--highlight-color);">
+                                    <i class="fas fa-seedling text-2xl mb-2" style="color: var(--highlight-color);"></i>
+                                    <div class="font-bold" style="color: var(--highlight-color);">第一關</div>
+                                    <div class="text-sm" style="color: var(--highlight-color);">初級</div>
+                                </div>
+                            </div>
+                            <div id="level-2" class="level-card cursor-pointer locked" onclick="selectLevel(2)">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(127, 179, 213, 0.1); border-color: var(--primary-color);">
+                                    <i class="fas fa-mountain text-2xl mb-2" style="color: var(--primary-color);"></i>
+                                    <div class="font-bold" style="color: var(--primary-color);">第二關</div>
+                                    <div class="text-sm" style="color: var(--primary-color);">進階</div>
+                                </div>
+                            </div>
+                            <div id="level-3" class="level-card cursor-pointer locked" onclick="selectLevel(3)">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(162, 217, 206, 0.1); border-color: var(--secondary-color);">
+                                    <i class="fas fa-fire text-2xl mb-2" style="color: var(--secondary-color);"></i>
+                                    <div class="font-bold" style="color: var(--secondary-color);">第三關</div>
+                                    <div class="text-sm" style="color: var(--secondary-color);">中級</div>
+                                </div>
+                            </div>
+                            <div id="level-4" class="level-card cursor-pointer locked" onclick="selectLevel(4)">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(169, 204, 227, 0.1); border-color: var(--accent-color);">
+                                    <i class="fas fa-dragon text-2xl mb-2" style="color: var(--accent-color);"></i>
+                                    <div class="font-bold" style="color: var(--accent-color);">第四關</div>
+                                    <div class="text-sm" style="color: var(--accent-color);">高級</div>
+                                </div>
+                            </div>
+                            <div id="level-5" class="level-card cursor-pointer locked" onclick="selectLevel(5)">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(118, 215, 196, 0.1); border-color: var(--soft-color);">
+                                    <i class="fas fa-crown text-2xl mb-2" style="color: var(--soft-color);"></i>
+                                    <div class="font-bold" style="color: var(--soft-color);">第五關</div>
+                                    <div class="text-sm" style="color: var(--soft-color);">專家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-2xl p-8" style="box-shadow: var(--shadow-light);">
+                                <h3 class="text-2xl font-bold mb-6" style="color: var(--text-color);">
+                                    <i class="fas fa-book-open mr-2" style="color: var(--primary-color);"></i>作品學習
+                                </h3>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--dark-color);">選擇作品</label>
+                                    <select id="work-selector" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50" style="border-color: var(--light-accent); color: var(--text-color);" onchange="loadWork()">
+                                        <option value="">請選擇作品</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-6">
+                                    <textarea id="classical-text" 
+                                        class="w-full h-64 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-opacity-50" 
+                                        style="border-color: var(--light-accent); font-family: 'Noto Serif TC', serif; line-height: 1.8; color: var(--text-color);"
+                                        placeholder="作品內容將在此顯示，或您可以輸入其他文言文內容..."></textarea>
+                                </div>
+
+                                <div class="flex flex-wrap gap-4">
+                                    <button onclick="translateText()" class="flex-1 min-w-32 gradient-primary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                        <i class="fas fa-language mr-2"></i>翻譯解析
+                                    </button>
+                                    <button onclick="startQuiz()" class="flex-1 min-w-32 gradient-secondary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                        <i class="fas fa-question-circle mr-2"></i>開始測驗
+                                    </button>
+                                    <button onclick="clearText()" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background: var(--error-color);">
+                                        <i class="fas fa-eraser mr-2"></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div class="bg-white rounded-2xl p-6" style="box-shadow: var(--shadow-light);">
+                                <h4 class="text-lg font-bold mb-4" style="color: var(--text-color);">學習進度</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm" style="color: var(--dark-color);">當前關卡</span>
+                                        <span id="current-level" class="text-sm font-bold" style="color: var(--primary-color);">第一關</span>
+                                    </div>
+                                    <div class="w-full rounded-full h-2" style="background: rgba(127, 179, 213, 0.2);">
+                                        <div id="progress-bar" class="gradient-primary h-2 rounded-full" style="width: 20%"></div>
+                                    </div>
+                                    <div class="text-xs text-center" style="color: var(--dark-color);">完成度 20%</div>
+                                </div>
+                            </div>
+
+                            <div class="rounded-2xl p-6 border" style="background: linear-gradient(to bottom right, rgba(127, 179, 213, 0.05), rgba(173, 214, 241, 0.05)); border-color: rgba(127, 179, 213, 0.2);">
+                                <h4 class="text-lg font-bold mb-3" style="color: var(--primary-color);">
+                                    <i class="fas fa-lightbulb mr-2"></i>學習提示
+                                </h4>
+                                <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                    <li>• 先仔細閱讀原文</li>
+                                    <li>• 使用翻譯功能理解含義</li>
+                                    <li>• 通過測驗檢驗學習成果</li>
+                                    <li>• 完成關卡解鎖新內容</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 翻譯結果頁面 -->
+        <div id="translation-page" class="page hidden">
+            <div id="floating-original" class="floating-original">
+                <div class="floating-header">
+                    <div class="floating-title">原文</div>
+                    <div class="floating-controls">
+                        <button id="floating-toggle" class="floating-toggle" title="隱藏原文">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="floating-content">
+                    <div id="floating-original-text" class="floating-original-text"></div>
+                </div>
+            </div>
+
+            <button id="reopen-floating" class="reopen-floating" title="顯示原文">
+                <i class="fas fa-scroll"></i>
+            </button>
+
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <button onclick="showPage('learning')" class="mb-6 flex items-center transition-colors" style="color: var(--primary-color);">
+                        <i class="fas fa-arrow-left mr-2"></i>返回學習
+                    </button>
+                    
+                    <div id="translation-main-content" class="translation-main-content mobile-top-space">
+                        <div class="bg-white rounded-2xl p-8" style="box-shadow: var(--shadow-light);">
+                            <h2 class="text-3xl font-bold mb-8 text-center" style="color: var(--text-color);">
+                                <i class="fas fa-language mr-3" style="color: var(--primary-color);"></i>翻譯解析結果
+                            </h2>
+                            
+                            <div id="translation-loading" class="hidden text-center py-12">
+                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent" style="border-color: var(--primary-color);"></div>
+                                <p class="mt-4" style="color: var(--dark-color);">正在翻譯解析中，請稍候...</p>
+                            </div>
+                            
+                            <div id="translation-content" class="space-y-8"></div>
+                            
+                            <div class="flex flex-wrap justify-center mt-8 gap-4">
+                                <button onclick="showPage('learning')" class="gradient-primary text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                    繼續學習
+                                </button>
+                                <button onclick="startQuiz()" class="gradient-secondary text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                    開始測驗
+                                </button>
+                                <button onclick="revealAllTranslations()" class="gradient-accent text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                    <i class="fas fa-eye mr-2"></i>顯示全部解釋
+                                </button>
+                                <button onclick="retranslateText()" class="text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all" style="background: #e67e22;">
+                                    <i class="fas fa-redo mr-2"></i>重新翻譯
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 測驗頁面 -->
+        <div id="quiz-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <div class="bg-white rounded-2xl p-8" style="box-shadow: var(--shadow-light);">
+                        <div class="text-center mb-8">
+                            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-color);">關卡測驗</h2>
+                            <p style="color: var(--dark-color);">回答問題以完成當前關卡</p>
+                        </div>
+
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm" style="color: var(--dark-color);">問題進度</span>
+                                <span id="quiz-progress-text" class="text-sm" style="color: var(--dark-color);">1/5</span>
+                            </div>
+                            <div class="w-full rounded-full h-3" style="background: rgba(127, 179, 213, 0.2);">
+                                <div id="quiz-progress-bar" class="gradient-primary h-3 rounded-full transition-all duration-500" style="width: 20%"></div>
+                            </div>
+                        </div>
+
+                        <div id="quiz-loading" class="hidden text-center py-12">
+                            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent" style="border-color: var(--primary-color);"></div>
+                            <p class="mt-4" style="color: var(--dark-color);">正在生成測驗題目...</p>
+                        </div>
+
+                        <div id="quiz-content" class="hidden">
+                            <div class="mb-8">
+                                <h3 id="quiz-question" class="text-xl font-bold mb-6" style="color: var(--text-color);"></h3>
+                                <div id="quiz-options" class="space-y-3"></div>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <button id="quiz-prev" onclick="previousQuestion()" class="text-white py-3 px-6 rounded-lg font-semibold transition-colors disabled:opacity-50" style="background: var(--dark-color);" disabled>
+                                    <i class="fas fa-chevron-left mr-2"></i>上一題
+                                </button>
+                                <button id="quiz-next" onclick="nextQuestion()" class="gradient-primary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50">
+                                    下一題<i class="fas fa-chevron-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="quiz-result" class="hidden text-center">
+                            <div id="quiz-success" class="hidden">
+                                <i class="fas fa-trophy text-6xl mb-4" style="color: #f1c40f;"></i>
+                                <h3 class="text-3xl font-bold mb-4" style="color: var(--highlight-color);">恭喜通過關卡！</h3>
+                                <p class="mb-6" style="color: var(--dark-color);">您已成功完成當前關卡，解鎖下一個挑戰！</p>
+                                <div class="space-x-4">
+                                    <button onclick="nextLevel()" class="gradient-secondary text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                        下一關卡
+                                    </button>
+                                    <button onclick="showPage('learning')" class="text-white py-3 px-8 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);">
+                                        返回學習
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="quiz-failure" class="hidden">
+                                <i class="fas fa-times-circle text-6xl mb-4" style="color: var(--error-color);"></i>
+                                <h3 class="text-3xl font-bold mb-4" style="color: var(--error-color);">未能通過關卡</h3>
+                                <p class="mb-6" style="color: var(--dark-color);">需要答對更多題目才能通過，請繼續努力！</p>
+                                <div class="space-x-4">
+                                    <button onclick="retryQuiz()" class="gradient-accent text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transition-all">
+                                        重新挑戰
+                                    </button>
+                                    <button onclick="showPage('learning')" class="text-white py-3 px-8 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);">
+                                        返回學習
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 社群頁面 -->
+        <div id="social-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-center mb-8" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                        古人社群
+                    </h2>
+                    
+                    <!-- 解鎖狀態提示 -->
+                    <div id="unlock-status" class="mb-8"></div>
+                    
+                    <div class="bg-white rounded-2xl p-6 mb-8" style="box-shadow: var(--shadow-light);">
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <button id="social-tab-all" onclick="showSocialTab('all')" class="social-tab px-6 py-3 rounded-lg font-semibold gradient-primary text-white">
+                                <i class="fas fa-globe mr-2"></i>全部動態
+                            </button>
+                            <button id="social-tab-sushe" onclick="showSocialTab('sushe')" class="social-tab px-6 py-3 rounded-lg font-semibold text-gray-600" style="background: rgba(127, 179, 213, 0.1);">
+                                <i class="fas fa-user-tie mr-2"></i>蘇軾
+                            </button>
+                            <button id="social-tab-hanyu" onclick="showSocialTab('hanyu')" class="social-tab px-6 py-3 rounded-lg font-semibold text-gray-600" style="background: rgba(125, 206, 160, 0.1);">
+                                <i class="fas fa-graduation-cap mr-2"></i>韓愈
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-6 mb-8" style="box-shadow: var(--shadow-light);">
+                        <h3 class="text-xl font-bold mb-4" style="color: var(--text-color);">
+                            <i class="fas fa-edit mr-2" style="color: var(--primary-color);"></i>發佈新動態
+                        </h3>
+                        <div class="mb-4">
+                            <textarea id="post-content" class="w-full h-24 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-opacity-50" style="border-color: var(--light-accent); color: var(--text-color);" placeholder="分享你的想法..."></textarea>
+                        </div>
+                        <button onclick="createPost()" class="gradient-primary text-white py-2 px-6 rounded-lg font-semibold hover:shadow-lg transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>發佈
+                        </button>
+                    </div>
+
+                    <div id="posts-container" class="space-y-6"></div>
+
+                    <div class="text-center mt-8">
+                        <button onclick="loadMorePosts()" class="text-white py-3 px-8 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);">
+                            載入更多動態
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+
+const authorAvatars = {
+    '蘇軾': 'https://i.ibb.co/wrhVfCjJ/image.png',
+    '韓愈': 'https://i.ibb.co/LhqsVb40/image.png',
+    '我': null // 用戶沒有特定圖片，使用默認圖標
+};
+
+
+        const API_KEYS = [
+            "sk-gAqOM7J27yElhAN6rE3iEw",
+            "sk-04KvBMK1EUyinjzdCb1wXQ",
+            "sk-MoqwsgO8P9MEoCrftvdSYA"
+        ];
+        let currentApiKeyIndex = 0;
+        const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
+        const MODEL = "DeepSeek-R1-0528";
+
+
+let postHistory = JSON.parse(localStorage.getItem('postHistory')) || [];
+        let currentAuthor = '';
+        let currentLevel = 1;
+        let currentQuizQuestions = [];
+        let currentQuestionIndex = 0;
+        let quizAnswers = [];
+        let posts = [];
+        let currentSocialTab = 'all';
+        let isFloatingVisible = true;
+        let currentOriginalTexts = [];
+        let currentTranslatingText = '';
+        let currentWorkTitle = '';
+        
+        // 新增變數
+        let postGenerationIntervals = {}; // 存儲每個角色的定時器
+        let postInterval = 60; // 默認60分鐘間距
+        let isTestPanelVisible = false;
+
+        const authorsData = {
+            sushe: {
+                name: '蘇軾',
+                description: '北宋文學家、書畫家',
+                avatar: 'gradient-primary',
+                personality: '豁達樂觀，熱愛自然，善於哲理思考，喜歡用比喻和典故。經歷過多次貶謫，但始終保持樂觀態度，善於在逆境中尋找樂趣。',
+                background: '北宋著名文學家，字子瞻，號東坡居士。官至翰林學士，因政治立場多次被貶。作品豐富，詩詞散文皆精。',
+                style: '文風優雅，常引用詩詞，語言富有哲理性，喜歡用粵語表達日常感受。',
+                works: {
+                    1: { title: '超然臺記', content: `凡物皆有可觀。苟有可觀，皆有可樂，非必怪奇偉麗者也。哺糟啜醨皆可以醉；果蔬草木，皆可以飽。推此類也，吾安往而不樂？
+夫所爲求褔而辭禍者，以褔可喜而禍可悲也。人之所欲無窮，而物之可以足吾欲者有盡，美惡之辨戰乎中，而去取之擇交乎前。則可樂者常少，而可悲者常多。是謂求禍而辭褔。夫求禍而辭褔，豈人之情也哉？物有以蓋之矣。彼遊於物之內，而不遊於物之外。物非有大小也，自其內而觀之，未有不高且大者也。彼挾其高大以臨我，則我常眩亂反覆，如隙中之觀鬥，又焉知勝負之所在。是以美惡橫生，而憂樂出焉，可不大哀乎！
+余自錢塘移守膠西，釋舟楫之安，而服車馬之勞；去雕牆之美，而蔽採椽之居；背湖山之觀，而適桑麻之野。始至之日，歲比不登，盜賊滿野，獄訟充斥；而齋廚索然，日食杞菊。人固疑余之不樂也。處之期年，而貌加豐，髮之白者日以反黑。余既樂其風俗之淳，而其吏民亦安予之拙也。於是治其園圃，潔其庭宇，伐安丘、高密之木，以修補破敗，爲苟全之計。而園之北，因城以爲臺者舊矣，稍葺而新之。
+時相與登覽，放意肆志焉。南望馬耳常山，出沒隱見，若近若遠，庶幾有隱君子乎！而其東則盧山，秦人盧敖之所從遁也。西望穆陵，隱然如城郭，師尚父、齊桓公之遺烈，猶有存者。北俯濰水，慨然太息，思淮陰之功，而弔其不終。臺高而安，深而明，夏涼而冬溫。雨雪之朝，風月之夕，余未嘗不在，客未嘗不從。擷園蔬，取池魚，釀秫酒，瀹脫粟而食之，曰︰「樂哉遊乎！」
+方是時，余弟子由，適在濟南，聞而賦之，且名其臺曰「超然」，以見余之無所往而不樂者，蓋遊於物之外也。` },
+                    2: { title: '方山子傳', content: `方山子，光、黃間隱人也。少時慕朱家、郭解為人，閭里之俠皆宗之。稍壯，折節讀書，欲以此馳騁當世，然終不遇。晚乃遯於光、黃間，曰︰「岐亭」。庵居蔬食，不與世相聞。棄車馬，毀冠服，徒步往來山中，人莫識也。見其所著帽，方屋而高，曰︰「此豈古方山冠之遺像乎？」因謂之「方山子」。
+余謫居於黃，過岐亭，適見焉，曰︰「嗚呼！此吾故人陳慥季常也，何為而在此？」方山子亦矍然問余所以至此者。余告之故。俛而不答，仰而笑。呼余宿其家。環堵蕭然，而妻子奴婢，皆有自得之意。
+余既聳然異之，獨念方山子少時，使酒好劍，用財如糞土；前十有九年，余在岐山，見方山子從兩騎，挾二矢，遊西山。鵲起於前，使騎逐而射之，不獲；方山子怒馬獨出，一發得之。因與余馬上論用兵，及古今成敗，自謂一世豪士。今幾日耳，精悍之色，猶見於眉間，而豈山中之人哉？
+然方山子世有勳閥，當得官；使從事於其間，今已顯聞。而其家在洛陽，園宅壯麗，與公侯等；河北有田，歲得帛千匹，亦足以富樂；皆棄不取，獨來窮山中，此豈無得而然哉？
+余聞光、黃間多異人，往往佯狂垢污，不可得而見，方山子儻見之歟？` },
+                    3: { title: '前赤壁賦', content: `壬戌之秋，七月既望，蘇子與客泛舟遊于赤壁之下。清風徐來，水波不興。舉酒屬客，誦明月之詩，歌窈窕之章。少焉，月出於東山之上，徘徊於斗牛之間。白露橫江，水光接天。縱一葦之所如，凌萬頃之茫然。浩浩乎如馮虛御風，而不知其所止；飄飄乎如遺世獨立，羽化而登仙。
+
+於是飲酒樂甚，扣舷而歌之。歌曰：「桂棹兮蘭槳，擊空明兮泝流光。渺渺兮予懷，望美人兮天一方。」客有吹洞簫者，倚歌而和之，其聲嗚嗚然，如怨如慕，如泣如訴；餘音嫋嫋，不絕如縷；舞幽壑之潛蛟，泣孤舟之嫠婦。
+
+蘇子愀然，正襟危坐而問客曰：「何為其然也？」客曰：「『月明星稀，烏鵲南飛』，此非曹孟德之詩乎？西望夏口，東望武昌。山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？方其破荊州，下江陵，順流而東也，舳艫千里，旌旗蔽空，釃酒臨江，橫槊賦詩，固一世之雄也，而今安在哉？況吾與子漁樵於江渚之上，侶魚蝦而友糜鹿，駕一葉之扁舟，舉匏樽以相屬；寄蜉蝣與天地，渺滄海之一粟。哀吾生之須臾，羨長江之無窮；挾飛仙以遨遊，抱明月而長終。知不可乎驟得，托遺響於悲風。」
+
+蘇子曰：「客亦知夫水與月乎？逝者如斯，而未嘗往也；盈虛者如彼，而卒莫消長也。蓋將自其變者而觀之，則天地曾不能以一瞬；自其不變者而觀之，則物於我皆無盡也。而又何羨乎？且夫天地之間，物各有主。苟非吾之所有，雖一毫而莫取。惟江上之清風，與山間之明月，耳得之而為聲，目遇之而成色。取之無禁，用之不竭。是造物者之無盡藏也，而吾與子之所共適。」
+
+客喜而笑，洗盞更酌。肴核既盡，杯盤狼藉。相與枕藉乎舟中，不知東方之既白。` }
+                }
+            },
+            hanyu: {
+                name: '韓愈',
+                description: '唐代文學家、思想家',
+                avatar: 'gradient-secondary',
+                personality: '嚴謹治學，重視道德修養，推崇古文，有教育家風範。性格直率，敢於批評時政，主張復古改革。',
+                background: '唐代文學家，字退之，河南河陽人。唐宋八大家之首，古文運動的倡導者。官至吏部侍郎，諡號文公。',
+                style: '文風簡潔有力，喜歡說理，常有教誨意味，用粵語分享生活感悟和學問心得。',
+                works: {
+                    1: { title: '雜說四（馬說）', content: `世有伯樂，然後有千里馬。千里馬常有，而伯樂不常有，故雖有名馬，祇辱於奴隸人之手，駢死於槽櫪之間，不以千里稱也。
+馬之千里者，一食或盡粟一石。食馬者，不知其能千里而食也。是馬也，雖有千里之能，食不飽，力不足，才美不外見，且欲與常馬等不可得，安求其能千里也？
+策之不以其道，食之不能盡其材，鳴之而不能通其意，執策而臨之，曰︰「天下無馬。」嗚呼！其真無馬邪？其真不知馬也！` },
+                    2: { title: '送孟東野序', content: `大凡物不得其平則鳴。草木之無聲，風撓之鳴。水之無聲，風蕩之鳴。其躍也，或激之；其趨也，或梗之；其沸也，或炙之。金石之無聲，或擊之鳴。人之於言也亦然，有不得已者而后言。謌也有思，其哭也有懷。凡出乎口而為聲者，其皆有弗平者乎！　
+樂也者，鬱於中而泄於外者也，擇其善鳴者而假之鳴。金、石、絲、竹、匏、土、革、木八者，物之善鳴者也。維天之於時也亦然，擇其善鳴者而假之鳴。是故以鳥鳴春，以雷鳴夏，以蟲鳴秋，以風鳴冬。四時之相推敓，其必有不得其平者乎？其於人也亦然，人聲之精者為言，文辭之於言，又其精也，尤擇其善鳴者而假之鳴。
+其在唐虞，咎陶禹其善鳴者也，而假以鳴。夔弗能以文辭鳴，又自假於《韶》以鳴。夏之時，五子以其歌鳴。伊尹鳴殷，周公鳴周。凡載於詩書六藝，皆鳴之善者也。周之衰，孔子之徒鳴之，其聲大而遠。傳曰︰「天將以夫子為木鐸。」其弗信矣乎？其末也，莊周以其荒唐之辭鳴。楚，大國也，其亡也，以屈原鳴。臧孫辰、孟軻、荀卿，以道鳴者也。楊朱、墨翟、管夷吾、晏嬰、老聃、申不害、韓非、昚到、田駢、鄒衍、尸佼、孫武、張儀、蘇秦之屬，皆以其術鳴。秦之興，李斯鳴之。漢之時，司馬遷、相如、揚雄，最其善鳴者也。其下魏晉氏，鳴者不及於古，然亦未嘗絕也。就其善者，其聲清以浮，其節數以急，其辭淫以哀，其志弛以肆；其為言也，亂雜而無章。將天醜其德莫之顧邪？何為乎不鳴其善鳴者也？
+唐之有天下，陳子昂、蘇源明、元結、李白、杜甫、李觀，皆以其所能鳴。其存而在下者，孟郊東野始以其詩鳴。其高出魏晉，不懈而及於古；其他浸乎漢氏矣。從吾遊者，李翱、張籍其尤也。三子者之鳴信善矣。抑不知天將和其聲而使鳴國家之盛邪？抑將窮餓其身、思愁其心腸而使自鳴其不幸邪？三子者之命則懸乎天矣。其在上也奚以喜？其在下也奚以悲？東野之役於江南也，有若不釋然者，故吾道其命於天者以解之。` },
+                    3: { title: '答李翊書', content: `六月二十六日，愈白李生足下︰
+生之書辭甚高，而其問何下而恭也！能如是，誰不欲告生以其道？道德之歸也有日矣，況其外之文乎！抑愈所謂望孔子之門牆而不入於其宮者，焉足以知是且非邪？雖然，不可不為生言之。
+生所謂立言者，是也；生所為者與所期者，甚似而幾矣。抑不知生之志，蘄勝於人而取於人邪？將蘄至於古之立言者邪？蘄勝於人而取於人，則固勝於人而可取於人矣；將蘄至於古之立言者，則無望其速成，無誘於勢利；養其根而竢其實，加其膏而希其光。根之茂者其實遂，膏之沃者其光曄；仁義之人，其言藹如也。
+抑又有難者︰愈之所為，不自知其至猶未也。雖然，學之二十餘年矣。始者，非三代兩漢之書不敢觀，非聖人之志不敢存；處若忘，行若遺，儼乎其若思，茫乎其若迷。當其取於心而注於手也，惟陳言之務去，戛戛乎其難哉！其觀於人，不知其非笑之為非笑也。如是者亦有年，猶不改。然後識古書之正偽，與雖正而不至焉者，昭昭然白黑分矣；而務去之，乃徐有得也。當其取於心而注於手也，汨汨然來矣。其觀於人也，笑之，則以為喜；譽之，則以為憂，以其猶有人之說者存也。如是者亦有年，然後浩乎其沛然矣。吾又懼其雜也，迎而拒之，平心而察之；其皆醇也，然後肆焉。雖然，不可以不養也。行之乎仁義之途，游之乎詩書之源，無迷其途，無絕其源，終吾身而已矣。
+氣，水也；言，浮物也。水大，而物之浮者大小畢浮。氣之與言猶是也。氣盛，則言之短長與聲之高下者皆宜。雖如是，其敢自謂幾於成乎？雖幾於成，其用於人也，奚敢焉？
+雖然，待用於人者，其肖於器邪？用與舍屬諸人。君子則不然︰處心有道，行己有方；用則施諸人，舍則傳諸其徒，垂諸文而為後世法；如是者，其亦足樂乎，其無足樂也？有志乎古者希矣！志乎古，必遺乎今，吾誠樂而悲之。亟稱其人，所以勸之，非敢褎其可褎，而貶其可貶也。問於愈者多矣，念生之言不志乎利，聊相為言之。愈白。` }
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProgress();
+            updateProgressDisplay();
+            initializeSocialPosts();
+            initFloatingWindow();
+            setupResponsiveHandler();
+            initializePostGeneration();
+        });
+
+
+function generateTestComment() {
+    if (posts.length === 0) {
+        showNotification('請先創建或生成一個POST');
+        return;
+    }
+    const post = posts[0];
+    const comment = {
+        author: '我', // 模擬真實用戶留言
+        content: '你講得真係好啊！',
+        timestamp: new Date().toISOString()
+    };
+    post.comments.push(comment);
+    savePosts();
+    displayPosts();
+    showNotification('已生成測試留言');
+    triggerAIComments(post.id); // 立即觸發古人回覆
+}
+
+
+        // 測試功能函數
+        function toggleTestPanel() {
+            const panel = document.getElementById('test-control-panel');
+            isTestPanelVisible = !isTestPanelVisible;
+            
+            if (isTestPanelVisible) {
+                panel.classList.remove('hide-test-panel');
+            } else {
+                panel.classList.add('hide-test-panel');
+            }
+        }
+
+        function unlockAllCharacters() {
+            const userProgress = {
+                sushe: {
+                    1: { completed: true, completedAt: new Date().toISOString() },
+                    2: { completed: true, completedAt: new Date().toISOString() },
+                    3: { completed: true, completedAt: new Date().toISOString() },
+                    4: { completed: true, completedAt: new Date().toISOString() },
+                    5: { completed: true, completedAt: new Date().toISOString() }
+                },
+                hanyu: {
+                    1: { completed: true, completedAt: new Date().toISOString() },
+                    2: { completed: true, completedAt: new Date().toISOString() },
+                    3: { completed: true, completedAt: new Date().toISOString() },
+                    4: { completed: true, completedAt: new Date().toISOString() },
+                    5: { completed: true, completedAt: new Date().toISOString() }
+                }
+            };
+            
+            localStorage.setItem('userProgress', JSON.stringify(userProgress));
+            updateProgressDisplay();
+            updateLevelStatus();
+            displayPosts();
+            showNotification('所有角色已解鎖！');
+        }
+
+        function resetProgress() {
+            localStorage.removeItem('userProgress');
+            updateProgressDisplay();
+            updateLevelStatus();
+            displayPosts();
+            showNotification('進度已重置！');
+        }
+
+        function updatePostInterval() {
+            const intervalInput = document.getElementById('post-interval');
+            const newInterval = parseInt(intervalInput.value);
+            
+            if (newInterval && newInterval >= 1 && newInterval <= 1440) {
+                postInterval = newInterval;
+                clearAllPostIntervals();
+                initializePostGeneration();
+                showNotification(`POST間距已更新為${newInterval}分鐘`);
+            } else {
+                alert('請輸入1-1440之間的數字（分鐘）');
+            }
+        }
+
+function submitComment(postId, button) {
+    const input = button.previousElementSibling;
+    const content = input.value.trim();
+    if (!content) return;
+    
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        post.comments.push({
+            author: '我',
+            content: content,
+            timestamp: new Date().toISOString()
+        });
+        input.value = '';
+        displayPosts();
+        triggerAIComments(postId);
+    }
+}
+
+
+        function generateTestPost() {
+            const unlockedCharacters = getUnlockedCharacters();
+            if (unlockedCharacters.length > 0) {
+                const randomChar = unlockedCharacters[Math.floor(Math.random() * unlockedCharacters.length)];
+                generateAIPost(randomChar);
+                showNotification('正在生成測試POST...');
+            } else {
+                showNotification('請先解鎖至少一個角色');
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('post-notification');
+            const text = document.getElementById('notification-text');
+            
+            text.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // POST生成相關函數
+        function initializePostGeneration() {
+            const unlockedCharacters = getUnlockedCharacters();
+            
+            unlockedCharacters.forEach(charId => {
+                if (!postGenerationIntervals[charId]) {
+                    startPostGeneration(charId);
+                }
+            });
+        }
+
+        function startPostGeneration(characterId) {
+            // 清除現有定時器
+            if (postGenerationIntervals[characterId]) {
+                clearInterval(postGenerationIntervals[characterId]);
+            }
+            
+            // 設置新定時器
+            postGenerationIntervals[characterId] = setInterval(() => {
+                generateAIPost(characterId);
+            }, postInterval * 60 * 1000);
+            
+            console.log(`已為${characterId}設置POST生成定時器，間距：${postInterval}分鐘`);
+        }
+
+        function clearAllPostIntervals() {
+            Object.keys(postGenerationIntervals).forEach(charId => {
+                if (postGenerationIntervals[charId]) {
+                    clearInterval(postGenerationIntervals[charId]);
+                    delete postGenerationIntervals[charId];
+                }
+            });
+        }
+
+        function getUnlockedCharacters() {
+            const userProgress = getUserProgress();
+            const unlockedChars = [];
+            
+            // 檢查蘇軾是否通關（完成任一關卡即解鎖）
+            if (userProgress.sushe && Object.keys(userProgress.sushe).length > 0) {
+                const completedLevels = Object.values(userProgress.sushe).filter(level => level.completed).length;
+                if (completedLevels > 0) {
+                    unlockedChars.push('sushe');
+                }
+            }
+            
+            // 檢查韓愈是否通關（完成任一關卡即解鎖）
+            if (userProgress.hanyu && Object.keys(userProgress.hanyu).length > 0) {
+                const completedLevels = Object.values(userProgress.hanyu).filter(level => level.completed).length;
+                if (completedLevels > 0) {
+                    unlockedChars.push('hanyu');
+                }
+            }
+            
+            return unlockedChars;
+        }
+
+
+
+let commentHistory = JSON.parse(localStorage.getItem('commentHistory')) || [];
+
+      async function generateAIPost(characterId) {
+    const charData = authorsData[characterId];
+    if (!charData) return;
+
+    try {
+        const prompt = `你現在是${charData.name}，請生成一個社交媒體貼文。
+角色背景：${charData.background}
+性格特點：${charData.personality}
+語言風格：${charData.style}
+要求：
+1. 以${charData.name}的身份發言，展現其性格特點
+2. 內容可以是：
+   - 分享生活感悟或哲理思考（用粵語表達）
+   - 對時事或學問的看法
+   - 引用自己的詩詞作品片段（保持文言文）
+   - 與朋友互動的趣事
+3. 語言要自然，像真正的社交媒體貼文
+4. 長度控制在50-150字
+5. 可以適當使用emoji表情
+6. 體現古人在現代社會的適應和思考
+7. 內容要多變，每個POST的內容都要不一樣
+8. 絕對不能展示思考過程，即<think></think>裡面的內容，只要展示生成結果。
+請直接給出貼文內容，不要其他解釋：`;
+
+        const response = await callAPI(prompt);
+        if (response && response.choices && response.choices[0].message.content) {
+            let content = response.choices[0].message.content.trim();
+            content = content.replace(/<think>.*?<\/think>/gs, '');
+
+            if (!postHistory.includes(content)) {
+                postHistory.push(content);
+                localStorage.setItem('postHistory', JSON.stringify(postHistory));
+
+                const newPost = {
+                    id: Date.now() + Math.random(),
+                    author: characterId,
+                    authorName: charData.name,
+                    content: content,
+                    timestamp: new Date().toISOString(),
+                    likes: Math.floor(Math.random() * 15) + 1,
+                    comments: []
+                };
+
+                posts.unshift(newPost);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                displayPosts();
+            } else {
+                // 若內容重複，重新生成
+                generateAIPost(characterId);
+            }
+        }
+    } catch (error) {
+        console.error(`生成${characterId}的POST失敗:`, error);
+    }
+}
+
+
+        function getDeviceType() {
+            const width = window.innerWidth;
+            if (width <= 768) return 'mobile';
+            if (width <= 1024) return 'tablet';
+            return 'desktop';
+        }
+
+        function setupResponsiveHandler() {
+            window.addEventListener('resize', handleResponsiveLayout);
+            handleResponsiveLayout();
+        }
+
+        function handleResponsiveLayout() {
+            const deviceType = getDeviceType();
+            const floatingElement = document.getElementById('floating-original');
+            const mainContent = document.getElementById('translation-main-content');
+            
+            if (deviceType === 'mobile') {
+                if (isFloatingVisible && currentOriginalTexts.length > 0) {
+                    floatingElement.classList.remove('hidden-mobile');
+                    mainContent.classList.add('mobile-top-space');
+                    mainContent.classList.remove('no-margin');
+                } else {
+                    floatingElement.classList.add('hidden-mobile');
+                    mainContent.classList.remove('mobile-top-space');
+                    mainContent.classList.add('no-space');
+                }
+            } else {
+                floatingElement.classList.remove('hidden-mobile');
+                mainContent.classList.remove('mobile-top-space', 'no-space');
+            }
+        }
+
+        function initFloatingWindow() {
+            const toggleBtn = document.getElementById('floating-toggle');
+            const reopenBtn = document.getElementById('reopen-floating');
+            
+            toggleBtn.addEventListener('click', hideFloatingWindow);
+            reopenBtn.addEventListener('click', showFloatingWindow);
+        }
+
+        function showFloatingWindow() {
+            isFloatingVisible = true;
+            document.getElementById('floating-original').classList.add('show');
+            document.getElementById('reopen-floating').classList.remove('show');
+            
+            const toggleBtn = document.getElementById('floating-toggle');
+            toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+            toggleBtn.title = '隱藏原文';
+            
+            handleResponsiveLayout();
+        }
+
+        function hideFloatingWindow() {
+            isFloatingVisible = false;
+            document.getElementById('floating-original').classList.remove('show');
+            
+            if (currentOriginalTexts.length > 0) {
+                document.getElementById('reopen-floating').classList.add('show');
+            }
+            
+            handleResponsiveLayout();
+        }
+
+        function showFloatingOriginal() {
+            if (currentOriginalTexts.length > 0) {
+                const combinedText = currentOriginalTexts.join('<br><br>');
+                document.getElementById('floating-original-text').innerHTML = combinedText;
+                showFloatingWindow();
+            }
+        }
+
+        function showPage(pageId) {
+            if (pageId !== 'translation') {
+                document.getElementById('floating-original').classList.remove('show');
+                document.getElementById('reopen-floating').classList.remove('show');
+                isFloatingVisible = false;
+            }
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            updateNavigation(pageId);
+            
+            // 當進入社群頁面時，檢查解鎖狀態
+            if (pageId === 'social') {
+                updateUnlockStatus();
+            }
+        }
+
+        function updateNavigation(activePageId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.style.color = 'var(--dark-color)';
+                btn.style.fontWeight = 'normal';
+            });
+        }
+
+        function selectAuthor(authorId) {
+            currentAuthor = authorId;
+            currentLevel = 1;
+            updateLearningPage();
+            showPage('learning');
+        }
+
+        function updateLearningPage() {
+            const author = authorsData[currentAuthor];
+            
+            document.getElementById('author-name').textContent = author.name;
+            document.getElementById('author-desc').textContent = author.description;
+            document.getElementById('author-avatar').className = `w-16 h-16 rounded-full flex items-center justify-center mr-4 ${author.avatar}`;
+            
+            const workSelector = document.getElementById('work-selector');
+            workSelector.innerHTML = '<option value="">請選擇作品</option>';
+            
+            Object.entries(author.works).forEach(([level, work]) => {
+                const option = document.createElement('option');
+                option.value = level;
+                option.textContent = `第${level}關 - ${work.title}`;
+                workSelector.appendChild(option);
+            });
+            
+            updateLevelStatus();
+        }
+
+        function updateLevelStatus() {
+            const userProgress = getUserProgress();
+            const authorProgress = userProgress[currentAuthor] || {};
+            
+            for (let i = 1; i <= 5; i++) {
+                const levelCard = document.getElementById(`level-${i}`);
+                const isUnlocked = i === 1 || (authorProgress[i-1] && authorProgress[i-1].completed);
+                
+                if (isUnlocked) {
+                    levelCard.classList.remove('locked');
+                    levelCard.querySelector('div').classList.remove('locked-card');
+                } else {
+                    levelCard.classList.add('locked');
+                    levelCard.querySelector('div').classList.add('locked-card');
+                }
+            }
+        }
+
+        function selectLevel(level) {
+            const userProgress = getUserProgress();
+            const authorProgress = userProgress[currentAuthor] || {};
+            const isUnlocked = level === 1 || (authorProgress[level-1] && authorProgress[level-1].completed);
+            
+            if (!isUnlocked) {
+                alert('請先完成前一個關卡！');
+                return;
+            }
+            
+            currentLevel = level;
+            
+            document.getElementById('current-level').textContent = `第${level}關`;
+            
+            const progress = (level / 5) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            document.getElementById('work-selector').value = level;
+            loadWork();
+        }
+
+        function loadWork() {
+            const workSelector = document.getElementById('work-selector');
+            const level = workSelector.value;
+            
+            if (!level) {
+                document.getElementById('classical-text').value = '';
+                currentWorkTitle = '';
+                return;
+            }
+            
+            const work = authorsData[currentAuthor].works[level];
+            if (work) {
+                document.getElementById('classical-text').value = work.content;
+                currentLevel = parseInt(level);
+                currentWorkTitle = work.title;
+                
+                document.getElementById('current-level').textContent = `第${level}關`;
+                const progress = (level / 5) * 100;
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+            }
+        }
+
+        function getTranslationCacheKey(text, title) {
+            const key = btoa(encodeURIComponent(title + '_' + text.substring(0, 100))).replace(/[^a-zA-Z0-9]/g, '');
+            return 'translation_' + key;
+        }
+
+        function getCachedTranslation(text, title) {
+            const cacheKey = getTranslationCacheKey(text, title);
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                try {
+                    const data = JSON.parse(cached);
+                    if (Date.now() - data.timestamp < 7 * 24 * 60 * 60 * 1000) {
+                        return data.translation;
+                    }
+                } catch (e) {
+                    localStorage.removeItem(cacheKey);
+                }
+            }
+            return null;
+        }
+
+        function setCachedTranslation(text, title, translation) {
+            const cacheKey = getTranslationCacheKey(text, title);
+            const data = {
+                translation: translation,
+                timestamp: Date.now()
+            };
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+            } catch (e) {
+                console.warn('localStorage full, clearing old translation cache');
+                clearOldTranslationCache();
+            }
+        }
+
+        function clearTranslationCache(text, title) {
+            const cacheKey = getTranslationCacheKey(text, title);
+            localStorage.removeItem(cacheKey);
+        }
+
+        function clearOldTranslationCache() {
+            const keys = Object.keys(localStorage);
+            const translationKeys = keys.filter(key => key.startsWith('translation_'));
+            
+            const cacheEntries = translationKeys.map(key => {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    return { key, timestamp: data.timestamp };
+                } catch (e) {
+                    return { key, timestamp: 0 };
+                }
+            }).sort((a, b) => a.timestamp - b.timestamp);
+            
+            const toDelete = cacheEntries.slice(0, Math.floor(cacheEntries.length / 2));
+            toDelete.forEach(entry => localStorage.removeItem(entry.key));
+        }
+
+        async function translateText(forceRetranslate = false) {
+            const text = document.getElementById('classical-text').value.trim();
+            const title = currentWorkTitle || 'custom';
+            
+            if (!text) {
+                alert('請輸入或選擇文言文內容');
+                return;
+            }
+            
+            currentTranslatingText = text;
+            
+            if (!forceRetranslate) {
+                const cachedTranslation = getCachedTranslation(text, title);
+                if (cachedTranslation) {
+                    console.log('使用緩存翻譯');
+                    showPage('translation');
+                    document.getElementById('translation-loading').classList.add('hidden');
+                    displayTranslationResult(cachedTranslation);
+                    return;
+                }
+            } else {
+                clearTranslationCache(text, title);
+            }
+            
+            try {
+                showPage('translation');
+                document.getElementById('translation-loading').classList.remove('hidden');
+                document.getElementById('translation-content').innerHTML = '';
+                
+                const prompt = `請將以下文言文逐字翻譯並解釋(直譯，不要意譯)，格式要求：
+
+原文：
+[顯示原文句子]
+
+語譯：
+[顯示完整句子翻譯]
+
+逐字解釋：
+[對每個文字進行解釋，格式為"字：解釋"，常見文言字詞用**粗體**標示，切勿解釋標點符號]
+
+要求：
+1. 為每一句(以，。？!：； 作為分隔)進行語譯
+2. 如果該行有常見文言字詞，請為該字及其詞解粗體
+3. 用中文繁體字顯示所有內容
+4. 不要提供思考過程
+5. 保持嚴格的格式，使用標題和清晰的分段
+6. 不要在任何地方使用多餘的星號(*)
+7. 不要使用任何裝飾性符號或分隔線
+8. 確保每部分都有明確的標題（原文、語譯、逐字解釋）
+9. 逐字解釋只解釋文字字符，不解釋標點符號如，。？!等
+
+需要翻譯的文言文：
+${forceRetranslate ? text + '。' : text}`;
+
+                const response = await callAPI(prompt);
+                
+                if (response && response.choices && response.choices[0].message.content) {
+                    const translatedText = response.choices[0].message.content;
+                    setCachedTranslation(text, title, translatedText);
+                    displayTranslationResult(translatedText);
+                } else {
+                    throw new Error('翻譯失敗');
+                }
+            } catch (error) {
+                console.error('翻譯錯誤:', error);
+                document.getElementById('translation-content').innerHTML = `
+                    <div class="p-6 text-center border rounded-lg" style="background: #fadbd8; border-color: #f1948a; color: var(--error-color);">
+                        <i class="fas fa-exclamation-triangle text-2xl mb-3"></i>
+                        <p>翻譯過程中發生錯誤，請稍後再試或使用重新翻譯功能</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById('translation-loading').classList.add('hidden');
+            }
+        }
+
+        function retranslateText() {
+            if (currentTranslatingText) {
+                const title = currentWorkTitle || 'custom';
+                clearTranslationCache(currentTranslatingText, title);
+                translateText(true);
+            } else {
+                alert('請先進行翻譯後再使用重新翻譯功能');
+            }
+        }
+
+        function displayTranslationResult(text) {
+            text = text.replace(/<think>.*?<\/think>/gs, '');
+            
+            const blocks = splitTranslationBlocks(text);
+            let htmlOutput = '';
+            currentOriginalTexts = [];
+            
+            for (let i = 0; i < blocks.length; i++) {
+                const block = blocks[i];
+                
+                if (block.type === 'original') {
+                    const formattedOriginal = formatOriginalText(block.content);
+                    currentOriginalTexts.push(formattedOriginal);
+                    htmlOutput += `
+                        <div class="mb-8 rounded-lg p-6 border-l-5" style="background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3)); border-left-color: var(--primary-color);">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--primary-color);">
+                                <i class="fas fa-scroll mr-2"></i>原文
+                            </h3>
+                            <div class="text-lg leading-loose" style="font-family: 'Noto Serif TC', serif;">
+                                ${formattedOriginal}
+                            </div>
+                        </div>
+                    `;
+                } else if (block.type === 'translation') {
+                    htmlOutput += `
+                        <div class="translation-section" style="border-left-color: var(--secondary-color);">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--secondary-color);">
+                                <i class="fas fa-language mr-2"></i>語譯
+                            </h3>
+                            <div class="text-base leading-relaxed">
+                                ${formatTranslationText(block.content)}
+                            </div>
+                        </div>
+                    `;
+                } else if (block.type === 'breakdown') {
+                    htmlOutput += `
+                        <div class="translation-section" style="border-left-color: var(--highlight-color);">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--highlight-color);">
+                                <i class="fas fa-search mr-2"></i>逐字解釋
+                            </h3>
+                            <div class="space-y-3">
+                                ${formatCharacterBreakdown(block.content)}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('translation-content').innerHTML = htmlOutput;
+            setupClickToReveal();
+            
+            if (currentOriginalTexts.length > 0) {
+                showFloatingOriginal();
+            }
+        }
+
+        function splitTranslationBlocks(text) {
+            const blocks = [];
+            const lines = text.split('\n');
+            let currentBlock = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                if (line.startsWith('原文：') || line === '原文') {
+                    if (currentBlock) blocks.push(currentBlock);
+                    currentBlock = { type: 'original', content: '' };
+                    const content = line.replace(/^原文：?\s*/, '');
+                    if (content) currentBlock.content += content + '\n';
+                }
+                else if (line.startsWith('語譯：') || line === '語譯') {
+                    if (currentBlock) blocks.push(currentBlock);
+                    currentBlock = { type: 'translation', content: '' };
+                    const content = line.replace(/^語譯：?\s*/, '');
+                    if (content) currentBlock.content += content + '\n';
+                }
+                else if (line.startsWith('逐字解釋：') || line === '逐字解釋') {
+                    if (currentBlock) blocks.push(currentBlock);
+                    currentBlock = { type: 'breakdown', content: '' };
+                    const content = line.replace(/^逐字解釋：?\s*/, '');
+                    if (content) currentBlock.content += content + '\n';
+                }
+                else if (currentBlock) {
+                    currentBlock.content += line + '\n';
+                }
+            }
+
+            if (currentBlock) blocks.push(currentBlock);
+            return blocks;
+        }
+
+        function formatOriginalText(text) {
+            text = text.trim().replace(/^：+/, '').replace(/：+$/, '');
+            return text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
+        }
+
+        function formatTranslationText(text) {
+            text = text.trim().replace(/^：+/, '').replace(/：+$/, '');
+            
+            const sentences = text.split(/(?<=[。！？；：])/);
+            let formattedText = '';
+            
+            sentences.forEach(sentence => {
+                if (sentence.trim()) {
+                    formattedText += `<div class="sentence-container"><span class="hidden-text click-to-reveal">${sentence.trim()}</span></div>`;
+                }
+            });
+            
+            return formattedText.replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
+        }
+
+        function formatCharacterBreakdown(text) {
+            text = text.trim().replace(/^：+/, '').replace(/：+$/, '');
+
+            text = text.replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
+
+            const lines = text.split('\n').filter(line => line.trim());
+            let html = '';
+
+            lines.forEach(line => {
+                line = line.replace(/^\*+/, '').replace(/\*+$/, '').trim();
+
+                const parts = line.split(/:|：/);
+                if (parts.length >= 2) {
+                    const character = parts[0].trim();
+                    const explanation = parts.slice(1).join(':').trim();
+                    if (/[\u4e00-\u9fff]/.test(character)) {
+                        html += `
+                            <div class="character-item">
+                                <span class="character">${character}</span>
+                                <div class="explanation">：${explanation}</div>
+                            </div>
+                        `;
+                    }
+                } else if (line.trim()) {
+                    html += `<div class="character-item">${line}</div>`;
+                }
+            });
+
+            return html;
+        }
+
+        function setupClickToReveal() {
+            const characters = document.querySelectorAll('.character');
+            characters.forEach(character => {
+                character.addEventListener('click', function() {
+                    const explanation = this.nextElementSibling;
+                    if (explanation && explanation.classList.contains('explanation')) {
+                        explanation.classList.toggle('revealed');
+                    }
+                });
+            });
+
+            const hiddenSentences = document.querySelectorAll('.hidden-text.click-to-reveal');
+            hiddenSentences.forEach(sentence => {
+                sentence.addEventListener('click', function() {
+                    this.classList.toggle('revealed');
+                });
+            });
+        }
+
+        function revealAllTranslations() {
+            const hiddenElements = document.querySelectorAll('.hidden-text');
+            hiddenElements.forEach(el => {
+                el.classList.add('revealed');
+            });
+
+            const explanations = document.querySelectorAll('.explanation');
+            explanations.forEach(el => {
+                el.classList.add('revealed');
+            });
+        }
+
+        async function startQuiz() {
+            const text = document.getElementById('classical-text').value.trim();
+            
+            if (!text) {
+                alert('請先選擇或輸入文言文內容');
+                return;
+            }
+            
+            try {
+                showPage('quiz');
+                document.getElementById('quiz-loading').classList.remove('hidden');
+                document.getElementById('quiz-content').classList.add('hidden');
+                document.getElementById('quiz-result').classList.add('hidden');
+                
+                currentQuestionIndex = 0;
+                quizAnswers = [];
+                
+                const prompt = `請基於以下文言文內容生成5道中文繁體選擇題，用來測試學習者的理解。
+
+文言文內容：
+${text}
+
+題目要求：
+1. 生成5道選擇題，每題4個選項（A、B、C、D）
+2. 題目類型應包括：
+   - 字詞釋義（問某個字在文中的意思）
+   - 句子翻譯（問某句話的現代中文意思）
+   - 文章理解（問文章主旨、作者情感等）
+   - 背景知識（問作者、文體、寫作背景等）
+3. 難度適合${getDifficultyName(currentLevel)}水準
+4. 每題都要有明確的正確答案和解釋
+
+請嚴格按照以下JSON格式回答，不要包含任何其他內容：
+
+{
+  "questions": [
+    {
+      "question": "以下哪個選項最能解釋文中「某字」的意思？",
+      "options": {
+        "A": "選項A的內容",
+        "B": "選項B的內容",
+        "C": "選項C的內容",
+        "D": "選項D的內容"
+      },
+      "correct": "A",
+      "explanation": "正確答案是A，因為在此文中「某字」指的是..."
+    }
+  ]
+}`;
+
+                let attempts = 0;
+                let quizData = null;
+                
+                while (attempts < 3 && !quizData) {
+                    attempts++;
+                    try {
+                        const response = await callAPI(prompt);
+                        
+                        if (response && response.choices && response.choices[0].message.content) {
+                            const content = response.choices[0].message.content.trim();
+                            const cleanContent = content.replace(/<think>.*?<\/think>/gs, '');
+                            const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+                            
+                            if (jsonMatch) {
+                                quizData = JSON.parse(jsonMatch[0]);
+                                
+                                if (quizData.questions && quizData.questions.length >= 5) {
+                                    currentQuizQuestions = quizData.questions.slice(0, 5);
+                                    break;
+                                } else {
+                                    console.warn(`第${attempts}次嘗試：題目數量不足`);
+                                    quizData = null;
+                                }
+                            } else {
+                                console.warn(`第${attempts}次嘗試：未找到JSON格式`);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn(`第${attempts}次嘗試失敗:`, error);
+                    }
+                }
+                
+                if (currentQuizQuestions && currentQuizQuestions.length > 0) {
+                    showQuestion(0);
+                    document.getElementById('quiz-loading').classList.add('hidden');
+                    document.getElementById('quiz-content').classList.remove('hidden');
+                } else {
+                    throw new Error('無法生成有效的測驗題目');
+                }
+                
+            } catch (error) {
+                console.error('測驗生成錯誤:', error);
+                alert('測驗生成失敗，請稍後再試');
+                showPage('learning');
+            }
+        }
+
+        function getDifficultyName(level) {
+            const difficulties = ['', '初級', '進階', '中級', '高級', '專家'];
+            return difficulties[level] || '初級';
+        }
+
+        function showQuestion(index) {
+            if (index >= currentQuizQuestions.length) {
+                finishQuiz();
+                return;
+            }
+            
+            const question = currentQuizQuestions[index];
+            currentQuestionIndex = index;
+            
+            document.getElementById('quiz-progress-text').textContent = `${index + 1}/${currentQuizQuestions.length}`;
+            const progress = ((index + 1) / currentQuizQuestions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
+            
+            document.getElementById('quiz-question').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            Object.entries(question.options).forEach(([key, value]) => {
+                const option = document.createElement('div');
+                option.className = 'quiz-option p-4 border-2 rounded-lg cursor-pointer transition-colors';
+                option.style.borderColor = 'var(--light-accent)';
+                option.innerHTML = `<span class="font-bold mr-3">${key}.</span>${value}`;
+                option.onclick = () => selectOption(option, key);
+                optionsContainer.appendChild(option);
+            });
+            
+            document.getElementById('quiz-prev').disabled = index === 0;
+            document.getElementById('quiz-next').disabled = false;
+            
+            if (quizAnswers[index]) {
+                const selectedOption = optionsContainer.children[quizAnswers[index].charCodeAt(0) - 65];
+                if (selectedOption) {
+                    selectOption(selectedOption, quizAnswers[index]);
+                }
+            }
+        }
+
+        function selectOption(element, key) {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.style.borderColor = 'var(--light-accent)';
+                option.style.backgroundColor = 'transparent';
+            });
+            
+            element.style.borderColor = 'var(--primary-color)';
+            element.style.backgroundColor = 'rgba(127, 179, 213, 0.1)';
+            
+            quizAnswers[currentQuestionIndex] = key;
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                showQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+                showQuestion(currentQuestionIndex + 1);
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            let correctCount = 0;
+            for (let i = 0; i < currentQuizQuestions.length; i++) {
+                if (quizAnswers[i] === currentQuizQuestions[i].correct) {
+                    correctCount++;
+                }
+            }
+            
+            const score = (correctCount / currentQuizQuestions.length) * 100;
+            const passed = score >= 60;
+            
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            if (passed) {
+                document.getElementById('quiz-success').classList.remove('hidden');
+                document.getElementById('quiz-failure').classList.add('hidden');
+                completeLevel();
+            } else {
+                document.getElementById('quiz-success').classList.add('hidden');
+                document.getElementById('quiz-failure').classList.remove('hidden');
+            }
+        }
+
+        function completeLevel() {
+            const userProgress = getUserProgress();
+            
+            if (!userProgress[currentAuthor]) {
+                userProgress[currentAuthor] = {};
+            }
+            
+            userProgress[currentAuthor][currentLevel] = {
+                completed: true,
+                completedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userProgress', JSON.stringify(userProgress));
+            
+            updateProgressDisplay();
+            updateLevelStatus();
+            
+            // 檢查是否首次解鎖該角色
+            const authorProgress = userProgress[currentAuthor];
+            const completedLevels = Object.values(authorProgress).filter(level => level.completed).length;
+            
+            if (completedLevels === 1) {
+                // 首次解鎖，開始POST生成
+                startPostGeneration(currentAuthor);
+                showNotification(`恭喜解鎖${authorsData[currentAuthor].name}！現在可以在社群中看到他的動態了`);
+            }
+        }
+
+        function nextLevel() {
+            if (currentLevel < 5) {
+                selectLevel(currentLevel + 1);
+                showPage('learning');
+            } else {
+                showPage('authors');
+            }
+        }
+
+        function retryQuiz() {
+            currentQuestionIndex = 0;
+            quizAnswers = [];
+            showQuestion(0);
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+        }
+
+        function getUserProgress() {
+            const progress = localStorage.getItem('userProgress');
+            return progress ? JSON.parse(progress) : {};
+        }
+
+        function loadUserProgress() {
+            const progress = getUserProgress();
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const userProgress = getUserProgress();
+            
+            ['sushe', 'hanyu'].forEach(authorId => {
+                const authorProgress = userProgress[authorId] || {};
+                const completedCount = Object.values(authorProgress).filter(level => level.completed).length;
+                
+                const progressText = document.getElementById(`${authorId}-progress-text`);
+                if (progressText) {
+                    progressText.textContent = `${completedCount}/5 關卡完成`;
+                }
+                
+                for (let i = 1; i <= 5; i++) {
+                    const circle = document.getElementById(`${authorId}-progress-${i}`);
+                    if (circle) {
+                        if (authorProgress[i] && authorProgress[i].completed) {
+                            circle.classList.add('completed');
+                        } else {
+                            circle.classList.remove('completed');
+                        }
+                    }
+                }
+            });
+        }
+
+   function initializeSocialPosts() {
+    const storedPosts = localStorage.getItem('posts');
+    posts = storedPosts ? JSON.parse(storedPosts) : [];
+    postHistory = JSON.parse(localStorage.getItem('postHistory')) || [];
+    displayPosts();
+}
+
+        function updateUnlockStatus() {
+            const unlockedChars = getUnlockedCharacters();
+            const statusContainer = document.getElementById('unlock-status');
+            
+            if (unlockedChars.length === 0) {
+                statusContainer.innerHTML = `
+                    <div class="locked-character-notice">
+                        <i class="fas fa-lock mr-2"></i>
+                        <strong>提示：</strong>您需要完成學習關卡才能看到古人的動態。請前往「作家」頁面開始學習！
+                    </div>
+                `;
+            } else {
+                const unlockedNames = unlockedChars.map(id => authorsData[id].name).join('、');
+                statusContainer.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-center">
+                        <i class="fas fa-unlock-alt mr-2"></i>
+                        <strong>已解鎖：</strong>${unlockedNames} 的社群動態
+                    </div>
+                `;
+            }
+        }
+
+        function showSocialTab(tab) {
+            currentSocialTab = tab;
+            
+            document.querySelectorAll('.social-tab').forEach(tabBtn => {
+                if (tabBtn.id === `social-tab-${tab}`) {
+                    tabBtn.className = 'social-tab px-6 py-3 rounded-lg font-semibold gradient-primary text-white';
+                } else {
+                    tabBtn.className = 'social-tab px-6 py-3 rounded-lg font-semibold text-gray-600';
+                    tabBtn.style.background = 'rgba(127, 179, 213, 0.1)';
+                }
+            });
+            
+            displayPosts();
+        }
+
+        function displayPosts() {
+            const container = document.getElementById('posts-container');
+            const unlockedChars = getUnlockedCharacters();
+            
+            // 過濾POST：只顯示已解鎖角色的POST和用戶自己的POST
+            let filteredPosts = posts.filter(post => 
+                post.author === 'user' || unlockedChars.includes(post.author)
+            );
+            
+            // 根據當前標籤再次過濾
+            if (currentSocialTab !== 'all') {
+                filteredPosts = filteredPosts.filter(post => 
+                    post.author === currentSocialTab || post.author === 'user'
+                );
+            }
+            
+            if (filteredPosts.length === 0) {
+                if (unlockedChars.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-lock text-6xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500 mb-4">尚未解鎖任何古人角色</p>
+                            <p class="text-sm text-gray-400">完成學習關卡即可解鎖對應角色的社群動態</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-comments text-6xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">還沒有動態，快來發佈第一條吧！</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+            
+            container.innerHTML = filteredPosts.map(post => `
+    <div class="post-card bg-white rounded-2xl p-6" style="box-shadow: var(--shadow-light);">
+        <div class="flex items-center mb-4">
+            <div class="w-12 h-12 rounded-full mr-4 flex items-center justify-center" style="background: ${getAuthorGradient(post.author)};">
+                ${authorAvatars[post.authorName] 
+                    ? `<img src="${authorAvatars[post.authorName]}" alt="${post.authorName}" class="w-full h-full object-cover rounded-full">`
+                    : `<i class="fas ${getAuthorIcon(post.author)} text-white text-lg"></i>`
+                }
+            </div>
+            <div>
+                <h3 class="font-bold" style="color: var(--text-color);">${post.authorName}</h3>
+                <p class="text-sm" style="color: var(--dark-color);">${formatTimestamp(post.timestamp)}</p>
+            </div>
+        </div>
+        <div class="mb-4">
+            <p class="leading-relaxed" style="font-family: 'Noto Serif TC', serif; color: var(--dark-color);">${post.content}</p>
+        </div>
+    <!-- 添加留言區域 -->
+    <div class="comment-section mt-4">
+        <div class="comments-list mb-2">
+            ${post.comments.map(comment => {
+    const isUser = comment.author === '我';
+    const avatarUrl = authorAvatars[comment.author];
+    const gradientClass = isUser ? 'gradient-accent' : 
+                          (comment.author === '蘇軾' ? 'gradient-primary' : 'gradient-secondary');
+    const avatarContent = avatarUrl 
+        ? `<img src="${avatarUrl}" alt="${comment.author}" class="w-full h-full object-cover rounded-full">`
+        : `<i class="fas fa-user text-white text-sm"></i>`;
+    
+    return `
+        <div class="comment bg-gray-50 p-3 rounded-lg mb-3">
+            <div class="flex items-start">
+                <div class="w-8 h-8 rounded-full mr-3 flex items-center justify-center ${gradientClass}">
+                    ${avatarContent}
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-semibold text-sm" style="color: var(--primary-color);">${comment.author}</span>
+                        <span class="text-xs" style="color: var(--dark-color);">${formatTimestamp(comment.timestamp)}</span>
+                    </div>
+                    <p class="text-base leading-relaxed" style="color: var(--text-color);">${comment.content}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}).join('')}
+        </div>
+        <div class="comment-input flex">
+            <input type="text" class="flex-grow p-2 border rounded-l-lg" placeholder="輸入留言..." data-post-id="${post.id}">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-r-lg" onclick="submitComment(${post.id}, this)">發送</button>
+        </div>
+    </div>
+    <!-- 現有按鈕 -->
+    <div class="flex items-center justify-between mt-4">
+        <button onclick="likePost(${post.id})" class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
+            <i class="fas fa-heart"></i>
+            <span>${post.likes}</span>
+        </button>
+        <!-- 移除原有的留言按鈕 -->
+    </div>
+</div>
+            `).join('');
+        }
+
+        function getAuthorGradient(authorId) {
+            const gradients = {
+                'sushe': 'gradient-primary',
+                'hanyu': 'gradient-secondary',
+                'user': 'gradient-accent'
+            };
+            return gradients[authorId] || 'gradient-accent';
+        }
+
+        function getAuthorIcon(authorId) {
+            const icons = {
+                'sushe': 'fa-user-tie',
+                'hanyu': 'fa-graduation-cap',
+                'user': 'fa-user'
+            };
+            return icons[authorId] || 'fa-user';
+        }
+
+       function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const options = {
+        timeZone: 'Asia/Hong_Kong',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    };
+    return new Intl.DateTimeFormat('zh-HK', options).format(date);
+}
+
+        async function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            
+            if (!content) {
+                alert('請輸入動態內容');
+                return;
+            }
+            
+            const newPost = {
+                id: posts.length + 1,
+                author: 'user',
+                authorName: '我',
+                content: content,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                comments: []
+            };
+            
+            posts.unshift(newPost);
+            document.getElementById('post-content').value = '';
+            
+            await generateAIResponse(content);
+            
+            displayPosts();
+        }
+
+function savePosts() {
+    localStorage.setItem('posts', JSON.stringify(posts));
+}
+
+
+
+        async function generateAIResponse(userContent) {
+            const userProgress = getUserProgress();
+            const unlockedCharacters = [];
+            
+            if (userProgress.sushe && Object.keys(userProgress.sushe).length === 5) {
+                unlockedCharacters.push('sushe');
+            }
+            if (userProgress.hanyu && Object.keys(userProgress.hanyu).length === 5) {
+                unlockedCharacters.push('hanyu');
+            }
+            
+            if (unlockedCharacters.length === 0) return;
+            
+            const respondingCharacter = unlockedCharacters[Math.floor(Math.random() * unlockedCharacters.length)];
+            
+            try {
+                const characterInfo = {
+                    sushe: {
+                        name: '蘇軾',
+                        personality: '豁達樂觀，熱愛自然，善於哲理思考，喜歡用比喻和典故',
+                        style: '文風優雅，常引用詩詞，語言富有哲理性'
+                    },
+                    hanyu: {
+                        name: '韓愈',
+                        personality: '嚴謹治學，重視道德修養，推崇古文，有教育家風範',
+                        style: '文風簡潔有力，喜歡說理，常有教誨意味，言簡意賅'
+                    }
+                };
+                
+                const char = characterInfo[respondingCharacter];
+                const prompt = `你現在是${char.name}，請以${char.name}的身份和語言風格回應以下用戶的動態內容。
+
+用戶動態：${userContent}
+
+要求：
+1. 保持${char.name}的性格特點：${char.personality}
+2. 使用${char.name}的語言風格：${char.style}
+3. 回應應該簡潔（不超過70字）
+4. 使用繁體中文
+5. 只有引用作品，例如詩文才會用文言文，其他情況一概用生活化的香港粵語，但發言要切合該人物角色性格
+6. 回應要友善且有建設性
+7. 絕對不要在回應後加入任何註解或解釋，例如「（註解：...）」或「註：」
+8. 回應內容必須是純粹的對話，不要包含任何解釋性文字
+9. 內容沒有任何「,」、「、」、「？」、「！」、「；」、開關引號以外的符號，例如「*」、「#」及「【】」都是禁用的，POST內容是完整的一段文字
+
+請直接給出回應內容，不要其他解釋：`;
+
+                const response = await callAPI(prompt);
+                
+                if (response && response.choices && response.choices[0].message.content) {
+                    const aiContent = response.choices[0].message.content.trim();
+                    
+                    const aiPost = {
+                        id: posts.length + 1,
+                        author: respondingCharacter,
+                        authorName: char.name,
+                        content: aiContent,
+                        timestamp: new Date(Date.now() + 30000).toISOString(),
+                        likes: Math.floor(Math.random() * 10) + 1,
+                        comments: []
+                    };
+                    
+                    setTimeout(() => {
+                        posts.unshift(aiPost);
+                        displayPosts();
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('AI回應生成失敗:', error);
+            }
+        }
+
+        function likePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.likes++;
+                displayPosts();
+            }
+        }
+
+        
+
+async function triggerAIComments(postId) {
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const unlockedChars = getUnlockedCharacters();
+    if (!unlockedChars.length) return;
+
+    const responders = unlockedChars.sort(() => 0.5 - Math.random()).slice(0, Math.min(2, unlockedChars.length));
+    const postContent = post.content;
+    const allComments = post.comments.map(comment => `${comment.author}: ${comment.content}`).join('\n');
+
+    responders.forEach(async (charId) => {
+        const char = authorsData[charId];
+        const isPostOwner = charId === post.author;
+
+        let prompt;
+        if (isPostOwner) {
+            prompt = `你現在是${char.name}，這是你的 POST，用戶和其他人對你的 POST 進行了留言。
+            POST 內容：${postContent}
+            所有留言：
+            ${allComments}
+            要求：
+            1. 以 POST 主的身份回應用戶和其他人的留言
+            2. 展現${char.name}的性格：${char.personality}
+            3. 使用${char.name}的語言風格：${char.style}
+            4. 回應簡潔（嚴格規定不超過70字，違反則無效），用繁體中文
+            5. 回應時要兼及不同人的留言(但不包括自己的留言)，必須優先針對用家的留言回應
+            6. 使用「＠」標註回覆對象，例如「＠蘇軾」或「＠我」
+            7. 絕對不要在回應後加入任何註解或解釋，例如「（註解：...）」或「註：」
+            8. 回應內容必須是純粹的對話，不要包含任何解釋性文字
+            9. POST內容沒有任何「,」、「、」、「？」、「！」、「；」、開關引號以外的符號，例如「*」、「#」及「【】」都是禁用的，POST內容是完整的一段文字
+            直接給出回應內容`;
+        } else {
+            prompt = `你現在是${char.name}，這是${post.authorName}的 POST，用戶和其他人對${post.authorName}的 POST 進行了留言。
+            POST 內容：${postContent}
+            所有留言：
+            ${allComments}
+            要求：
+            1. 以第三者的身份回應用戶和其他人的留言
+            2. 展現${char.name}的性格：${char.personality}
+            3. 使用${char.name}的語言風格：${char.style}
+            4. 回應簡潔（嚴格規定不超過70字，違反則無效），用繁體中文
+            5. 回應時要兼及不同人的留言
+            6. 使用「＠」標註回覆對象，例如「＠蘇軾」或「＠我」
+            7. 絕對不要在回應後加入任何註解或解釋，例如「（註解：...）」或「註：」
+            8. 回應內容必須是純粹的對話，不要包含任何解釋性文字
+            9. POST內容沒有任何「,」、「、」、「？」、「！」、「；」、開關引號以外的符號，例如「*」、「#」及「【】」都是禁用的，POST內容是完整的一段文字
+            直接給出回應內容`;
+        }
+
+        try {
+            const response = await callAPI(prompt);
+            if (response && response.choices && response.choices[0].message.content) {
+                let content = response.choices[0].message.content.trim();
+                content = content.replace(/<think>.*?<\/think>/gs, '');
+                content = content.replace(/（[^）]*）/g, '');
+                content = content.replace(/註：.*$/g, '');
+                post.comments.push({
+                    author: char.name,
+                    content: content,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('posts', JSON.stringify(posts));
+                displayPosts();
+            }
+        } catch (error) {
+            console.error(`生成${char.name}的回覆失敗:`, error);
+        }
+    });
+}
+
+async function triggerAICommentsForPost(postId) {
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const unlockedChars = getUnlockedCharacters().filter(charId => charId !== post.author);
+    if (!unlockedChars.length) return;
+
+    const responder = unlockedChars[Math.floor(Math.random() * unlockedChars.length)];
+    const char = authorsData[responder];
+
+    const prompt = `你現在是${char.name}，這是${post.authorName}的 POST。
+POST 內容：${post.content}
+要求：
+1. 以${char.name}的身份對${post.authorName}的 POST 進行留言
+2. 展現${char.name}的性格：${char.personality}
+3. 使用${char.name}的語言風格：${char.style}
+4. 回應簡潔（嚴格規定不超過70字，違反則無效），用繁體中文
+5. 絕對不要留言後加入任何註解或解釋，例如「（註解：...）」或「註：」
+6. POST內容必須不包含任何解釋性文字
+7. POST內容沒有任何「,」、「、」、「？」、「！」、「；」、開關引號以外的符號，例如「*」、「#」及「【】」都是禁用的，POST內容是完整的一段文字
+8. 直接給出留言內容`;
+
+    try {
+        const response = await callAPI(prompt);
+        if (response && response.choices && response.choices[0].message.content) {
+            let content = response.choices[0].message.content.trim();
+            content = content.replace(/<think>.*?<\/think>/gs, ''); // 過濾思考過程
+
+            post.comments.push({
+                author: char.name,
+                content: content,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('posts', JSON.stringify(posts));
+            displayPosts();
+        }
+    } catch (error) {
+        console.error(`生成${char.name}的留言失敗:`, error);
+    }
+}
+
+
+
+
+
+        function loadMorePosts() {
+            alert('已顯示全部動態');
+        }
+
+        // API調用函數
+        async function callAPI(prompt) {
+            const apiKey = API_KEYS[currentApiKeyIndex];
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: MODEL,
+                        messages: [
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 64000
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API 請求失敗: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('API 調用錯誤:', error);
+                currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
+                if (currentApiKeyIndex === 0) {
+                    throw new Error('所有API密鑰嘗試失敗');
+                }
+                return callAPI(prompt);
+            }
+        }
+
+        // 清除文本
+        function clearText() {
+            document.getElementById('classical-text').value = '';
+            document.getElementById('work-selector').value = '';
+            currentOriginalTexts = [];
+            hideFloatingWindow();
+        }
+
+    </script>
+</body>
+</html>

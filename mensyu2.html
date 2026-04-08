@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="文樞 - 古典文學互動學習平台，與古代文豪互動學習">
+    <title>文樞 - 古典文學互動學習平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #7FB3D5;
+            --secondary-color: #7DCEA0;
+            --highlight-color: #A2D9CE;
+            --accent-color: #A9CCE3;
+            --soft-color: #76D7C4;
+            --text-color: #2C3E50;
+            --dark-color: #5D6D7E;
+            --light-accent: #D6EAF8;
+            --error-color: #E74C3C;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --hidden-bg: #ecf0f1;
+            --border-radius: 12px;
+            --border-radius-small: 6px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            color: var(--text-color);
+            background: linear-gradient(to bottom right, #F5F7FA, #EAF2F8);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .max-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .max-container {
+                padding: 0 0.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .max-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .max-container {
+                padding: 0 2rem;
+            }
+        }
+
+        .gradient-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+        }
+
+        .gradient-secondary {
+            background: linear-gradient(to right, var(--secondary-color), var(--soft-color));
+        }
+
+        .gradient-accent {
+            background: linear-gradient(to right, var(--highlight-color), var(--accent-color));
+        }
+
+        .nav-btn:hover, .social-tab:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            color: var(--primary-color);
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        @media (max-width: 767px) {
+            .nav-menu {
+                flex-direction: column;
+                align-items: flex-start;
+                background: white;
+                width: 100%;
+                position: absolute;
+                top: 4rem;
+                left: 0;
+                padding: 1rem;
+                box-shadow: var(--shadow-light);
+            }
+            .nav-btn {
+                width: 100%;
+                padding: 0.5rem 0;
+                text-align: left;
+            }
+        }
+
+        .test-control-panel {
+            position: fixed;
+            top: 4.5rem;
+            right: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-medium);
+            z-index: 1000;
+            max-width: 300px;
+            width: 90%;
+        }
+
+        @media (max-width: 640px) {
+            .test-control-panel {
+                top: 5rem;
+                right: 0.5rem;
+                width: 95%;
+                max-width: none;
+            }
+        }
+
+        .test-control-panel h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .test-control-panel button, .test-control-panel input {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid var(--light-accent);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--text-color);
+            background: var(--light-accent);
+            transition: all 0.3s ease;
+        }
+
+        .test-control-panel button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .post-notification {
+            position: fixed;
+            top: 5rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-light);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .post-notification.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .post-notification {
+                top: 6rem;
+                right: 0.5rem;
+                width: 90%;
+                text-align: center;
+            }
+        }
+
+        .floating-original {
+            position: fixed;
+            top: 6rem;
+            right: 1rem;
+            width: 300px;
+            max-width: 300px;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-medium);
+            z-index: 1000;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 640px) {
+            .floating-original {
+                width: 90%;
+                max-width: none;
+                top: 7rem;
+                right: 0.5rem;
+            }
+        }
+
+        .floating-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .floating-title {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .floating-controls button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+        }
+
+        .floating-content {
+            padding: 1rem;
+            font-family: 'Noto Serif TC', serif;
+            color: var(--text-color);
+        }
+
+        .reopen-floating {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        @media (max-width: 640px) {
+            .reopen-floating {
+                bottom: 0.5rem;
+                right: 0.5rem;
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+
+        .character-card {
+            transition: transform 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .progress-circle {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            text-align: center;
+            border-radius: 50%;
+            background: var(--light-accent);
+            color: var(--dark-color);
+            margin: 0 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-circle.completed {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 640px) {
+            .progress-circle {
+                width: 1.25rem;
+                height: 1.25rem;
+                line-height: 1.25rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        .locked-card {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-option:hover {
+            background: rgba(127, 179, 213, 0.2);
+        }
+
+        .quiz-option.selected {
+            background: rgba(127, 179, 213, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        /* New styles for translation page */
+        .translation-block {
+            margin-bottom: 35px;
+            border-bottom: 2px dashed var(--light-accent);
+            padding-bottom: 25px;
+        }
+
+        .translation-block:last-child {
+            border-bottom: none;
+        }
+
+        .original-title, .translation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-family: 'Noto Serif TC', serif;
+        }
+
+        .original-text {
+            font-size: 18px;
+            line-height: 2;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3));
+            border-left: 5px solid var(--primary-color);
+            border-radius: var(--border-radius-small);
+            font-family: 'Noto Serif TC', serif;
+        }
+
+        .translation-text {
+            background: linear-gradient(135deg, rgba(162, 217, 206, 0.2), rgba(118, 215, 196, 0.1));
+            padding: 20px;
+            border-radius: var(--border-radius-small);
+            line-height: 1.8;
+            font-size: 16px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .character-breakdown {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160, 0.1));
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            border-left: 5px solid var(--highlight-color);
+        }
+
+        .character-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(127, 179, 213, 0.1);
+        }
+
+        .character-item:last-child {
+            border-bottom: none;
+        }
+        
+        .click-to-reveal {
+            position: relative;
+            cursor: pointer;
+            margin: 0 2px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .hidden-text {
+            background: var(--hidden-bg);
+            color: transparent;
+            border-radius: 4px;
+            padding: 4px 8px;
+            transition: var(--transition);
+            user-select: none;
+            position: relative;
+        }
+
+        .hidden-text::before {
+            content: '點擊顯示';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+            font-size: 12px;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .hidden-text:hover {
+            background: rgba(127, 179, 213, 0.2);
+        }
+
+        .hidden-text.revealed {
+            background: transparent;
+            color: inherit;
+        }
+
+        .hidden-text.revealed::before {
+            display: none;
+        }
+
+        .sentence-container {
+            margin-bottom: 15px;
+        }
+
+        .character {
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px dotted var(--primary-color);
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .character:hover {
+            background: rgba(127, 179, 213, 0.1);
+        }
+
+        .explanation {
+            display: none;
+            padding-left: 20px;
+            color: var(--dark-color);
+            font-style: italic;
+            margin-top: 8px;
+            border-left: 3px solid var(--secondary-color);
+            padding: 8px 0 8px 15px;
+        }
+
+        .explanation.revealed {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .common-word {
+            background: linear-gradient(135deg, rgba(127, 179, 213, 0.2), rgba(162, 217, 206, 0.2));
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 100px; /* Or a sufficiently large value */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth guard overlay -->
+    <div id="auth-guard-overlay" style="position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(15,15,40,.96);backdrop-filter:blur(8px);">
+        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(124,58,237,.3);border-radius:20px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <p style="color:#fff;font-size:1.15rem;font-weight:700;margin:0 0 .5rem;">需要登入</p>
+            <p style="color:rgba(255,255,255,.65);font-size:.9rem;margin:0 0 1.5rem;">請先登入才能使用此工具。</p>
+            <a href="./index.html" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:.65rem 1.75rem;border-radius:12px;font-weight:600;font-size:.95rem;">前往登入</a>
+        </div>
+    </div>
+    
+
+    <div id="test-control-panel" class="test-control-panel" aria-label="測試控制面板">
+        <h4><i class="fas fa-cogs mr-2"></i>測試控制</h4>
+        <button onclick="unlockAllCharacters()" aria-label="解鎖所有角色"><i class="fas fa-unlock mr-2"></i>全部通關</button>
+        <button onclick="resetProgress()" aria-label="重置進度"><i class="fas fa-redo mr-2"></i>重置進度</button>
+        <label for="post-interval">POST間距（分鐘）：</label>
+        <input type="number" id="post-interval" value="60" min="1" max="1440" aria-label="設定貼文間距">
+        <button onclick="updatePostInterval()" aria-label="更新貼文間距"><i class="fas fa-clock mr-2"></i>更新間距</button>
+        <button onclick="generateTestPost()" aria-label="生成測試貼文"><i class="fas fa-plus mr-2"></i>立即生成POST</button>
+        <button onclick="generateTestComment()" aria-label="生成測試留言"><i class="fas fa-comment mr-2"></i>生成測試留言</button>
+        <button onclick="triggerAICommentsForLatestPost()" aria-label="觸發古人留言"><i class="fas fa-comment mr-2"></i>觸發古人留言</button>
+        <button onclick="toggleTestPanel()" aria-label="隱藏測試面板"><i class="fas fa-eye-slash mr-2"></i>隱藏面板</button>
+    </div>
+
+    <div id="post-notification" class="post-notification" role="alert">
+        <i class="fas fa-bell mr-2"></i>
+        <span id="notification-text">新動態已生成</span>
+    </div>
+
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect" role="navigation" aria-label="主導航">
+        <div class="max-container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a id="back-btn-link" href="./index.html" class="nav-btn transition-colors flex items-center" style="color: var(--primary-color); text-decoration: none; font-weight: 700;" aria-label="返回">
+                        <i class="fas fa-arrow-left mr-1"></i><span class="hidden sm:inline">返回</span>
+                    </a>
+                    <!-- Mensyu brand: platform logo image -->
+                    <div class="flex items-center space-x-2">
+                      <img src="https://i.ibb.co/gMQh9L2S/Edu-Genius-AI.png" alt="EduGenius AI Logo" aria-hidden="true" style="width:28px;height:28px;border-radius:8px;object-fit:cover;flex-shrink:0">
+                      <h1 class="text-2xl font-bold" style="font-family: 'Noto Serif TC', serif; color: var(--primary-color);">文樞</h1>
+                    </div>
+                    <span class="text-sm hidden md:block" style="color: var(--dark-color);">古典文學互動學習平台</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden nav-toggle" onclick="toggleNavMenu()" aria-label="切換導航菜單">
+                        <i class="fas fa-bars text-2xl" style="color: var(--dark-color);"></i>
+                    </button>
+                    <div id="nav-menu" class="nav-menu hidden md:flex items-center space-x-6">
+                        <button onclick="showPage('home')" class="nav-btn transition-colors" style="color: var(--dark-color);" aria-label="首頁">
+                            <i class="fas fa-home mr-2"></i>首頁
+                        </button>
+                        <button onclick="showPage('authors')" class="nav-btn transition-colors" style="color: var(--dark-color);" aria-label="作家">
+                            <i class="fas fa-user-graduate mr-2"></i>作家
+                        </button>
+                        <button onclick="showPage('social')" class="nav-btn transition-colors" style="color: var(--dark-color);" aria-label="社群">
+                            <i class="fas fa-users mr-2"></i>社群
+                        </button>
+                        <a href="./mensyu-tran.html" class="nav-btn transition-colors" style="color: var(--dark-color); text-decoration: none;" aria-label="翻譯工具">
+                            <i class="fas fa-language mr-2"></i>翻譯
+                        </a>
+                        <a href="./history.html" class="nav-btn transition-colors" style="color: var(--dark-color); text-decoration: none;" aria-label="歷史記錄">
+                            <i class="fas fa-history mr-2"></i>歷史
+                        </a>
+                        <button onclick="toggleTestPanel()" class="nav-btn transition-colors text-xs" style="color: var(--accent-color);" aria-label="測試控制">
+                            <i class="fas fa-cogs mr-1"></i>測試
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-16">
+        <div id="home-page" class="page">
+            <div class="min-h-screen flex items-center justify-center">
+                <div class="max-container mx-auto text-center px-4">
+                    <div class="mb-8">
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                            與古代文豪為友
+                        </h2>
+                        <p class="text-lg sm:text-xl mb-8" style="color: var(--dark-color);">
+                            透過學習古典文學，解鎖歷史人物，與他們在虛擬社群中互動
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-12">
+                        <div class="gradient-primary rounded-2xl p-6 sm:p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="showPage('authors')" role="button" aria-label="開始學習">
+                            <i class="fas fa-book-open text-3xl sm:text-4xl mb-4"></i>
+                            <h3 class="text-xl sm:text-2xl font-bold mb-3">開始學習</h3>
+                            <p class="text-sm sm:text-base">選擇你喜愛的作家，開始文言文學習之旅</p>
+                        </div>
+                        <div class="gradient-secondary rounded-2xl p-6 sm:p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="showPage('social')" role="button" aria-label="古人社群">
+                            <i class="fas fa-comments text-3xl sm:text-4xl mb-4"></i>
+                            <h3 class="text-xl sm:text-2xl font-bold mb-3">古人社群</h3>
+                            <p class="text-sm sm:text-base">與解鎖的古代文豪在虛擬世界中交流互動</p>
+                        </div>
+                        <div class="gradient-accent rounded-2xl p-6 sm:p-8 text-white transform hover:scale-105 transition-transform cursor-pointer" onclick="window.location.href='./mensyu-tran.html'" role="button" aria-label="文言翻譯">
+                            <i class="fas fa-language text-3xl sm:text-4xl mb-4"></i>
+                            <h3 class="text-xl sm:text-2xl font-bold mb-3">文言翻譯</h3>
+                            <p class="text-sm sm:text-base">專業的文言文翻譯工具，助您理解古文精髓</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 sm:p-8" style="box-shadow: var(--shadow-light);">
+                        <h3 class="text-xl sm:text-2xl font-bold mb-6" style="color: var(--text-color);">平台特色</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl font-bold" style="color: var(--primary-color);">互動學習</div>
+                                <div class="text-sm sm:text-base" style="color: var(--dark-color);">逐字解析，深入理解</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-3xl font-bold" style="color: var(--highlight-color);">社群互動</div>
+                                <div class="text-sm sm:text-base" style="color: var(--dark-color);">與古代文豪對話</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="authors-page" class="page hidden">
+            <div class="min-h-screen py-8 sm:py-12">
+                <div class="max-container mx-auto px-4">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                        選擇你的文學導師
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
+                        <div class="character-card bg-white rounded-3xl overflow-hidden" style="box-shadow: var(--shadow-medium);" role="region" aria-label="蘇軾卡片">
+                            <div class="gradient-primary p-6 sm:p-8 text-white text-center">
+                                <div class="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                                    <img src="https://i.ibb.co/wrhVfCjJ/image.png" alt="蘇軾頭像" class="w-full h-full object-cover rounded-full" loading="lazy" srcset="https://i.ibb.co/wrhVfCjJ/image.png 1x, https://i.ibb.co/wrhVfCjJ/image.png 2x">
+                                </div>
+                                <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">蘇軾</h3>
+                                <p class="opacity-90 text-sm sm:text-base">北宋文學家、書畫家</p>
+                            </div>
+                            <div class="p-6 sm:p-8">
+                                <p style="color: var(--dark-color);" class="mb-6 text-sm sm:text-base">
+                                    蘇軾（1037-1101），字子瞻，號東坡居士，北宋著名文學家、書法家、畫家。唐宋八大家之一，豪放派詞人代表。
+                                </p>
+                                <div class="mb-6">
+                                    <h4 class="font-bold mb-3 text-base sm:text-lg" style="color: var(--text-color);">可學習作品：</h4>
+                                    <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                        <li>• 記承天寺夜遊</li>
+                                        <li>• 永遇樂 并序</li>
+                                        <li>• 超然臺記</li>
+                                        <li>• 方山子傳</li>
+                                        <li>• 前赤壁賦</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-5 gap-2 mb-6">
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(125, 206, 160, 0.2); color: var(--highlight-color);">初級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(127, 179, 213, 0.2); color: var(--primary-color);">進階</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(162, 217, 206, 0.2); color: var(--secondary-color);">中級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(169, 204, 227, 0.2); color: var(--accent-color);">高級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(118, 215, 196, 0.2); color: var(--soft-color);">專家</div>
+                                </div>
+                                <div class="progress-display">
+                                    <div class="text-center">
+                                        <h5 class="font-semibold mb-2 text-sm sm:text-base" style="color: var(--primary-color);">學習進度</h5>
+                                        <div class="text-sm" style="color: var(--dark-color);">
+                                            <span id="sushe-progress-text">0/5 關卡完成</span>
+                                            <div class="progress-circles">
+                                                <div class="progress-circle" id="sushe-progress-1">1</div>
+                                                <div class="progress-circle" id="sushe-progress-2">2</div>
+                                                <div class="progress-circle" id="sushe-progress-3">3</div>
+                                                <div class="progress-circle" id="sushe-progress-4">4</div>
+                                                <div class="progress-circle" id="sushe-progress-5">5</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectAuthor('sushe')" class="w-full gradient-primary text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all mt-4" aria-label="開始學習蘇軾">
+                                    開始學習
+                                </button>
+                            </div>
+                        </div>
+                        <div class="character-card bg-white rounded-3xl overflow-hidden" style="box-shadow: var(--shadow-medium);" role="region" aria-label="韓愈卡片">
+                            <div class="gradient-secondary p-6 sm:p-8 text-white text-center">
+                                <div class="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                                    <img src="https://i.ibb.co/LhqsVb40/image.png" alt="韓愈頭像" class="w-full h-full object-cover rounded-full" loading="lazy" srcset="https://i.ibb.co/LhqsVb40/image.png 1x, https://i.ibb.co/LhqsVb40/image.png 2x">
+                                </div>
+                                <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">韓愈</h3>
+                                <p class="opacity-90 text-sm sm:text-base">唐代文學家、思想家</p>
+                            </div>
+                            <div class="p-6 sm:p-8">
+                                <p style="color: var(--dark-color);" class="mb-6 text-sm sm:text-base">
+                                    韓愈（768-824），字退之，河南河陽人，唐代傑出的文學家、思想家。唐宋八大家之首，古文運動的倡導者。
+                                </p>
+                                <div class="mb-6">
+                                    <h4 class="font-bold mb-3 text-base sm:text-lg" style="color: var(--text-color);">可學習作品：</h4>
+                                    <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                        <li>• 雜說四（馬說）</li>
+                                        <li>• 送孟東野序</li>
+                                        <li>• 答李翊書</li>
+                                        <li>• 祭十二郎文</li>
+                                        <li>• 最後的挑戰</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-5 gap-2 mb-6">
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(125, 206, 160, 0.2); color: var(--highlight-color);">初級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(127, 179, 213, 0.2); color: var(--primary-color);">進階</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(162, 217, 206, 0.2); color: var(--secondary-color);">中級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(169, 204, 227, 0.2); color: var(--accent-color);">高級</div>
+                                    <div class="difficulty-badge text-xs px-2 py-1 rounded-full text-center" style="background: rgba(118, 215, 196, 0.2); color: var(--soft-color);">專家</div>
+                                </div>
+                                <div class="progress-display">
+                                    <div class="text-center">
+                                        <h5 class="font-semibold mb-2 text-sm sm:text-base" style="color: var(--highlight-color);">學習進度</h5>
+                                        <div class="text-sm" style="color: var(--dark-color);">
+                                            <span id="hanyu-progress-text">0/5 關卡完成</span>
+                                            <div class="progress-circles">
+                                                <div class="progress-circle" id="hanyu-progress-1">1</div>
+                                                <div class="progress-circle" id="hanyu-progress-2">2</div>
+                                                <div class="progress-circle" id="hanyu-progress-3">3</div>
+                                                <div class="progress-circle" id="hanyu-progress-4">4</div>
+                                                <div class="progress-circle" id="hanyu-progress-5">5</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectAuthor('hanyu')" class="w-full gradient-secondary text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all mt-4" aria-label="開始學習韓愈">
+                                    開始學習
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="learning-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <button onclick="showPage('authors')" class="mb-6 flex items-center transition-colors" style="color: var(--primary-color);" aria-label="返回作家選擇">
+                        <i class="fas fa-arrow-left mr-2"></i>返回作家選擇
+                    </button>
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 mb-8" style="box-shadow: var(--shadow-light);">
+                        <div class="flex items-center mb-6 flex-col sm:flex-row">
+                            <div id="author-avatar" class="w-16 h-16 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-4">
+                                <i class="fas fa-user-tie text-2xl text-white"></i>
+                            </div>
+                            <div class="text-center sm:text-left">
+                                <h2 id="author-name" class="text-2xl sm:text-3xl font-bold" style="color: var(--text-color);"></h2>
+                                <p id="author-desc" class="text-sm sm:text-base" style="color: var(--dark-color);"></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                            <div id="level-1" class="level-card cursor-pointer" onclick="selectLevel(1)" role="button" aria-label="第一關">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors" style="background: rgba(125, 206, 160, 0.1); border-color: var(--highlight-color);">
+                                    <i class="fas fa-seedling text-xl sm:text-2xl mb-2" style="color: var(--highlight-color);"></i>
+                                    <div class="font-bold text-sm sm:text-base" style="color: var(--highlight-color);">第一關</div>
+                                    <div class="text-xs sm:text-sm" style="color: var(--highlight-color);">初級</div>
+                                </div>
+                            </div>
+                            <div id="level-2" class="level-card cursor-pointer locked" onclick="selectLevel(2)" role="button" aria-label="第二關">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(127, 179, 213, 0.1); border-color: var(--primary-color);">
+                                    <i class="fas fa-mountain text-xl sm:text-2xl mb-2" style="color: var(--primary-color);"></i>
+                                    <div class="font-bold text-sm sm:text-base" style="color: var(--primary-color);">第二關</div>
+                                    <div class="text-xs sm:text-sm" style="color: var(--primary-color);">進階</div>
+                                </div>
+                            </div>
+                            <div id="level-3" class="level-card cursor-pointer locked" onclick="selectLevel(3)" role="button" aria-label="第三關">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(162, 217, 206, 0.1); border-color: var(--secondary-color);">
+                                    <i class="fas fa-fire text-xl sm:text-2xl mb-2" style="color: var(--secondary-color);"></i>
+                                    <div class="font-bold text-sm sm:text-base" style="color: var(--secondary-color);">第三關</div>
+                                    <div class="text-xs sm:text-sm" style="color: var(--secondary-color);">中級</div>
+                                </div>
+                            </div>
+                            <div id="level-4" class="level-card cursor-pointer locked" onclick="selectLevel(4)" role="button" aria-label="第四關">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(169, 204, 227, 0.1); border-color: var(--accent-color);">
+                                    <i class="fas fa-dragon text-xl sm:text-2xl mb-2" style="color: var(--accent-color);"></i>
+                                    <div class="font-bold text-sm sm:text-base" style="color: var(--accent-color);">第四關</div>
+                                    <div class="text-xs sm:text-sm" style="color: var(--accent-color);">高級</div>
+                                </div>
+                            </div>
+                            <div id="level-5" class="level-card cursor-pointer locked" onclick="selectLevel(5)" role="button" aria-label="第五關">
+                                <div class="border-2 rounded-xl p-4 text-center hover:bg-opacity-80 transition-colors locked-card" style="background: rgba(118, 215, 196, 0.1); border-color: var(--soft-color);">
+                                    <i class="fas fa-crown text-xl sm:text-2xl mb-2" style="color: var(--soft-color);"></i>
+                                    <div class="font-bold text-sm sm:text-base" style="color: var(--soft-color);">第五關</div>
+                                    <div class="text-xs sm:text-sm" style="color: var(--soft-color);">專家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-2xl p-6 sm:p-8" style="box-shadow: var(--shadow-light);">
+                                <div class="flex items-center justify-center mb-4">
+                                     <i class="fas fa-book-open mr-3" style="color: var(--primary-color);"></i>
+                                     <h3 id="work-title" class="text-xl sm:text-2xl font-bold" style="color: var(--text-color); font-family: 'Noto Serif TC', serif;"></h3>
+                                </div>
+                                <div class="mb-6">
+                                    <textarea id="classical-text" class="w-full h-48 sm:h-64 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-opacity-50" style="border-color: var(--light-accent); font-family: 'Noto Serif TC', serif; line-height: 1.8; color: var(--text-color);" placeholder="作品內容將在此顯示..." aria-label="輸入或顯示文言文內容"></textarea>
+                                </div>
+                                <div class="flex flex-wrap gap-4">
+                                    <button onclick="translateText()" class="flex-1 min-w-32 gradient-primary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="翻譯解析">
+                                        <i class="fas fa-language mr-2"></i>翻譯解析
+                                    </button>
+                                    <button onclick="startQuiz()" class="flex-1 min-w-32 gradient-secondary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="開始測驗">
+                                        <i class="fas fa-question-circle mr-2"></i>開始測驗
+                                    </button>
+                                    <button onclick="clearText()" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background: var(--error-color);" aria-label="清除內容">
+                                        <i class="fas fa-eraser mr-2"></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-6 sm:space-y-8">
+                            <div class="bg-white rounded-2xl p-6" style="box-shadow: var(--shadow-light);">
+                                <h4 class="text-lg font-bold mb-4" style="color: var(--text-color);">學習進度</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm" style="color: var(--dark-color);">當前關卡</span>
+                                        <span id="current-level" class="text-sm font-bold" style="color: var(--primary-color);">第一關</span>
+                                    </div>
+                                    <div class="w-full rounded-full h-2" style="background: rgba(127, 179, 213, 0.2);">
+                                        <div id="progress-bar" class="gradient-primary h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <div class="text-xs text-center" style="color: var(--dark-color);">完成度 0%</div>
+                                </div>
+                            </div>
+                            <div class="rounded-2xl p-6 border" style="background: linear-gradient(to bottom right, rgba(127, 179, 213, 0.05), rgba(173, 214, 241, 0.05)); border-color: rgba(127, 179, 213, 0.2);">
+                                <h4 class="text-lg font-bold mb-3" style="color: var(--primary-color);">
+                                    <i class="fas fa-lightbulb mr-2"></i>學習提示
+                                </h4>
+                                <ul class="space-y-2 text-sm" style="color: var(--dark-color);">
+                                    <li>• 先仔細閱讀原文</li>
+                                    <li>• 使用翻譯功能理解含義</li>
+                                    <li>• 通過測驗檢驗學習成果</li>
+                                    <li>• 完成關卡解鎖新內容</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="translation-page" class="page hidden">
+            <div id="floating-original" class="floating-original" role="complementary" aria-label="原文視窗">
+                <div class="floating-header">
+                    <div class="floating-title">原文</div>
+                    <div class="floating-controls">
+                        <button id="floating-toggle" class="floating-toggle" title="隱藏原文" aria-label="隱藏原文視窗">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="floating-content">
+                    <div id="floating-original-text" class="floating-original-text"></div>
+                </div>
+            </div>
+            <button id="reopen-floating" class="reopen-floating hidden" title="顯示原文" aria-label="顯示原文視窗">
+                <i class="fas fa-scroll"></i>
+            </button>
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <button onclick="showPage('learning')" class="mb-6 flex items-center transition-colors" style="color: var(--primary-color);" aria-label="返回學習頁面">
+                        <i class="fas fa-arrow-left mr-2"></i>返回學習
+                    </button>
+                    <div id="translation-main-content" class="translation-main-content">
+                        <div class="bg-white rounded-2xl p-6 sm:p-8" style="box-shadow: var(--shadow-light);">
+                            <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-center" style="color: var(--text-color);">
+                                <i class="fas fa-language mr-3" style="color: var(--primary-color);"></i>翻譯解析結果
+                            </h2>
+                            <div id="translation-loading" class="hidden text-center py-12">
+                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent" style="border-color: var(--primary-color);"></div>
+                                <p class="mt-4" style="color: var(--dark-color);">正在翻譯解析中，請稍候...</p>
+                            </div>
+                            <div id="translation-content" class="space-y-8" role="main"></div>
+                            <div class="flex flex-wrap justify-center mt-8 gap-4">
+                                <button onclick="showPage('learning')" class="flex-1 min-w-32 gradient-primary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="繼續學習">
+                                    繼續學習
+                                </button>
+                                <button onclick="startQuiz()" class="flex-1 min-w-32 gradient-secondary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="開始測驗">
+                                    開始測驗
+                                </button>
+                                <button onclick="revealAllTranslations()" class="flex-1 min-w-32 gradient-accent text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="顯示全部解釋">
+                                    <i class="fas fa-eye mr-2"></i>顯示全部解釋
+                                </button>
+                                <button onclick="retranslateText()" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" style="background: #e67e22;" aria-label="重新翻譯">
+                                    <i class="fas fa-redo mr-2"></i>重新翻譯
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8" style="box-shadow: var(--shadow-light);">
+                        <div class="text-center mb-8">
+                            <h2 class="text-2xl sm:text-3xl font-bold mb-2" style="color: var(--text-color);">關卡測驗</h2>
+                            <p class="text-sm sm:text-base" style="color: var(--dark-color);">回答問題以完成當前關卡</p>
+                        </div>
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm" style="color: var(--dark-color);">問題進度</span>
+                                <span id="quiz-progress-text" class="text-sm" style="color: var(--dark-color);">1/5</span>
+                            </div>
+                            <div class="w-full rounded-full h-3" style="background: rgba(127, 179, 213, 0.2);">
+                                <div id="quiz-progress-bar" class="gradient-primary h-3 rounded-full transition-all duration-500" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        <div id="quiz-loading" class="hidden text-center py-12">
+                            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent" style="border-color: var(--primary-color);"></div>
+                            <p class="mt-4" style="color: var(--dark-color);">正在生成測驗題目...</p>
+                        </div>
+                        <div id="quiz-content" class="hidden">
+                            <div class="mb-8">
+                                <h3 id="quiz-question" class="text-lg sm:text-xl font-bold mb-6" style="color: var(--text-color);"></h3>
+                                <div id="quiz-options" class="space-y-3"></div>
+                            </div>
+                            <div class="flex flex-wrap justify-between gap-4">
+                                <button id="quiz-prev" onclick="previousQuestion()" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold transition-colors disabled:opacity-50" style="background: var(--dark-color);" disabled aria-label="上一題">
+                                    <i class="fas fa-chevron-left mr-2"></i>上一題
+                                </button>
+                                <button id="quiz-next" onclick="nextQuestion()" class="flex-1 min-w-32 gradient-primary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50" aria-label="下一題">
+                                    下一題
+                                </button>
+                            </div>
+                        </div>
+                        <div id="quiz-result" class="hidden text-center">
+                            <div id="quiz-success" class="hidden">
+                                <i class="fas fa-trophy text-5xl sm:text-6xl mb-4" style="color: #f1c40f;"></i>
+                                <h3 class="text-2xl sm:text-3xl font-bold mb-4" style="color: var(--highlight-color);">恭喜通過關卡！</h3>
+                                <p class="mb-6 text-sm sm:text-base" style="color: var(--dark-color);">您已成功完成當前關卡，解鎖下一個挑戰！</p>
+                                <div class="flex flex-wrap justify-center gap-4">
+                                    <button onclick="nextLevel()" class="flex-1 min-w-32 gradient-secondary text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="下一關卡">
+                                        下一關卡
+                                    </button>
+                                    <button onclick="showPage('learning')" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);" aria-label="返回學習">
+                                        返回學習
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="quiz-failure" class="hidden">
+                                <i class="fas fa-times-circle text-5xl sm:text-6xl mb-4" style="color: var(--error-color);"></i>
+                                <h3 class="text-2xl sm:text-3xl font-bold mb-4" style="color: var(--error-color);">未能通過關卡</h3>
+                                <p class="mb-6 text-sm sm:text-base" style="color: var(--dark-color);">需要答對更多題目才能通過，請繼續努力！</p>
+                                <div class="flex flex-wrap justify-center gap-4">
+                                    <button onclick="retryQuiz()" class="flex-1 min-w-32 gradient-accent text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="重新挑戰">
+                                        重新挑戰
+                                    </button>
+                                    <button onclick="showPage('learning')" class="flex-1 min-w-32 text-white py-3 px-6 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);" aria-label="返回學習">
+                                        返回學習
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="social-page" class="page hidden">
+            <div class="min-h-screen py-8">
+                <div class="max-container mx-auto px-4">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8" style="font-family: 'Noto Serif TC', serif; color: var(--text-color);">
+                        古人社群
+                    </h2>
+                    <div id="unlock-status" class="mb-8 text-center"></div>
+                    <div class="bg-white rounded-2xl p-6 mb-8" style="box-shadow: var(--shadow-light);">
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <button id="social-tab-all" onclick="showSocialTab('all')" class="social-tab px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold gradient-primary text-white" aria-label="全部動態">
+                                <i class="fas fa-globe mr-2"></i>全部動態
+                            </button>
+                            <button id="social-tab-sushe" onclick="showSocialTab('sushe')" class="social-tab px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-gray-600" style="background: rgba(127, 179, 213, 0.1);" aria-label="蘇軾動態">
+                                <i class="fas fa-user-tie mr-2"></i>蘇軾
+                            </button>
+                            <button id="social-tab-hanyu" onclick="showSocialTab('hanyu')" class="social-tab px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-gray-600" style="background: rgba(125, 206, 160, 0.1);" aria-label="韓愈動態">
+                                <i class="fas fa-graduation-cap mr-2"></i>韓愈
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 mb-8" style="box-shadow: var(--shadow-light);">
+                        <h3 class="text-lg sm:text-xl font-bold mb-4" style="color: var(--text-color);">
+                            <i class="fas fa-edit mr-2" style="color: var(--primary-color);"></i>發佈新動態
+                        </h3>
+                        <div class="mb-4">
+                            <textarea id="post-content" class="w-full h-24 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-opacity-50" style="border-color: var(--light-accent); color: var(--text-color);" placeholder="分享你的想法..." aria-label="輸入新動態內容"></textarea>
+                        </div>
+                        <button onclick="createPost()" class="gradient-primary text-white py-2 sm:py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="發佈動態">
+                            <i class="fas fa-paper-plane mr-2"></i>發佈
+                        </button>
+                    </div>
+                    <div id="posts-container" class="space-y-6"></div>
+                    <div class="text-center mt-8">
+                        <button onclick="loadMorePosts()" class="text-white py-2 sm:py-3 px-6 sm:px-8 rounded-lg font-semibold transition-colors" style="background: var(--dark-color);" aria-label="載入更多動態">
+                            載入更多動態
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
+   
+    <script>
+        // JavaScript code here
+        // Constants
+const POLLINATIONS_API_KEY = 'sk_dk6t4GEymji9dVR9jPau4bB9RJYJ0JbP';
+const POLLINATIONS_API_URL = 'https://gen.pollinations.ai/v1/chat/completions';
+const FALLBACK_MODELS = ['gemini-search', 'gemini-fast', 'glm', 'openai-fast', 'openai', 'deepseek'];
+const ANCIENT_CHARACTERS = ['sushe', 'hanyu'];
+
+// Global variables
+let posts = JSON.parse(localStorage.getItem('posts')) || [];
+let postHistory = JSON.parse(localStorage.getItem('postHistory')) || [];
+let commentHistory = JSON.parse(localStorage.getItem('commentHistory')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let currentAuthor = '';
+let currentLevel = 1;
+let currentQuizQuestions = [];
+let currentQuestionIndex = 0;
+let quizAnswers = [];
+let currentSocialTab = 'all';
+let isFloatingVisible = true;
+let currentOriginalTexts = [];
+let currentTranslatingText = '';
+let currentWorkTitle = '';
+let postGenerationIntervals = {};
+let postInterval = parseInt(localStorage.getItem('postInterval')) || 60;
+let isTestPanelVisible = localStorage.getItem('isTestPanelVisible') === 'true';
+let isNavMenuOpen = false;
+
+const authorAvatars = {
+    '蘇軾': 'https://i.ibb.co/wrhVfCjJ/image.png',
+    '韓愈': 'https://i.ibb.co/LhqsVb40/image.png',
+    '我': 'https://i.ibb.co/4gP649Xr/user-male-circle-v1.png'
+};
+
+const authorsData = {
+    sushe: {
+        name: '蘇軾',
+        description: '北宋文學家、書畫家',
+        avatar: 'gradient-primary',
+        personality: '豁達樂觀，熱愛自然，善於哲理思考，喜歡用比喻和典故。經歷過多次貶謫，但始終保持樂觀態度，善於在逆境中尋找樂趣。',
+        background: '北宋著名文學家，字子瞻，號東坡居士。官至翰林學士，因政治立場多次被貶。作品豐富，詩詞散文皆精。',
+        style: '文風優雅，常引用詩詞，語言富有哲理性，喜歡用粵語表達日常感受。',
+        works: {
+            1: { title: '記承天寺夜遊', content: `元豐六年十月十二日，夜，解衣欲睡，月色入戶，欣然起行。念無與為樂者，遂至承天寺，尋張懷民。懷民亦未寢，相與步於中庭。 庭下如積水空明，水中藻、荇交橫，蓋竹柏影也。 何夜無月？何處無竹柏？但少閑人如吾兩人者耳。` },
+            2: { title: '永遇樂 并序', content: `夜宿燕子樓，夢盼盼，因作此詞。 明月如霜，好風如水，清景無限。曲港跳魚，圓荷瀉露，寂寞無人見。紞如三鼓，鏗然一葉，黯黯夢雲驚斷。夜茫茫，重尋無處，覺來小園行徧。　 天涯倦客，山中歸路，望斷故園心眼。燕子樓空，佳人何在？空鎖樓中燕！古今如夢，何曾夢覺？但有舊歡新怨。異時對、黃樓夜景，為余浩歎！` },
+            3: { title: '超然臺記', content: `凡物皆有可觀。苟有可觀，皆有可樂，非必怪奇偉麗者也。哺糟啜醨皆可以醉；果蔬草木，皆可以飽。推此類也，吾安往而不樂？夫所爲求褔而辭禍者，以褔可喜而禍可悲也。人之所欲無窮，而物之可以足吾欲者有盡，美惡之辨戰乎中，而去取之擇交乎前。則可樂者常少，而可悲者常多。是謂求禍而辭褔。夫求禍而辭福，豈人之情也哉？物有以蓋之矣。彼遊於物之內，而不遊於物之外。物非有大小也，自其內而觀之，未有不高且大者也。彼挾其高大以臨我，則我常眩亂反覆，如隙中之觀鬥，又焉知勝負之所在。是以美惡橫生，而憂樂出焉，可不大哀乎！余自錢塘移守膠西，釋舟楫之安，而服車馬之勞；去雕牆之美，而蔽採椽之居；背湖山之觀，而適桑麻之野。始至之日，歲比不登，盜賊滿野，獄訟充斥；而齋廚索然，日食杞菊。人固疑余之不樂也。處之期年，而貌加豐，髮之白者日以反黑。余既樂其風俗之淳，而其吏民亦安予之拙也。於是治其園圃，潔其庭宇，伐安丘、高密之木，以修補破敗，爲苟全之計。而園之北，因城以爲臺者舊矣，稍葺而新之。時相與登覽，放意肆志焉。南望馬耳常山，出沒隱見，若近若遠，庶幾有隱君子乎！而其東則盧山，秦人盧敖之所從遁也。西望穆陵，隱然如城郭，師尚父、齊桓公之遺烈，猶有存者。北俯濰水，慨然太息，思淮陰之功，而弔其不終。臺高而安，深而明，夏涼而冬溫。雨雪之朝，風月之夕，余未嘗不在，客未嘗不從。擷園蔬，取池魚，釀秫酒，瀹脫粟而食之，曰︰「樂哉遊乎！」方是時，余弟子由，適在濟南，聞而賦之，且名其臺曰「超然」，以見余之無所往而不樂者，蓋遊於物之外也。` },
+            4: { title: '方山子傳', content: `方山子，光、黃間隱人也。少時慕朱家、郭解為人，閭里之俠皆宗之。稍壯，折節讀書，欲以此馳騁當世，然終不遇。晚乃遯於光、黃間，曰︰「岐亭」。庵居蔬食，不與世相聞。棄車馬，毀冠服，徒步往來山中，人莫識也。見其所著帽，方屋而高，曰︰「此豈古方山冠之遺像乎？」因謂之「方山子」。余謫居於黃，過岐亭，適見焉，曰︰「嗚呼！此吾故人陳慥季常也，何為而在此？」方山子亦矍然問余所以至此者。余告之故。俛而不答，仰而笑。呼余宿其家。環堵蕭然，而妻子奴婢，皆有自得之意。余既聳然異之，獨念方山子少時，使酒好劍，用財如糞土；前十有九年，余在岐山，見方山子從兩騎，挾二矢，遊西山。鵲起於前，使騎逐而射之，不獲；方山子怒馬獨出，一發得之。因與余馬上論用兵，及古今成敗，自謂一世豪士。今幾日耳，精悍之色，猶見於眉間，而豈山中之人哉？然方山子世有勳閥，當得官；使從事於其間，今已顯聞。而其家在洛陽，園宅壯麗，與公侯等；河北有田，歲得帛千匹，亦足以富樂；皆棄不取，獨來窮山中，此豈無得而然哉？余聞光、黃間多異人，往往佯狂垢污，不可得而見，方山子儻見之歟？` },
+            5: { title: '前赤壁賦', content: `壬戌之秋，七月既望，蘇子與客泛舟遊于赤壁之下。清風徐來，水波不興。舉酒屬客，誦明月之詩，歌窈窕之章。少焉，月出於東山之上，徘徊於斗牛之間。白露橫江，水光接天。縱一葦之所如，凌萬頃之茫然。浩浩乎如馮虛御風，而不知其所止；飄飄乎如遺世獨立，羽化而登仙。於是飲酒樂甚，扣舷而歌之。歌曰：「桂棹兮蘭槳，擊空明兮泝流光。渺渺兮予懷，望美人兮天一方。」客有吹洞簫者，倚歌而和之，其聲嗚嗚然，如怨如慕，如泣如訴；餘音嫋嫋，不絕如縷；舞幽壑之潛蛟，泣孤舟之嫠婦。蘇子愀然，正襟危坐而問客曰：「何為其然也？」客曰：「『月明星稀，烏鵲南飛』，此非曹孟德之詩乎？西望夏口，東望武昌。山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？方其破荊州，下江陵，順流而東也，舳艫千里，旌旗蔽空，釃酒臨江，橫槊賦詩，固一世之雄也，而今安在哉？況吾與子漁樵於江渚之上，侶魚蝦而友糜鹿，駕一葉之扁舟，舉匏樽以相屬；寄蜉蝣與天地，渺滄海之一粟。哀吾生之須臾，羨長江之無窮；挾飛仙以遨遊，抱明月而長終。知不可乎驟得，托遺響於悲風。」蘇子曰：「客亦知夫水與月乎？逝者如斯，而未嘗往也；盈虛者如彼，而卒莫消長也。蓋將自其變者而觀之，則天地曾不能以一瞬；自其不變者而觀之，則物於我皆無盡也。而又何羨乎？且夫天地之間，物各有主。苟非吾之所有，雖一毫而莫取。惟江上之清風，與山間之明月，耳得之而為聲，目遇之而成色。取之無禁，用之不竭。是造物者之無盡藏也，而吾與子之所共適。」客喜而笑，洗盞更酌。肴核既盡，杯盤狼藉。相與枕藉乎舟中，不知東方之既白。` }
+        }
+    },
+    hanyu: {
+        name: '韓愈',
+        description: '唐代文學家、思想家',
+        avatar: 'gradient-secondary',
+        personality: '嚴謹治學，重視道德修養，推崇古文，有教育家風範。性格直率，敢於批評時政，主張復古改革。',
+        background: '唐代文學家，字退之，河南河陽人。唐宋八大家之首，古文運動的倡導者。官至吏部侍郎，諡號文公。',
+        style: '文風簡潔有力，喜歡說理，常有教誨意味，用粵語分享生活感悟和學問心得。',
+        works: {
+            1: { title: '雜說四（馬說）', content: `世有伯樂，然後有千里馬。千里馬常有，而伯樂不常有，故雖有名馬，祇辱於奴隸人之手，駢死於槽櫪之間，不以千里稱也。馬之千里者，一食或盡粟一石。食馬者，不知其能千里而食也。是馬也，雖有千里之能，食不飽，力不足，才美不外見，且欲與常馬等不可得，安求其能千里也？策之不以其道，食之不能盡其材，鳴之而不能通其意，執策而臨之，曰︰「天下無馬。」嗚呼！其真無馬邪？其真不知馬也！` },
+            2: { title: '送孟東野序', content: `大凡物不得其平則鳴。草木之無聲，風撓之鳴。水之無聲，風蕩之鳴。其躍也，或激之；其趨也，或梗之；其沸也，或炙之。金石之無聲，或擊之鳴。人之於言也亦然，有不得已者而后言。謌也有思，其哭也有懷。凡出乎口而為聲者，其皆有弗平者乎！樂也者，鬱於中而泄於外者也，擇其善鳴者而假之鳴。金、石、絲、竹、匏、土、革、木八者，物之善鳴者也。維天之於時也亦然，擇其善鳴者而假之鳴。是故以鳥鳴春，以雷鳴夏，以蟲鳴秋，以風鳴冬。四時之相推敓，其必有不得其平者乎？其於人也亦然，人聲之精者為言，文辭之於言，又其精也，尤擇其善鳴者而假之鳴。其在唐虞，咎陶禹其善鳴者也，而假以鳴。夔弗能以文辭鳴，又自假於《韶》以鳴。夏之時，五子以其歌鳴。伊尹鳴殷，周公鳴周。凡載於詩書六藝，皆鳴之善者也。周之衰，孔子之徒鳴之，其聲大而遠。傳曰︰「天將以夫子為木鐸。」其弗信矣乎？其末也，莊周以其荒唐之辭鳴。楚，大國也，其亡也，以屈原鳴。臧孫辰、孟軻、荀卿，以道鳴者也。楊朱、墨翟、管夷吾、晏嬰、老聃、申不害、韓非、昚到、田駢、鄒衍、尸佼、孫武、張儀、蘇秦之屬，皆以其術鳴。秦之興，李斯鳴之。漢之時，司馬遷、相如、揚雄，最其善鳴者也。其下魏晉氏，鳴者不及於古，然亦未嘗絕也。就其善者，其聲清以浮，其節數以急，其辭淫以哀，其志弛以肆；其為言也，亂雜而無章。將天醜其德莫之顧邪？何為乎不鳴其善鳴者也？唐之有天下，陳子昂、蘇源明、元結、李白、杜甫、李觀，皆以其所能鳴。其存而在下者，孟郊東野始以其詩鳴。其高出魏晉，不懈而及於古；其他浸乎漢氏矣。從吾遊者，李翱、張籍其尤也。三子者之鳴信善矣。抑不知天將和其聲而使鳴國家之盛邪？抑將窮餓其身、思愁其心腸而使自鳴其不幸邪？三子者之命則懸乎天矣。其在上也奚以喜？其在下也奚以悲？東野之役於江南也，有若不釋然者，故吾道其命於天者以解之。` },
+            3: { title: '答李翊書', content: `六月二十六日，愈白李生足下︰生之書辭甚高，而其問何下而恭也！能如是，誰不欲告生以其道？道德之歸也有日矣，況其外之文乎！抑愈所謂望孔子之門牆而不入於其宮者，焉足以知是且非邪？雖然，不可不為生言之。生所謂立言者，是也；生所為者與所期者，甚似而幾矣。抑不知生之志，蘄勝於人而取於人邪？將蘄至於古之立言者邪？蘄勝於人而取於人，則固勝於人而可取於人矣；將蘄至於古之立言者，則無望其速成，無誘於勢利；養其根而竢其實，加其膏而希其光。根之茂者其實遂，膏之沃者其光曄；仁義之人，其言藹如也。抑又有難者︰愈之所為，不自知其至猶未也。雖然，學之二十餘年矣。始者，非三代兩漢之書不敢觀，非聖人之志不敢存；處若忘，行若遺，儼乎其若思，茫乎其若迷。當其取於心而注於手也，惟陳言之務去，戛戛乎其難哉！其觀於人，不知其非笑之為非笑也。如是者亦有年，猶不改。然後識古書之正偽，與雖正而不至焉者，昭昭然白黑分矣；而務去之，乃徐有得也。當其取於心而注於手也，汨汨然來矣。其觀於人也，笑之，則以為喜；譽之，則以為憂，以其猶有人之說者存也。如是者亦有年，然後浩乎其沛然矣。吾又惧其雜也，迎而拒之，平心而察之；其皆醇也，然後肆焉。雖然，不可以不養也。行之乎仁義之途，游之乎詩書之源，無迷其途，無絕其源，終吾身而已矣。氣，水也；言，浮物也。水大，而物之浮者大小畢浮。氣之與言猶是也。氣盛，則言之短長與聲之高下者皆宜。雖如是，其敢自謂幾於成乎？雖幾於成，其用於人也，奚敢焉？雖然，待用於人者，其肖於器邪？用與舍屬諸人。君子則不然︰處心有道，行己有方；用則施諸人，舍則傳諸其徒，垂諸文而為後世法；如是者，其亦足樂乎，其無足樂也？有志乎古者希矣！志乎古，必遺乎今，吾誠樂而悲之。亟稱其人，所以勸之，非敢褎其可褎，而貶其可貶也。問於愈者多矣，念生之書不志乎利，聊相為言之。愈白。` },
+            4: { title: ' 祭十二郎文', content: `年月日，季父愈，聞汝喪之七日，乃能銜哀致誠，使建中遠具時羞之奠，告汝十二郎之靈︰嗚呼！吾少孤，及長，不省所怙，惟兄嫂是依。中年，兄歿南方，吾與汝俱幼，從嫂歸葬河陽，既又與汝就食江南。零丁孤苦，未嘗一日相離也。吾上有三兄，皆不幸早世。承先人後者，在孫惟汝，在子惟吾；兩世一身，形單影隻。嫂嘗撫汝指吾而言曰︰「韓氏兩世，惟此而已！」汝時尤小，當不復記憶；吾時雖能記憶，亦未知其言之悲也。吾年十九，始來京城。其後四年，而歸視汝，又四年，吾往河陽省墳墓，遇汝從嫂喪來葬。又二年，吾佐董丞相於汴州，汝來省吾；止一歲，請歸取其孥。明年，丞相薨，吾去汴州，汝不果來。是年，吾佐戎徐州，使取汝者始行，吾又罷去，汝又不果來。吾念汝從於東，東亦客也，不可以久。圖久遠者，莫如西歸，將成家而致汝。嗚呼，孰謂汝遽去吾而歿乎！吾與汝俱少年，以為雖暫相別，終當久相與處，故捨汝而旅食京師，以求斗斛之祿。誠知其如此，雖萬乘之公相，吾不以一日輟汝而就也！去年，孟東野往，吾書與汝曰︰「吾年未四十，而視茫茫，而髮蒼蒼，而齒牙動搖。念諸父與諸兄，皆康彊而早世，如吾之衰者，其能久存乎？吾不可去，汝不肯來，恐旦暮死，而汝抱無涯之戚也。」孰謂少者歿而長者存，彊者夭而病者全乎！嗚呼！其信然邪？其夢邪？其傳之非其真邪？信也，吾兄之盛德而夭其嗣乎？汝之純明而不克蒙其澤乎？少者彊者而夭歿，長者衰者而存全乎？未可以為信也。夢也，傳之非其真也，東野之書，耿蘭之報，何為而在吾側也？嗚呼，其信然矣！吾兄之盛德而夭其嗣矣！汝之純明宜業其家者，不克蒙其澤矣！所謂天者誠難測，而神者誠難明矣！所謂理者不可推，而壽者不可知矣！雖然，吾自今年來，蒼蒼者或化而為白矣，動搖者或脫而落矣；毛血日益衰，志氣日益微，幾何不從汝而死也！死而有知，其幾何離；其無知，悲不幾時，而不悲者無窮期矣！汝之子始十歲，吾之子始五歲，少而彊者不可保，如此孩提者，又可冀其成立邪？嗚呼哀哉！嗚呼哀哉！汝去年書云︰「比得軟腳病，往往而劇。」吾曰︰「是疾也，江南之人，常常有之。」未始以為憂也。嗚呼！其竟以此而殞其生乎？抑別有疾而至斯乎？汝之書，六月十七日也；東野云，汝歿以六月二日；耿蘭之報無月日。蓋東野之使者，不知問家人以月日；如耿蘭之報，不知當言月日。東野與吾書，乃問使者；使者妄稱以應之耳。其然乎，其不然乎？今吾使建中祭汝，弔汝之孤，與汝之乳母。彼有食可守以待終喪，則待終喪而取以來；如不能守以終喪，則遂取以來；其餘奴婢，並令守汝喪。吾力能改葬，終葬汝於先人之兆，然後惟其所願。嗚呼！汝病吾不知時，汝歿吾不知日；生不能相養以共居，歿不得撫汝以盡哀；斂不憑其棺，窆不臨其穴。吾行負神明，而使汝夭；不孝、不慈，而不得與汝相養以生，相守以死。一在天之涯，一在地之角；生而影不與吾形相依；死而魂不與吾夢相接。吾實為之，其又何尤！彼蒼者天，曷其有極！自今以往，吾其無意於人世矣！當求數頃之田於伊、潁之上，以待餘年，教吾子與汝子，幸其成；長吾女與汝女，待其嫁，如此而已！嗚呼！言有窮而情不可終，汝其知也邪？其不知也邪？嗚呼哀哉！尚饗！` },
+            5: { title: '最後的挑戰', content: `你可以自選任何一篇文言文篇章` }
+        }
+    }
+};
+
+// Utility Functions
+async function makeApiRequest(messages) {
+    for (const model of FALLBACK_MODELS) {
+        try {
+            const response = await fetch(POLLINATIONS_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${POLLINATIONS_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: messages,
+                    temperature: 0.9,
+                    seed: Math.floor(Math.random() * 2147483647),
+                    max_tokens: 5000
+                })
+            });
+            if (!response.ok) {
+                console.warn(`Model ${model} failed with status ${response.status}, trying next model...`);
+                continue;
+            }
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content?.trim();
+            if (content) return content;
+            console.warn(`Model ${model} returned no content, trying next model...`);
+        } catch (error) {
+            console.warn(`Model ${model} failed with error: ${error.message}, trying next model...`);
+        }
+    }
+    console.error('All models failed');
+    return null;
+}
+
+function savePosts() {
+    localStorage.setItem('posts', JSON.stringify(posts));
+}
+
+function savePostHistory() {
+    localStorage.setItem('postHistory', JSON.stringify(postHistory));
+}
+
+function saveCommentHistory() {
+    localStorage.setItem('commentHistory', JSON.stringify(commentHistory));
+}
+
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+let userProgress = JSON.parse(localStorage.getItem('userProgress')) || {
+    sushe: { level: 1, unlocked: false },
+    hanyu: { level: 1, unlocked: false }
+};
+
+function saveUserProgress() {
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
+}
+
+function savePostInterval() {
+    localStorage.setItem('postInterval', postInterval);
+}
+
+function saveTestPanelVisibility() {
+    localStorage.setItem('isTestPanelVisible', isTestPanelVisible);
+}
+
+function getUnlockedCharacters() {
+    return Object.keys(userProgress).filter(author => userProgress[author] && userProgress[author].unlocked);
+}
+
+// Navigation
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+    document.getElementById(`${pageId}-page`).classList.remove('hidden');
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+    if (pageId === 'social') displayPosts();
+    if (pageId === 'authors') updateProgressDisplay();
+    if (isNavMenuOpen) toggleNavMenu();
+}
+
+function toggleNavMenu() {
+    isNavMenuOpen = !isNavMenuOpen;
+    const navMenu = document.getElementById('nav-menu');
+    navMenu.classList.toggle('hidden', !isNavMenuOpen);
+    navMenu.classList.toggle('flex', isNavMenuOpen);
+    navMenu.classList.toggle('flex-col', isNavMenuOpen);
+    navMenu.classList.toggle('absolute', isNavMenuOpen);
+    navMenu.classList.toggle('bg-white', isNavMenuOpen);
+    navMenu.classList.toggle('w-full', isNavMenuOpen);
+    navMenu.classList.toggle('top-16', isNavMenuOpen);
+    navMenu.classList.toggle('left-0', isNavMenuOpen);
+    navMenu.classList.toggle('p-4', isNavMenuOpen);
+}
+
+// Social Posts
+function initializeSocialPosts() {
+    displayPosts();
+    const unlockedCharacters = getUnlockedCharacters();
+    if (unlockedCharacters.length > 0 && posts.length === 0) {
+        const author = unlockedCharacters[Math.floor(Math.random() * unlockedCharacters.length)];
+        generatePost(author);
+    }
+}
+
+function initializePostGeneration() {
+    Object.keys(authorsData).forEach(author => {
+        if (postGenerationIntervals[author]) {
+            clearInterval(postGenerationIntervals[author]);
+        }
+        postGenerationIntervals[author] = setInterval(() => {
+            if (getUnlockedCharacters().includes(author)) {
+                generatePost(author);
+            }
+        }, postInterval * 60 * 1000);
+    });
+}
+
+function dailyPostTrigger() {
+    const unlockedCharacters = getUnlockedCharacters();
+    unlockedCharacters.forEach(author => {
+        if (Math.random() < 0.5) {
+            generatePost(author);
+        }
+    });
+}
+
+async function generatePost(author) {
+    const content = await generateContent(author, 'post');
+    if (!content) return;
+    const timestamp = new Date().toISOString();
+    const postId = Date.now() + Math.random();
+    const newPost = {
+        id: postId,
+        author: author,
+        authorName: authorsData[author]?.name || '我',
+        content: content,
+        timestamp: timestamp,
+        likes: Math.floor(Math.random() * 15) + 1,
+        comments: []
+    };
+    posts.unshift(newPost);
+    postHistory.push({ postId, author, content, timestamp });
+    savePosts();
+    savePostHistory();
+    displayPosts();
+    showNotification('新動態已生成');
+    scheduleComments(postId);
+}
+
+function scheduleComments(postId) {
+    const postAuthor = getPostAuthor(postId);
+    const availableCharacters = ANCIENT_CHARACTERS.filter(char => char !== postAuthor && getUnlockedCharacters().includes(char));
+    const numComments = Math.random() < 0.5 ? 1 : 2;
+
+    for (let i = 0; i < numComments; i++) {
+        const author = availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
+        if (!author) continue;
+        const delay = Math.random() * 3 * 60 * 60 * 1000;
+        const executeTime = new Date(Date.now() + delay);
+        createTask('generate_comment', { postId, author }, executeTime);
+    }
+}
+
+async function generateComment(postId, author) {
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+    const content = await generateContent(author, 'comment', post.content);
+    if (!content) return;
+    const timestamp = new Date().toISOString();
+    const comment = {
+        id: Date.now() + Math.random(),
+        postId: postId,
+        author: author,
+        authorName: authorsData[author].name,
+        content: content,
+        timestamp: timestamp
+    };
+    post.comments.push(comment);
+    commentHistory.push(comment);
+    savePosts();
+    saveCommentHistory();
+    displayPosts();
+    showNotification(`${authorsData[author].name} 留言了！`);
+}
+
+async function generateContent(author, type, context = '') {
+    const authorData = authorsData[author] || { name: '我', personality: '現代用戶', style: '簡潔自然的現代中文' };
+    const pastPosts = postHistory
+        .filter(p => p.author === author)
+        .map(p => p.content)
+        .slice(-5);
+    const pastComments = commentHistory
+        .filter(c => c.author === author)
+        .map(c => c.content)
+        .slice(-5);
+    const pastContent = [...pastPosts, ...pastComments].join('\n');
+
+    const prompt = type === 'post' ?
+        `你現在是${authorData.name}，以${authorData.personality}的性格，使用${authorData.style}的文風，撰寫一篇社群動態貼文（約50-100字），內容可以是日常生活感悟、哲理思考或文學創作。請確保內容新穎，與以下歷史內容的主題、觀點、用字或具體表達不重複：\n\n${pastContent || '無歷史內容'}\n\n使用繁體中文，適當融入粵語元素，但內容主要用字需要文言文，確保語氣自然且符合角色性格，內容不要太過離地，要年輕及近代化， 用現代中學生易懂的文言混合粵語引用自身作品化解負面情緒保持豁達本色並帶入生活化比喻，內容不要包含「tag(#) 」或任何「註」` :
+        `你現在是${authorData.name}，以${authorData.personality}的性格，使用${authorData.style}的文風，對以下貼文進行留言（約30-50字）：\n\n${context}\n\n請確保留言內容新穎，與以下歷史內容的主題、觀點或具體表達不重複：\n\n${pastContent || '無歷史內容'}\n\n請以繁體中文回應，適當融入粵語元素，但內容主要用字需要文言文，語氣需符合角色性格並與貼文內容相關，內容不要太過離地，要年輕及近代化， 用現代中學生易懂的文言混合粵語引用自身作品化解負面情緒保持豁達本色並帶入生活化比喻，內容不要包含「tag(#) 」或任何「註」`;
+
+    const messages = [
+        { role: 'system', content: '你是一位精通古典文學的AI，熟悉唐宋文學家的風格與語氣，擅長生成新穎且不重複的內容。' },
+        { role: 'user', content: prompt }
+    ];
+    return await makeApiRequest(messages);
+}
+
+function createTask(type, params, executeTime) {
+    const task = {
+        id: Date.now() + Math.random(),
+        type: type,
+        params: params,
+        executeTime: executeTime.toISOString(),
+        status: 'pending'
+    };
+    tasks.push(task);
+    saveTasks();
+}
+
+function executePendingTasks() {
+    const now = new Date();
+    tasks = tasks.filter(task => {
+        if (task.status === 'pending' && new Date(task.executeTime) <= now) {
+            if (task.type === 'generate_comment') {
+                generateComment(task.params.postId, task.params.author);
+                return false;
+            }
+        }
+        return true;
+    });
+    saveTasks();
+    setTimeout(executePendingTasks, 60000);
+}
+
+function getPostAuthor(postId) {
+    const post = posts.find(p => p.id === postId);
+    return post ? post.author : null;
+}
+
+function displayPosts() {
+    const container = document.getElementById('posts-container');
+    if (!container) return;
+    container.innerHTML = '';
+    const filteredPosts = currentSocialTab === 'all' ? posts : posts.filter(post => post.author === currentSocialTab);
+    filteredPosts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post bg-white rounded-2xl p-6 mb-6';
+        postElement.style.boxShadow = 'var(--shadow-light)';
+        postElement.setAttribute('role', 'article');
+        postElement.setAttribute('aria-label', `由${post.authorName}發表的動態`);
+
+        const avatarUrl = authorAvatars[post.authorName] || 'https://via.placeholder.com/40';
+        const timeAgo = timeSince(new Date(post.timestamp));
+
+        postElement.innerHTML = `
+            <div class="flex items-start space-x-4">
+                <img src="${avatarUrl}" alt="${post.authorName}頭像" class="w-10 h-10 rounded-full" loading="lazy">
+                <div class="flex-1">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-bold" style="color: var(--text-color);">${post.authorName}</span>
+                            <span class="text-sm" style="color: var(--dark-color);">${timeAgo}</span>
+                        </div>
+                        ${post.author === 'user' ? `<button onclick="deletePost(${post.id})" class="text-sm" style="color: var(--error-color);" aria-label="刪除動態"><i class="fas fa-trash"></i></button>` : ''}
+                    </div>
+                    <p class="mt-2 text-sm sm:text-base" style="color: var(--dark-color);">${post.content}</p>
+                    <div class="mt-4 flex items-center space-x-4">
+                        <button onclick="likePost(${post.id})" class="flex items-center text-sm" style="color: var(--primary-color);" aria-label="點讚動態">
+                            <i class="fas fa-heart mr-1"></i> ${post.likes}
+                        </button>
+                        <button onclick="toggleCommentInput(${post.id})" class="flex items-center text-sm" style="color: var(--secondary-color);" aria-label="留言">
+                            <i class="fas fa-comment mr-1"></i> ${post.comments.length}
+                        </button>
+                    </div>
+                    <div id="comment-input-${post.id}" class="mt-4 hidden">
+                        <textarea class="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-opacity-50" style="border-color: var(--light-accent); color: var(--text-color);" placeholder="輸入留言..." aria-label="輸入留言"></textarea>
+                        <button onclick="submitComment(${post.id})" class="mt-2 gradient-primary text-white py-2 px-4 rounded-lg font-semibold hover:shadow-lg transition-all" aria-label="提交留言">提交</button>
+                    </div>
+                    <div class="mt-4 space-y-3">
+                        ${post.comments.map(comment => `
+                            <div class="flex items-start space-x-3">
+                                <img src="${authorAvatars[comment.authorName] || 'https://via.placeholder.com/32'}" alt="${comment.authorName}頭像" class="w-8 h-8 rounded-full" loading="lazy">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold text-sm" style="color: var(--text-color);">${comment.authorName}</span>
+                                        <span class="text-xs" style="color: var(--dark-color);">${timeSince(new Date(comment.timestamp))}</span>
+                                    </div>
+                                    <p class="text-sm" style="color: var(--dark-color);">${comment.content}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(postElement);
+    });
+
+    updateUnlockStatus();
+}
+
+function timeSince(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "年前";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "個月前";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "天前";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "小時前";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "分鐘前";
+    return "剛剛";
+}
+
+function createPost() {
+    const content = document.getElementById('post-content').value.trim();
+    if (!content) return alert('請輸入動態內容');
+    const timestamp = new Date().toISOString();
+    const postId = Date.now() + Math.random();
+    const newPost = {
+        id: postId,
+        author: 'user',
+        authorName: '我',
+        content: content,
+        timestamp: timestamp,
+        likes: 0,
+        comments: []
+    };
+    posts.unshift(newPost);
+    postHistory.push({ postId, author: 'user', content, timestamp });
+    savePosts();
+    savePostHistory();
+    document.getElementById('post-content').value = '';
+    displayPosts();
+    showNotification('動態已發佈');
+    scheduleComments(postId);
+}
+
+function deletePost(postId) {
+    posts = posts.filter(post => post.id !== postId);
+    postHistory = postHistory.filter(history => history.postId !== postId);
+    commentHistory = commentHistory.filter(comment => comment.postId !== postId);
+    savePosts();
+    savePostHistory();
+    saveCommentHistory();
+    displayPosts();
+}
+
+function likePost(postId) {
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        post.likes += 1;
+        savePosts();
+        displayPosts();
+    }
+}
+
+function toggleCommentInput(postId) {
+    const inputDiv = document.getElementById(`comment-input-${postId}`);
+    inputDiv.classList.toggle('hidden');
+}
+
+function submitComment(postId) {
+    const input = document.querySelector(`#comment-input-${postId} textarea`);
+    const content = input.value.trim();
+    if (!content) return alert('請輸入留言內容');
+    const timestamp = new Date().toISOString();
+    const comment = {
+        id: Date.now() + Math.random(),
+        postId: postId,
+        author: 'user',
+        authorName: '我',
+        content: content,
+        timestamp: timestamp
+    };
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        post.comments.push(comment);
+        commentHistory.push(comment);
+        savePosts();
+        saveCommentHistory();
+        input.value = '';
+        displayPosts();
+        showNotification('留言已發佈');
+    }
+}
+
+function showSocialTab(tab) {
+    currentSocialTab = tab;
+    document.querySelectorAll('.social-tab').forEach(btn => {
+        btn.classList.remove('gradient-primary', 'text-white');
+        btn.classList.add('text-gray-600');
+        btn.style.background = 'rgba(127, 179, 213, 0.1)';
+    });
+    const activeBtn = document.getElementById(`social-tab-${tab}`);
+    if (activeBtn) {
+        activeBtn.classList.add('gradient-primary', 'text-white');
+        activeBtn.style.background = '';
+    }
+    displayPosts();
+}
+
+function loadMorePosts() {
+    const unlockedCharacters = getUnlockedCharacters();
+    if (unlockedCharacters.length > 0) {
+        const author = unlockedCharacters[Math.floor(Math.random() * unlockedCharacters.length)];
+        generatePost(author);
+    }
+}
+
+function updateUnlockStatus() {
+    const unlockedCharacters = getUnlockedCharacters();
+    const statusElement = document.getElementById('unlock-status');
+    if (unlockedCharacters.length === 0) {
+        statusElement.innerHTML = `
+            <div class="bg-red-100 text-red-800 p-4 rounded-lg text-center text-sm sm:text-base">
+                <i class="fas fa-lock mr-2"></i>尚未解鎖任何角色，請完成學習關卡以解鎖古人社群互動！
+            </div>
+        `;
+    } else {
+        statusElement.innerHTML = `
+            <div class="bg-green-100 text-green-800 p-4 rounded-lg text-center text-sm sm:text-base">
+                <i class="fas fa-unlock mr-2"></i>已解鎖角色：${unlockedCharacters.map(char => authorsData[char].name).join(', ')}
+            </div>
+        `;
+    }
+}
+
+// Learning and Progress
+function loadUserProgress() {
+    const progress = JSON.parse(localStorage.getItem('userProgress')) || {
+        sushe: { level: 1, unlocked: false },
+        hanyu: { level: 1, unlocked: false }
+    };
+    userProgress = progress;
+    updateProgressDisplay();
+}
+
+function updateProgressDisplay() {
+    Object.keys(userProgress).forEach(author => {
+        const progress = userProgress[author];
+        const progressText = document.getElementById(`${author}-progress-text`);
+        if (progressText) {
+            progressText.textContent = `${progress.level > 1 ? progress.level - 1 : 0}/5 關卡完成`;
+        }
+        for (let i = 1; i <= 5; i++) {
+            const circle = document.getElementById(`${author}-progress-${i}`);
+            if (circle) {
+                circle.classList.toggle('completed', i < progress.level);
+            }
+        }
+    });
+}
+
+function selectAuthor(author) {
+    currentAuthor = author;
+    showPage('learning');
+    document.getElementById('author-name').textContent = authorsData[author].name;
+    document.getElementById('author-desc').textContent = authorsData[author].description;
+    const avatarDiv = document.getElementById('author-avatar');
+    avatarDiv.className = `w-16 h-16 rounded-full flex items-center justify-center ${authorsData[author].avatar}`;
+    avatarDiv.innerHTML = `<img src="${authorAvatars[authorsData[author].name]}" alt="${authorsData[author].name}頭像" class="w-full h-full object-cover rounded-full" loading="lazy">`;
+    updateLevelDisplay();
+    loadLevelContent();
+}
+
+function updateLevelDisplay() {
+    const progress = userProgress[currentAuthor] || { level: 1 };
+    const maxLevel = progress.level;
+    currentLevel = maxLevel > 5 ? 5 : maxLevel;
+
+    const completedLevels = maxLevel > 1 ? maxLevel - 1 : 0;
+    const progressPercent = (completedLevels / 5) * 100;
+    
+    document.getElementById('current-level').textContent = `第${currentLevel}關`;
+    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+    const progressBarText = document.querySelector('#progress-bar').parentElement.nextElementSibling;
+    if(progressBarText) progressBarText.textContent = `完成度 ${progressPercent}%`;
+
+    document.querySelectorAll('.level-card').forEach(card => {
+        const level = parseInt(card.id.split('-')[1]);
+        card.classList.toggle('locked', level > maxLevel);
+        const innerCard = card.querySelector('.border-2');
+        innerCard.classList.toggle('locked-card', level > maxLevel);
+    });
+}
+
+function selectLevel(level) {
+    const maxUnlockedLevel = userProgress[currentAuthor].level;
+    if (level > maxUnlockedLevel) {
+        alert('請先完成前面的關卡！');
+        return;
+    }
+    currentLevel = level;
+    loadLevelContent();
+}
+
+function loadLevelContent() {
+    if (!currentAuthor) return;
+    const work = authorsData[currentAuthor].works[currentLevel];
+    const titleElement = document.getElementById('work-title');
+    const textElement = document.getElementById('classical-text');
+    const clearButton = document.querySelector('button[onclick="clearText()"]');
+    const quizButton = document.querySelector('button[onclick="startQuiz()"]');
+
+    if (work) {
+        titleElement.textContent = work.title;
+        textElement.value = work.content;
+        currentWorkTitle = work.title;
+
+        if (currentAuthor === 'hanyu' && currentLevel == 5) {
+            textElement.readOnly = false;
+            textElement.placeholder = "你可以自選任何一篇文言文篇章";
+            if(clearButton) {
+                clearButton.disabled = false;
+                clearButton.style.opacity = '1';
+                clearButton.style.cursor = 'pointer';
+            }
+            if(quizButton) quizButton.disabled = false;
+
+        } else {
+            textElement.readOnly = true;
+            textElement.placeholder = "作品內容將在此顯示。此關卡內容不可編輯。";
+             if(clearButton) {
+                clearButton.disabled = true;
+                clearButton.style.opacity = '0.5';
+                clearButton.style.cursor = 'not-allowed';
+            }
+            if(quizButton) quizButton.disabled = (currentLevel > userProgress[currentAuthor].level);
+        }
+    } else {
+        titleElement.textContent = '無可用作品';
+        textElement.value = '';
+        textElement.readOnly = true;
+        if(clearButton) {
+            clearButton.disabled = true;
+            clearButton.style.opacity = '0.5';
+            clearButton.style.cursor = 'not-allowed';
+        }
+    }
+}
+
+
+function clearText() {
+    const textElement = document.getElementById('classical-text');
+    if (!textElement.readOnly) {
+        textElement.value = '';
+    }
+}
+
+// --- START: NEW TRANSLATION LOGIC ---
+
+// Helper function to clean text from API
+function cleanSectionText(text) {
+    return text.trim().replace(/^：+/, '').replace(/：+$/, '').replace(/^\*+/, '').replace(/\*+$/, '').trim();
+}
+
+// Format original text block
+function formatOriginalText(text) {
+    return cleanSectionText(text).replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
+}
+
+// Format translation text block (with click-to-reveal sentences)
+function formatTranslationText(text) {
+    const cleanedText = cleanSectionText(text);
+    const sentences = cleanedText.split('\n').filter(s => s.trim());
+    let newContent = '';
+    sentences.forEach(sentence => {
+        if (sentence.trim()) {
+            newContent += `<div class="sentence-container"><span class="hidden-text">${sentence.trim()}</span></div>`;
+        }
+    });
+    return newContent;
+}
+
+// Format character-by-character breakdown (with click-to-reveal explanations)
+function formatCharacterBreakdown(text) {
+    const cleanedText = cleanSectionText(text);
+    const lines = cleanedText.split('\n').filter(line => line.trim());
+    let html = '';
+    lines.forEach(line => {
+        line = line.replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
+        const parts = line.split(/:|：/);
+        if (parts.length >= 2) {
+            const character = parts[0].trim();
+            const explanation = parts.slice(1).join(':').trim();
+            if (/[\u4e00-\u9fff]/.test(character)) { // Process only Chinese characters
+                html += `<div class="character-item"><span class="character">${character}</span><span class="explanation">：${explanation}</span></div>`;
+            }
+        }
+    });
+    return html;
+}
+
+// Function to set up click-to-reveal interactivity
+function setupClickToReveal() {
+    document.querySelectorAll('#translation-content .character').forEach(character => {
+        character.addEventListener('click', function() {
+            const explanation = this.nextElementSibling;
+            if (explanation && explanation.classList.contains('explanation')) {
+                explanation.classList.toggle('revealed');
+            }
+        });
+    });
+
+    document.querySelectorAll('#translation-content .hidden-text').forEach(sentence => {
+        sentence.addEventListener('click', function() {
+            this.classList.toggle('revealed');
+        });
+    });
+}
+
+// Function to split the raw API response into logical blocks
+function splitTranslationBlocks(text) {
+    const blocks = [];
+    const lines = text.split('\n');
+    let currentBlock = null;
+
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (trimmedLine.startsWith('原文：') || trimmedLine === '原文') {
+            if (currentBlock) blocks.push(currentBlock);
+            currentBlock = { type: 'original', content: '' };
+            const content = trimmedLine.replace(/^原文：?\s*/, '');
+            if (content) currentBlock.content += content + '\n';
+        } else if (trimmedLine.startsWith('語譯：') || trimmedLine === '語譯') {
+            if (currentBlock) blocks.push(currentBlock);
+            currentBlock = { type: 'translation', content: '' };
+            const content = trimmedLine.replace(/^語譯：?\s*/, '');
+            if (content) currentBlock.content += content + '\n';
+        } else if (trimmedLine.startsWith('逐字解釋：') || trimmedLine === '逐字解釋') {
+            if (currentBlock) blocks.push(currentBlock);
+            currentBlock = { type: 'breakdown', content: '' };
+            const content = trimmedLine.replace(/^逐字解釋：?\s*/, '');
+            if (content) currentBlock.content += content + '\n';
+        } else if (currentBlock) {
+            currentBlock.content += line + '\n';
+        }
+    }
+    if (currentBlock) blocks.push(currentBlock);
+    return blocks;
+}
+
+// Main function to display the formatted result
+function displayFormattedResult(text) {
+    const translationResult = document.getElementById('translation-content');
+    text = text.replace(/<think>.*?<\/think>/gs, ''); // Remove thought process tags
+    const blocks = splitTranslationBlocks(text);
+    let htmlOutput = '';
+    currentOriginalTexts = []; // Reset original texts
+
+    for (const block of blocks) {
+        if (block.type === 'original') {
+            const formattedOriginal = formatOriginalText(block.content);
+            currentOriginalTexts.push(formattedOriginal);
+            htmlOutput += `<div class="translation-block">
+                               <div class="original-title"><i class="fas fa-scroll"></i> 原文</div>
+                               <div class="original-text">${formattedOriginal}</div>`;
+        } else if (block.type === 'translation') {
+            htmlOutput += `<div class="translation-title"><i class="fas fa-language"></i> 語譯</div>
+                               <div class="translation-text">${formatTranslationText(block.content)}</div>`;
+        } else if (block.type === 'breakdown') {
+            htmlOutput += `<div class="character-breakdown"><strong><i class="fas fa-search"></i> 逐字解釋</strong>${formatCharacterBreakdown(block.content)}</div>
+                           </div>`; // Close the translation-block
+        }
+    }
+
+    translationResult.innerHTML = htmlOutput;
+    setupClickToReveal();
+    updateFloatingOriginal(); // Update the floating window
+}
+
+async function translateText() {
+    const text = document.getElementById('classical-text').value.trim();
+    if (!text) return alert('請輸入或選擇文言文內容');
+
+    showPage('translation');
+    document.getElementById('translation-loading').classList.remove('hidden');
+    document.getElementById('translation-content').innerHTML = '';
+    currentTranslatingText = text;
+
+    const prompt = `請將以下文言文逐字翻譯並解釋(直譯，不要意譯)，格式要求：
+
+原文：
+[顯示原文句子]
+
+語譯：
+[顯示完整句子翻譯]
+
+逐字解釋：
+[對每個文字進行解釋，格式為"字：解釋"，常見文言字詞用**粗體**標示，切勿解釋標點符號]
+
+要求：
+1. 為每一句(以，。？!：； 作為分隔)進行語譯
+2. 如果該行有常見文言字詞，請為該字及其詞解粗體
+3. 用中文繁體字顯示所有內容
+4. 不要提供思考過程，用<think></think>中間內容
+5. 保持嚴格的格式，使用標題和清晰的分段
+6. 不要在任何地方使用多餘的星號(*)
+7. 不要使用任何裝飾性符號或分隔線
+8. 確保每部分都有明確的標題（原文、語譯、逐字解釋）
+9. 逐字解釋只解釋文字字符，不解釋標點符號如，。？!等
+
+必須注意以下要求，務必跟從：
+為每一句(以，。？!：； 作為分隔)進行語譯，嚴禁整句進行語譯。
+
+需要翻譯的文言文：
+${text}`;
+
+    const messages = [
+        { role: 'system', content: '你是一位精通文言文的學者，嚴格遵循格式要求。' },
+        { role: 'user', content: prompt }
+    ];
+
+    try {
+        const response = await makeApiRequest(messages);
+        if (!response) throw new Error('Translation failed');
+        displayFormattedResult(response);
+        // Save to Firestore history (non-blocking)
+        if (window.saveHistoryRecord) {
+            window.saveHistoryRecord('文樞翻譯', '中文', text, text, response);
+        }
+    } catch (error) {
+        console.error('Translation Error:', error);
+        document.getElementById('translation-content').innerHTML = `
+            <div class="text-center text-red-600">
+                <i class="fas fa-exclamation-circle mr-2"></i>翻譯失敗，請稍後重試
+            </div>
+        `;
+    } finally {
+        document.getElementById('translation-loading').classList.add('hidden');
+        document.getElementById('translation-content').classList.remove('hidden');
+    }
+}
+
+
+function revealAllTranslations() {
+    document.querySelectorAll('#translation-content .hidden-text').forEach(el => el.classList.add('revealed'));
+    document.querySelectorAll('#translation-content .explanation').forEach(el => el.classList.add('revealed'));
+}
+
+function retranslateText() {
+    translateText();
+}
+
+// Quiz
+async function startQuiz() {
+    showPage('quiz');
+    document.getElementById('quiz-loading').classList.remove('hidden');
+    document.getElementById('quiz-content').classList.add('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+
+    const text = document.getElementById('classical-text').value.trim() || authorsData[currentAuthor].works[currentLevel].content;
+    const prompt = `請基於以下文言文內容生成5道中文繁體選擇題，用來測試學習者的理解。
+文言文內容：
+${text},
+題目要求：
+1. 生成5道選擇題，每題4個選項（A、B、C、D）
+2. 題目類型應包括：
+- 字詞釋義（問某個字在文中的意思）
+- 句子翻譯（問某句話的白話文意思）
+- 文章理解（問文章主旨、作者情感等）
+- 背景知識（問文體、寫作背景等）
+3. 難度適合第${currentLevel}關水準
+4. 每題都要有明確的正確答案和解釋
+
+每題提供正確答案和解析。輸出格式如下：
+
+問題1：{問題內容}
+A. {選項A}
+B. {選項B}
+C. {選項C}
+D. {選項D}
+正確答案：{正確選項}
+解析：{解析內容}`;
+    
+    const messages = [
+        { role: 'system', content: '你是一位文言文教育專家，擅長設計教育性選擇題，問題需精準且具挑戰性，解析需清晰易懂。' },
+        { role: 'user', content: prompt }
+    ];
+
+    try {
+        const response = await makeApiRequest(messages);
+        if (!response) throw new Error('Quiz generation failed');
+        currentQuizQuestions = parseQuizResponse(response);
+        currentQuestionIndex = 0;
+        quizAnswers = [];
+        displayQuizQuestion();
+    } catch (error) {
+        console.error('Quiz Error:', error);
+        document.getElementById('quiz-content').innerHTML = `
+            <div class="text-center text-red-600">
+                <i class="fas fa-exclamation-circle mr-2"></i>測驗生成失敗，請稍後重試
+            </div>
+        `;
+        document.getElementById('quiz-loading').classList.add('hidden');
+        document.getElementById('quiz-content').classList.remove('hidden');
+    }
+}
+
+function parseQuizResponse(response) {
+    const questions = [];
+    const questionBlocks = response.split('\n\n');
+    questionBlocks.forEach(block => {
+        const lines = block.split('\n');
+        if (lines.length >= 7) {
+            const question = lines[0].replace(/^問題\d+：/, '').trim();
+            const options = lines.slice(1, 5).map(opt => opt.replace(/^[A-D]\.\s*/, '').trim());
+            const correct = lines[5].replace('正確答案：', '').trim();
+            const explanation = lines[6].replace('解析：', '').trim();
+            questions.push({ question, options, correct, explanation });
+        }
+    });
+    return questions;
+}
+
+function displayQuizQuestion() {
+    document.getElementById('quiz-loading').classList.add('hidden');
+    document.getElementById('quiz-content').classList.remove('hidden');
+    const question = currentQuizQuestions[currentQuestionIndex];
+    if (!question) return;
+
+    document.getElementById('quiz-progress-text').textContent = `${currentQuestionIndex + 1}/${currentQuizQuestions.length}`;
+    document.getElementById('quiz-progress-bar').style.width = `${((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100}%`;
+    document.getElementById('quiz-question').textContent = question.question;
+    const optionsDiv = document.getElementById('quiz-options');
+    optionsDiv.innerHTML = question.options.map((option, index) => `
+        <button onclick="selectAnswer('${String.fromCharCode(65 + index)}')" class="w-full text-left p-3 sm:p-4 rounded-lg border hover:bg-opacity-80 transition-colors quiz-option" style="border-color: var(--light-accent); color: var(--text-color);" aria-label="選擇答案${String.fromCharCode(65 + index)}">
+            ${String.fromCharCode(65 + index)}. ${option}
+        </button>
+    `).join('');
+    document.getElementById('quiz-prev').disabled = currentQuestionIndex === 0;
+    document.getElementById('quiz-next').textContent = currentQuestionIndex === currentQuizQuestions.length - 1 ? '提交測驗' : '下一題';
+}
+
+function selectAnswer(answer) {
+    quizAnswers[currentQuestionIndex] = answer;
+    document.querySelectorAll('.quiz-option').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.textContent.startsWith(`${answer}.`)) {
+            btn.classList.add('selected');
+        }
+    });
+}
+
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuizQuestion();
+    }
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+        if (!quizAnswers[currentQuestionIndex]) {
+            alert('請選擇一個答案！');
+            return;
+        }
+        currentQuestionIndex++;
+        displayQuizQuestion();
+    } else {
+        submitQuiz();
+    }
+}
+
+function submitQuiz() {
+    if (!quizAnswers[currentQuestionIndex]) {
+        alert('請選擇一個答案！');
+        return;
+    }
+    const correctCount = quizAnswers.reduce((count, answer, index) => {
+        return count + (answer === currentQuizQuestions[index].correct ? 1 : 0);
+    }, 0);
+    const passed = correctCount >= 3;
+    document.getElementById('quiz-content').classList.add('hidden');
+    document.getElementById('quiz-result').classList.remove('hidden');
+    document.getElementById(passed ? 'quiz-success' : 'quiz-failure').classList.remove('hidden');
+
+    if (passed) {
+        userProgress[currentAuthor].level = Math.min(currentLevel + 1, 6);
+        if (userProgress[currentAuthor].level > 5 && !userProgress[currentAuthor].unlocked) {
+            userProgress[currentAuthor].unlocked = true;
+            showNotification(`${authorsData[currentAuthor].name} 已可在社群互動！`);
+        }
+        saveUserProgress();
+        updateProgressDisplay();
+        updateLevelDisplay();
+    }
+}
+
+function retryQuiz() {
+    startQuiz();
+}
+
+function nextLevel() {
+    if (currentLevel < 5) {
+        selectLevel(currentLevel + 1);
+        showPage('learning');
+    } else {
+        showPage('authors');
+    }
+}
+
+// Floating Original Window
+function initFloatingWindow() {
+    document.getElementById('floating-toggle').addEventListener('click', () => {
+        isFloatingVisible = false;
+        document.getElementById('floating-original').classList.add('hidden');
+        document.getElementById('reopen-floating').classList.remove('hidden');
+    });
+    document.getElementById('reopen-floating').addEventListener('click', () => {
+        isFloatingVisible = true;
+        document.getElementById('floating-original').classList.remove('hidden');
+        document.getElementById('reopen-floating').classList.add('hidden');
+    });
+}
+
+function updateFloatingOriginal() {
+    const floatingText = document.getElementById('floating-original-text');
+    floatingText.innerHTML = currentOriginalTexts.map(text => `<p>${text}</p>`).join('');
+    document.getElementById('floating-original').classList.toggle('hidden', !isFloatingVisible);
+    document.getElementById('reopen-floating').classList.toggle('hidden', isFloatingVisible);
+}
+
+// Test Controls
+function unlockAllCharacters() {
+    Object.keys(userProgress).forEach(author => {
+        userProgress[author].level = 6;
+        userProgress[author].unlocked = true;
+    });
+    saveUserProgress();
+    updateProgressDisplay();
+    updateUnlockStatus();
+    alert('已解鎖所有角色！');
+}
+
+function resetProgress() {
+    userProgress = {
+        sushe: { level: 1, unlocked: false },
+        hanyu: { level: 1, unlocked: false }
+    };
+    saveUserProgress();
+    updateProgressDisplay();
+    updateUnlockStatus();
+    alert('進度已重置！');
+}
+
+function updatePostInterval() {
+    const intervalInput = document.getElementById('post-interval');
+    const newInterval = parseInt(intervalInput.value);
+    if (newInterval >= 1 && newInterval <= 1440) {
+        postInterval = newInterval;
+        savePostInterval();
+        initializePostGeneration();
+        alert(`貼文間距已更新為${postInterval}分鐘`);
+    } else {
+        alert('請輸入1到1440之間的分鐘數');
+    }
+}
+
+function generateTestPost() {
+    const unlockedCharacters = getUnlockedCharacters();
+    if (unlockedCharacters.length === 0) {
+        alert('請先解鎖角色！');
+        return;
+    }
+    const author = unlockedCharacters[Math.floor(Math.random() * unlockedCharacters.length)];
+    generatePost(author);
+}
+
+function generateTestComment() {
+    if (posts.length === 0) {
+        alert('請先創建或生成動態！');
+        return;
+    }
+    const postId = posts[0].id;
+    const availableCharacters = ANCIENT_CHARACTERS.filter(char => char !== getPostAuthor(postId) && getUnlockedCharacters().includes(char));
+    if (availableCharacters.length === 0) {
+        alert('沒有可用的角色進行留言！');
+        return;
+    }
+    const author = availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
+    generateComment(postId, author);
+}
+
+function triggerAICommentsForLatestPost() {
+    if (posts.length === 0) {
+        alert('請先創建或生成動態！');
+        return;
+    }
+    scheduleComments(posts[0].id);
+}
+
+function toggleTestPanel() {
+    isTestPanelVisible = !isTestPanelVisible;
+    toggleTestPanelVisibility();
+    saveTestPanelVisibility();
+}
+
+function toggleTestPanelVisibility() {
+    const panel = document.getElementById('test-control-panel');
+    panel.classList.toggle('hidden', !isTestPanelVisible);
+}
+
+function showNotification(message) {
+    const notification = document.getElementById('post-notification');
+    document.getElementById('notification-text').textContent = message;
+    notification.classList.remove('hidden');
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.classList.add('hidden'), 300);
+    }, 3000);
+}
+
+// Responsive Handler
+const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+function setupResponsiveHandler() {
+    const adjustLayout = () => {
+        if (window.innerWidth >= 768 && isNavMenuOpen) {
+            toggleNavMenu();
+        }
+        const floatingWindow = document.getElementById('floating-original');
+        if (window.innerWidth < 640) {
+            floatingWindow.style.width = '90%';
+            floatingWindow.style.maxWidth = 'none';
+        } else {
+            floatingWindow.style.width = '300px';
+            floatingWindow.style.maxWidth = '300px';
+        }
+    };
+    window.addEventListener('resize', debounce(adjustLayout, 100));
+    adjustLayout();
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserProgress();
+    updateProgressDisplay();
+    initializeSocialPosts();
+    initFloatingWindow();
+    setupResponsiveHandler();
+    initializePostGeneration();
+    executePendingTasks();
+    toggleTestPanelVisibility();
+});
+    </script>
+    <!-- Firebase auth guard -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+        const app = initializeApp({
+            apiKey: "AIzaSyAXCSDsibC9yTJed3cbRjmWmOIMv1A2cr8",
+            authDomain: "login-system-9c566.firebaseapp.com",
+            projectId: "login-system-9c566",
+            storageBucket: "login-system-9c566.firebasestorage.app",
+            messagingSenderId: "547074181663",
+            appId: "1:547074181663:web:6e3afd6c7c1ec6ae43232a"
+        });
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const overlay = document.getElementById('auth-guard-overlay');
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (overlay) overlay.style.display = 'none';
+                window._fbUser = user;
+            } else {
+                window.location.replace('./index.html');
+            }
+        });
+        window.saveHistoryRecord = async function(tool, subject, summary, userContent, aiContent) {
+            const user = window._fbUser;
+            if (!user) return;
+            try {
+                await addDoc(collection(db, 'users', user.uid, 'history'), {
+                    tool: tool,
+                    subject: subject,
+                    page: 'mensyu2',
+                    summary: summary.substring(0, 100),
+                    messages: [
+                        { role: 'user', content: userContent, timestamp: new Date().toISOString() },
+                        { role: 'assistant', content: aiContent, timestamp: new Date().toISOString() }
+                    ],
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            } catch (e) {
+                console.warn('History save failed:', e);
+            }
+        };
+    </script>
+<script>
+    // Set back button to return to the correct AI list page
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        const back = params.get('back');
+        const link = document.getElementById('back-btn-link');
+        if (link) {
+            link.href = './index.html' + (back ? '?openSubject=' + encodeURIComponent(back) : '');
+        }
+    })();
+</script>
+</body>
+</html>
