@@ -64,7 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $redirect = $_GET['redirect'] ?? '';
                         if ($user['role'] === 'admin') {
                             header('Location: ' . BASE_URL . '/admin/index.php');
-                        } elseif ($redirect && strpos($redirect, BASE_URL) === 0) {
+                        } elseif ($redirect
+                            && str_starts_with($redirect, '/')
+                            && !str_starts_with($redirect, '//')
+                            && (BASE_URL === '' || str_starts_with($redirect, BASE_URL . '/'))) {
                             header('Location: ' . $redirect);
                         } else {
                             header('Location: ' . BASE_URL . '/dashboard.php');

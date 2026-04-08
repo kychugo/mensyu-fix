@@ -396,4 +396,19 @@ $fullTitle = ($pageTitle !== APP_NAME)
     </div>
 </nav>
 
+<?php if (!empty($_SESSION['flash_info']) || !empty($_SESSION['flash_error'])): ?>
+<div style="position:fixed;top:60px;left:0;right:0;z-index:99;padding:10px 20px;
+            background:<?= !empty($_SESSION['flash_error']) ? 'rgba(231,76,60,0.92)' : 'rgba(39,174,96,0.92)' ?>;
+            color:white;text-align:center;font-size:0.88rem;backdrop-filter:blur(4px);"
+     id="flash-banner">
+    <i class="fas fa-<?= !empty($_SESSION['flash_error']) ? 'exclamation-circle' : 'info-circle' ?>"></i>
+    <?= htmlspecialchars($_SESSION['flash_info'] ?? $_SESSION['flash_error'], ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:white;margin-left:12px;cursor:pointer;font-size:1rem;line-height:1;">×</button>
+</div>
+<script>setTimeout(function(){var b=document.getElementById('flash-banner');if(b)b.remove();},4000);</script>
+<?php
+unset($_SESSION['flash_info'], $_SESSION['flash_error']);
+endif;
+?>
+
 <main class="main-content">

@@ -25,13 +25,21 @@ $interval    = (int)getSetting('post_interval_minutes', DEFAULT_POST_INTERVAL);
 $baseUrl     = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
 $sessionId   = session_id();
 
+// 計算哪些導師需要觸發（在釋放 session 鎖前）
+$tutorsToTrigger = [];
 foreach ($tutors as $tutor) {
     $lastPostKey  = 'last_post_' . $tutor['id'];
     $lastPostTime = getSetting($lastPostKey, '1970-01-01 00:00:00');
     $elapsed      = time() - strtotime($lastPostTime);
-
     if ($elapsed >= ($interval * 60)) {
-        // fire-and-forget：不等待回應
+        $tutorsToTrigger[] = $tutor;
+    }
+}
+
+// 釋放 session 鎖後再發出 curl，避免子請求因 session 鎖等待而死鎖
+if (!empty($tutorsToTrigger)) {
+    session_write_close();
+    foreach ($tutorsToTrigger as $tutor) {
         $apiUrl  = $baseUrl . '/api/generate_tutor_post.php';
         $payload = json_encode(['tutor_id' => $tutor['id'], 'mode' => 'auto'], JSON_UNESCAPED_UNICODE);
 

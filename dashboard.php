@@ -139,7 +139,7 @@ require __DIR__ . '/includes/partials/header.php';
             <div style="font-size:0.82rem;color:var(--dark-color);">挑戰次數</div>
         </div>
         <div class="card" style="text-align:center;padding:20px;">
-            <div style="font-size:1.8rem;font-weight:700;" style="color:#f0932b;"><?= $stats['users'] ?></div>
+            <div style="font-size:1.8rem;font-weight:700;color:#f0932b;"><?= $stats['users'] ?></div>
             <div style="font-size:0.82rem;color:var(--dark-color);">平台用戶</div>
         </div>
     </div>

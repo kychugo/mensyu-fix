@@ -77,13 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submi
         // 若只有剛才這一筆是完成的（即首次通關）
         if ((int)$stCheck->fetchColumn() === 1) {
             $baseUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
+            $sid = session_id();
+            // 釋放 session 鎖，避免子請求因 session 鎖等待而死鎖
+            session_write_close();
             $ch = curl_init($baseUrl . '/api/generate_tutor_post.php');
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST           => true,
                 CURLOPT_POSTFIELDS     => json_encode(['tutor_id' => $tutorId, 'mode' => 'auto']),
                 CURLOPT_TIMEOUT        => 1,
-                CURLOPT_HTTPHEADER     => ['Content-Type: application/json', 'Cookie: PHPSESSID=' . session_id()],
+                CURLOPT_HTTPHEADER     => ['Content-Type: application/json', 'Cookie: PHPSESSID=' . $sid],
             ]);
             curl_exec($ch);
             curl_close($ch);

@@ -9,6 +9,10 @@ require_once __DIR__ . '/config.php';
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_samesite', 'Lax');
+// Secure flag：僅在 HTTPS 連線時啟用（保護 session cookie）
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', 1);
+}
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
