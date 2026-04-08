@@ -49,9 +49,6 @@ $socialRanking = $db->query(
 )->fetchAll();
 
 // ── 當前用戶排名 ──────────────────────────────────────────────────────────
-$myXpRank = (int)$db->prepare(
-    'SELECT COUNT(*) + 1 FROM users WHERE xp > (SELECT xp FROM users WHERE id = ?)'
-)->execute([$userId]) ? null : null;
 $stMyRank = $db->prepare('SELECT COUNT(*) + 1 AS rank FROM users WHERE xp > (SELECT xp FROM users WHERE id = ?)');
 $stMyRank->execute([$userId]);
 $myXpRank = (int)$stMyRank->fetchColumn();

@@ -82,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $newPostId = (int)$db->lastInsertId();
 
                 // 觸發導師自動回覆（fire-and-forget）
+                // 釋放 session 鎖，避免子請求因等待 session 而死鎖
                 session_write_close();
                 $replyUrl  = $baseUrl . '/api/tutor_reply.php';
                 $replyData = json_encode(['post_id' => $newPostId], JSON_UNESCAPED_UNICODE);
@@ -114,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )->execute([$postId, $userId, $content]);
 
                 // 觸發導師自動回覆留言（fire-and-forget）
+                // 釋放 session 鎖，避免子請求因等待 session 而死鎖
                 session_write_close();
                 $replyUrl  = $baseUrl . '/api/tutor_reply.php';
                 $replyData = json_encode(['post_id' => $postId, 'comment_context' => $content], JSON_UNESCAPED_UNICODE);

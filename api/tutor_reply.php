@@ -51,13 +51,7 @@ if (!$post) {
     jsonResponse(['success' => false, 'message' => '找不到帖子'], 404);
 }
 
-// ── 防重複：若此帖已有導師留言，50% 機率跳過（避免刷屏）──────────────────
-$existingTutorComments = (int)$db->prepare(
-    "SELECT COUNT(*) FROM social_comments WHERE post_id = ? AND author_type = 'tutor'"
-)->execute([$postId]) ? $db->prepare(
-    "SELECT COUNT(*) FROM social_comments WHERE post_id = ? AND author_type = 'tutor'"
-) : null;
-
+// ── 防重複：若此帖已有導師留言，超過2條則跳過（避免刷屏）─────────────────
 $stCount = $db->prepare(
     "SELECT COUNT(*) FROM social_comments WHERE post_id = ? AND author_type = 'tutor'"
 );
