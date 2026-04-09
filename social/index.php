@@ -79,6 +79,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "INSERT INTO social_posts (author_type, user_id, content, created_at)
                      VALUES ('user', ?, ?, NOW())"
                 )->execute([$userId, $content]);
+                $newPostId = (int)$db->lastInsertId();
+
+                // 偽定時觸發：讓一位活躍導師對用戶新帖留言（50% 機率，火焰即忘）
+                if (mt_rand(1, 2) === 1) {
+                    $activeTutors = getActiveTutors();
+                    if (!empty($activeTutors)) {
+                        // 確保 session 已關閉（避免子請求死鎖）
+                        if (session_status() === PHP_SESSION_ACTIVE) {
+                            session_write_close();
+                        }
+                        $commentApiUrl = $baseUrl . '/api/generate_tutor_comment.php';
+                        $payload = json_encode([
+                            'mode'    => 'comment_post',
+                            'post_id' => $newPostId,
+                        ], JSON_UNESCAPED_UNICODE);
+                        $ch = curl_init($commentApiUrl);
+                        curl_setopt_array($ch, [
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_POST           => true,
+                            CURLOPT_POSTFIELDS     => $payload,
+                            CURLOPT_TIMEOUT        => 1,
+                            CURLOPT_HTTPHEADER     => [
+                                'Content-Type: application/json',
+                                'Cookie: PHPSESSID=' . $sessionId,
+                            ],
+                        ]);
+                        curl_exec($ch);
+                        curl_close($ch);
+                    }
+                }
                 header('Location: ' . BASE_URL . '/social/index.php');
                 exit;
             }
@@ -92,6 +122,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "INSERT INTO social_comments (post_id, author_type, user_id, content, created_at)
                      VALUES (?, 'user', ?, ?, NOW())"
                 )->execute([$postId, $userId, $content]);
+
+                // 若是在導師帖子下留言，觸發導師自動回覆（火焰即忘）
+                $stCheckTutor = $db->prepare('SELECT author_type FROM social_posts WHERE id = ?');
+                $stCheckTutor->execute([$postId]);
+                $postRow = $stCheckTutor->fetch();
+                if ($postRow && $postRow['author_type'] === 'tutor') {
+                    if (session_status() === PHP_SESSION_ACTIVE) {
+                        session_write_close();
+                    }
+                    $commentApiUrl = $baseUrl . '/api/generate_tutor_comment.php';
+                    $payload = json_encode([
+                        'mode'         => 'reply_comment',
+                        'post_id'      => $postId,
+                        'user_comment' => $content,
+                    ], JSON_UNESCAPED_UNICODE);
+                    $ch = curl_init($commentApiUrl);
+                    curl_setopt_array($ch, [
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_POST           => true,
+                        CURLOPT_POSTFIELDS     => $payload,
+                        CURLOPT_TIMEOUT        => 1,
+                        CURLOPT_HTTPHEADER     => [
+                            'Content-Type: application/json',
+                            'Cookie: PHPSESSID=' . $sessionId,
+                        ],
+                    ]);
+                    curl_exec($ch);
+                    curl_close($ch);
+                }
             }
             header('Location: ' . BASE_URL . '/social/index.php#post-' . $postId);
             exit;

@@ -373,6 +373,12 @@ $fullTitle = ($pageTitle !== APP_NAME)
                     <i class="fas fa-puzzle-piece"></i><span>遊戲</span>
                 </a>
             </li>
+            <li>
+                <a href="<?= BASE_URL ?>/social/leaderboard.php"
+                   class="<?= $activePage === 'leaderboard' ? 'active' : '' ?>">
+                    <i class="fas fa-trophy"></i><span>龍虎榜</span>
+                </a>
+            </li>
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
             <li>
                 <a href="<?= BASE_URL ?>/admin/index.php"

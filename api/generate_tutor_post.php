@@ -83,15 +83,18 @@ $promptContent = buildTutorPostPrompt($tutor);
 
 // ── 呼叫 AI（直接在此執行，不經前端代理）────────────────────────────────
 $aiContent = callAiDirectly([
-    ['role' => 'user', 'content' => $promptContent]
+    ['role' => 'system', 'content' => '你是一個角色扮演 AI。嚴格按照指示直接輸出角色的社交媒體動態內容，絕對不要輸出任何思考過程、分析說明或前置解釋。'],
+    ['role' => 'user', 'content' => $promptContent],
 ], 512, 0.8);
 
 if ($aiContent === null) {
     jsonResponse(['success' => false, 'message' => 'AI 生成失敗，請稍後再試'], 503);
 }
 
-// 清理輸出
+// 清理輸出：移除 <think> 標籤、各種 AI 推理前置文字、特殊符號
 $aiContent = trim(preg_replace('/<think>.*?<\/think>/s', '', $aiContent));
+// 移除 AI 推理文字（以「首先」「好的」「我需要」「根據」「讓我」等開頭的段落）
+$aiContent = stripAiReasoning($aiContent);
 $aiContent = preg_replace('/[*#【】\[\]]/u', '', $aiContent);
 
 // ── FIFO：強制執行動態上限 ───────────────────────────────────────────────
@@ -119,6 +122,55 @@ jsonResponse([
 // ════════════════════════════════════════════════════════════════════════════
 
 /**
+ * 移除 AI 推理文字：若回覆包含推理段落（以「首先」「好的」「我需要」等開頭），
+ * 嘗試從最後一個連續正文段落提取實際內容。
+ */
+function stripAiReasoning(string $text): string
+{
+    // 移除整個 <think>...</think> 區塊（含多行）
+    $text = preg_replace('/<think>[\s\S]*?<\/think>/u', '', $text);
+
+    // 常見推理前置詞模式
+    $reasoningPatterns = [
+        '/^首先[，,、].{0,200}\n/um',
+        '/^好的[，,、].{0,200}\n/um',
+        '/^我需要.{0,200}\n/um',
+        '/^讓我.{0,200}\n/um',
+        '/^根據.{0,200}\n/um',
+        '/^思考.{0,200}\n/um',
+        '/^分析.{0,200}\n/um',
+        '/^用戶要求.{0,200}\n/um',
+        '/^要求.{0,200}\n/um',
+        '/^注意.{0,200}\n/um',
+    ];
+    foreach ($reasoningPatterns as $pattern) {
+        $text = preg_replace($pattern, '', $text);
+    }
+
+    // 如果仍有長串推理（超過 200 字且包含推理關鍵詞），取最後一段非空行作為實際內容
+    $lines = array_filter(array_map('trim', explode("\n", $text)));
+    if (count($lines) > 1) {
+        // 找最後一個看起來像正式動態的段落（不以推理詞開頭，且長度合理）
+        $reasoningStarts = ['首先', '好的', '我需要', '讓我', '根據', '思考', '分析', '用戶', '要求', '注意', '結構', '內容', '動態要'];
+        $candidates = [];
+        foreach ($lines as $line) {
+            $isReasoning = false;
+            foreach ($reasoningStarts as $s) {
+                if (mb_strpos($line, $s) === 0) { $isReasoning = true; break; }
+            }
+            if (!$isReasoning && mb_strlen($line) >= 10 && mb_strlen($line) <= 150) {
+                $candidates[] = $line;
+            }
+        }
+        if (!empty($candidates)) {
+            return trim(end($candidates));
+        }
+    }
+
+    return trim($text);
+}
+
+/**
  * 構建古人動態生成 Prompt
  */
 function buildTutorPostPrompt(array $tutor): string
@@ -132,15 +184,16 @@ function buildTutorPostPrompt(array $tutor): string
 性格特點：{$personality}
 語言風格：{$style}
 
-要求：
+嚴格要求：
 1. 不超過70字，用繁體中文
 2. 只有引用詩文時才用文言文，其他情況一概用生活化的香港粵語
 3. 體現{$name}的性格，展現對現代生活的思考與感受
 4. 絕對不要在內容後加入任何括號解釋、「（註：...）」或「注：」
 5. 不含「*」「#」「【】」「[」「]」等特殊符號
 6. 內容必須是完整的一段文字，語句流暢自然
+7. 不要輸出任何思考過程、分析或解釋，只輸出動態正文
 
-請直接輸出動態內容，不要任何前置說明：";
+直接輸出動態正文：";
 }
 
 /**
