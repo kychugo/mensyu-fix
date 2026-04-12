@@ -66,16 +66,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $imported++;
                     }
                     $db->commit();
+                    $msg = "批量匯入完成：成功 {$imported} 筆，跳過 {$skipped} 筆。";
+                    if ($imported === 0) $msgType = 'error';
                 } catch (Exception $e) {
                     $db->rollBack();
                     $msg = '批量匯入失敗，資料已復原：' . $e->getMessage();
                     $msgType = 'error';
-                    goto render;
                 }
+            } else {
+                $msg = '批量匯入失敗：資料格式錯誤。';
+                $msgType = 'error';
             }
-            $msg = "批量匯入完成：成功 {$imported} 筆，跳過 {$skipped} 筆。";
-            if ($imported === 0) $msgType = 'error';
-            render:
         }
     }
 }
