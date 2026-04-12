@@ -189,7 +189,7 @@ require __DIR__ . '/../includes/partials/header.php';
 const PAIR_COUNTS  = <?= json_encode($pairCounts,  JSON_UNESCAPED_UNICODE) ?>;
 const TIME_LIMITS  = <?= json_encode($timeLimits,  JSON_UNESCAPED_UNICODE) ?>;
 const ALL_PAIRS    = <?= json_encode(
-    $db->query("SELECT classical_term, modern_meaning FROM matching_pairs WHERE is_active = 1")->fetchAll(PDO::FETCH_ASSOC),
+    $db->query("SELECT classical_term, modern_meaning, difficulty FROM matching_pairs WHERE is_active = 1")->fetchAll(PDO::FETCH_ASSOC),
     JSON_UNESCAPED_UNICODE
 ) ?>;
 
@@ -216,8 +216,11 @@ function startGame(diff) {
     const count = PAIR_COUNTS[diff] || 8;
     const limit = TIME_LIMITS[diff] || 120;
 
-    // 按難度篩選題庫，不足則補充其他難度
-    let pool = ALL_PAIRS.filter(function(p) { return true; });
+    // Filter by selected difficulty first; fall back to all pairs if pool is too small
+    let pool = ALL_PAIRS.filter(function(p) { return p.difficulty === diff; });
+    if (pool.length < count) {
+        pool = ALL_PAIRS; // supplement with all difficulties when not enough difficulty-specific pairs
+    }
     if (pool.length < count) {
         alert('題庫題目不足，請管理員新增更多配對詞組。');
         return;

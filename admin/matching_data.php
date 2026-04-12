@@ -209,6 +209,10 @@ function openModal(title) {
 function closeModal() {
     document.getElementById('pair-modal').style.display = 'none';
     document.body.style.overflow = '';
+    // Reset the form so "新增題組" is never stuck in edit mode
+    document.querySelector('#pair-modal form').reset();
+    document.getElementById('form-action').value = 'add';
+    document.getElementById('form-id').value     = '';
 }
 function editPair(data) {
     document.getElementById('form-action').value          = 'edit';

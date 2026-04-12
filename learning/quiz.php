@@ -236,7 +236,7 @@ function renderQuestions(questions) {
             <label style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;margin-bottom:6px;border:1.5px solid rgba(127,179,213,0.2);transition:all 0.2s;" class="opt-label-${i}">
                 <input type="radio" name="answers[${i}]" value="${escHtml(opt)}"
                        style="margin-top:2px;accent-color:var(--primary-color);"
-                       onchange="onAnswer(${i}, '${escHtml(opt)}')">
+                       onchange="onAnswer(${i})">
                 <span style="font-size:0.9rem;">${escHtml(opt)}</span>
             </label>`;
         });
@@ -251,7 +251,7 @@ function renderQuestions(questions) {
         container.appendChild(div);
     });
 
-    function onAnswer(questionIdx, val) {
+    function onAnswer(questionIdx) {
         // 高亮已選
         document.querySelectorAll(`.opt-label-${questionIdx}`).forEach(function(lbl) {
             lbl.style.background   = '';

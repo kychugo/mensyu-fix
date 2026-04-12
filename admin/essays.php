@@ -178,6 +178,10 @@ function openModal(title) {
 function closeModal() {
     document.getElementById('essay-modal').style.display = 'none';
     document.body.style.overflow = '';
+    // Reset the form so "新增文章" is never stuck in edit mode
+    document.querySelector('#essay-modal form').reset();
+    document.getElementById('form-action').value = 'add';
+    document.getElementById('form-id').value     = '';
 }
 function editEssay(data) {
     document.getElementById('form-action').value   = 'edit';
