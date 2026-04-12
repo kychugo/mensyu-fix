@@ -422,7 +422,7 @@ function submitBulkImport() {
     </div>
 </div>
 
-<!-- SheetJS for XLSX parsing -->
+<!-- SheetJS for XLSX parsing (client-side, admin-only page) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <?php require __DIR__ . '/../includes/partials/footer.php'; ?>
