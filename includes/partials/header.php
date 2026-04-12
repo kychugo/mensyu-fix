@@ -362,7 +362,7 @@ $fullTitle = ($pageTitle !== APP_NAME)
                 </a>
             </li>
             <li>
-                <a href="<?= BASE_URL ?>/translate/index.php"
+                <a href="<?= BASE_URL ?>/mensyu.html"
                    class="<?= $activePage === 'translate' ? 'active' : '' ?>">
                     <i class="fas fa-language"></i><span>翻譯</span>
                 </a>

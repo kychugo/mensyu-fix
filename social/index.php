@@ -124,10 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )->execute([$postId, $userId, $content]);
 
                 // 若是在導師帖子下留言，觸發導師自動回覆（火焰即忘）
+                // 若是在用戶帖子下留言，也有50%機率觸發導師留言
                 $stCheckTutor = $db->prepare('SELECT author_type FROM social_posts WHERE id = ?');
                 $stCheckTutor->execute([$postId]);
                 $postRow = $stCheckTutor->fetch();
-                if ($postRow && $postRow['author_type'] === 'tutor') {
+                $shouldTrigger = false;
+                if ($postRow) {
+                    if ($postRow['author_type'] === 'tutor') {
+                        // Always reply on tutor posts
+                        $shouldTrigger = true;
+                    } elseif ($postRow['author_type'] === 'user' && mt_rand(1, 2) === 1) {
+                        // 50% chance to reply on user posts
+                        $shouldTrigger = true;
+                    }
+                }
+                if ($shouldTrigger) {
                     if (session_status() === PHP_SESSION_ACTIVE) {
                         session_write_close();
                     }

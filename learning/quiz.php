@@ -94,8 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submi
     }
 
     $quizResult = compact('score', 'passed', 'correct', 'total', 'detail');
-    // 通關後清除已快取的題目
-    unset($_SESSION['quiz_questions_' . $levelId]);
 }
 
 $csrfToken  = getCsrfToken();
