@@ -52,20 +52,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imported  = 0;
             $skipped   = 0;
             if (is_array($rows)) {
-                $stmt = $db->prepare('INSERT INTO matching_pairs (classical_term, modern_meaning, source_essay, difficulty, is_active) VALUES (?, ?, ?, ?, 1)');
-                foreach ($rows as $row) {
-                    $term    = trim($row[0] ?? '');
-                    $meaning = trim($row[1] ?? '');
-                    $source  = trim($row[2] ?? '');
-                    $diff    = trim($row[3] ?? '');
-                    if (!in_array($diff, $validD)) $diff = $defDiff;
-                    if (empty($term) || empty($meaning)) { $skipped++; continue; }
-                    $stmt->execute([$term, $meaning, $source, $diff]);
-                    $imported++;
+                try {
+                    $db->beginTransaction();
+                    $stmt = $db->prepare('INSERT INTO matching_pairs (classical_term, modern_meaning, source_essay, difficulty, is_active) VALUES (?, ?, ?, ?, 1)');
+                    foreach ($rows as $row) {
+                        $term    = trim($row[0] ?? '');
+                        $meaning = trim($row[1] ?? '');
+                        $source  = trim($row[2] ?? '');
+                        $diff    = trim($row[3] ?? '');
+                        if (!in_array($diff, $validD)) $diff = $defDiff;
+                        if (empty($term) || empty($meaning)) { $skipped++; continue; }
+                        $stmt->execute([$term, $meaning, $source, $diff]);
+                        $imported++;
+                    }
+                    $db->commit();
+                } catch (Exception $e) {
+                    $db->rollBack();
+                    $msg = '批量匯入失敗，資料已復原：' . $e->getMessage();
+                    $msgType = 'error';
+                    goto render;
                 }
             }
             $msg = "批量匯入完成：成功 {$imported} 筆，跳過 {$skipped} 筆。";
             if ($imported === 0) $msgType = 'error';
+            render:
         }
     }
 }
@@ -320,8 +330,15 @@ function parseBulkFile(file) {
                 var wb   = XLSX.read(e.target.result, { type: 'array' });
                 var ws   = wb.Sheets[wb.SheetNames[0]];
                 var data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                var rows = data.filter(function(r){ return r.length >= 2 && r[0] && r[1]; })
-                               .map(function(r){ return r.map(function(c){ return String(c||'').trim(); }); });
+                var rows = data
+                    .filter(function(r) {
+                        if (r.length < 2 || !r[0] || !r[1]) return false;
+                        // Skip header-like rows (same logic as parseBulkText)
+                        var first = String(r[0]).trim();
+                        if (/^(文言|classical|字詞|term)/i.test(first)) return false;
+                        return true;
+                    })
+                    .map(function(r){ return r.map(function(c){ return String(c||'').trim(); }); });
                 showBulkPreview(rows);
             } catch(err) { alert('XLSX 解析失敗：' + err.message); }
         };

@@ -64,10 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submi
            ->execute([$userId, $tutorId, $levelId, $passed ? 1 : 0, $score, $passed ? date('Y-m-d H:i:s') : null]);
     }
 
-    // XP 獎勵
+    // XP 獎勵：僅在首次通關（或舊記錄尚未通關）時獎勵，避免重複刷分
     if ($passed) {
-        $xpReward = 20 + (int)(($score - QUIZ_PASS_SCORE) / 10) * 5;
-        addUserXp($userId, $xpReward);
+        $alreadyPassed = $row && (int)$row['completed'] === 1;
+        if (!$alreadyPassed) {
+            $xpReward = 20 + (int)(($score - QUIZ_PASS_SCORE) / 10) * 5;
+            addUserXp($userId, $xpReward);
+        }
     }
 
     // 首次通關此導師 → 觸發古人生成動態

@@ -189,6 +189,10 @@
 | 2.0.1 | `admin/matching_data.php` — 同上，影響配對題組管理 | ✅ 已修復 |
 | 2.0.1 | `games/matching.php` — 難度過濾無效（SQL 缺 `difficulty` 欄位，JS 過濾條件為 `true`） | ✅ 已修復 |
 | 2.0.1 | `learning/quiz.php` — 選項含單引號時 `onAnswer()` 的 JS 字串拼接錯誤導致高亮失效 | ✅ 已修復 |
+| 2.0.1 | `admin/matching_data.php` — 批量匯入 XLSX 未跳過標題行，標題被當成資料匯入 | ✅ 已修復 |
+| 2.0.1 | `admin/matching_data.php` — 批量匯入無 DB 事務，中途失敗留下殘留資料 | ✅ 已修復 |
+| 2.0.1 | `learning/quiz.php` — XP 每次通關均發放，可無限刷分 | ✅ 已修復 |
+| 2.0.1 | `social/index.php` — 提交空留言或過長留言時靜默重定向，無錯誤提示 | ✅ 已修復 |
 
 ---
 

@@ -117,7 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'new_comment') {
             $postId  = (int)($_POST['post_id'] ?? 0);
             $content = trim($_POST['comment_content'] ?? '');
-            if ($postId > 0 && !empty($content) && mb_strlen($content) <= 200) {
+            if ($postId <= 0) {
+                $postError = '無效的動態 ID。';
+            } elseif (empty($content)) {
+                $postError = '留言內容不可為空。';
+            } elseif (mb_strlen($content) > 200) {
+                $postError = '留言內容不可超過 200 字。';
+            } else {
                 $db->prepare(
                     "INSERT INTO social_comments (post_id, author_type, user_id, content, created_at)
                      VALUES (?, 'user', ?, ?, NOW())"
@@ -162,9 +168,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     curl_exec($ch);
                     curl_close($ch);
                 }
+                header('Location: ' . BASE_URL . '/social/index.php#post-' . $postId);
+                exit;
             }
-            header('Location: ' . BASE_URL . '/social/index.php#post-' . $postId);
-            exit;
         }
 
         if ($action === 'like_post' && isset($_POST['post_id'])) {
