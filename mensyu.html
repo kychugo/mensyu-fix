@@ -1522,6 +1522,13 @@ transform: scale(1.1);
 <span class="btn-text">尋找篇章</span>
 </button>
 <hr class="section-divider">
+<h2 class="section-title">預設文章</h2>
+<div class="form-group">
+<select id="preset-essay-select" style="width:100%;padding:10px 14px;border:2px solid var(--light-accent);border-radius:var(--border-radius-small);font-size:15px;font-family:inherit;background:#fff;color:var(--text-color);cursor:pointer;transition:var(--transition);">
+<option value="">— 選擇預設文章 —</option>
+</select>
+</div>
+<hr class="section-divider">
 <h2 class="section-title">或 手動輸入文言篇章</h2>
 <textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..."></textarea>
 <div class="button-group">
@@ -1673,13 +1680,12 @@ transform: scale(1.1);
 // API 配置信息
 
 	const API_KEYS = [
-   "c43794c4fd6f460c9e154f81034e6ae4.0tLyirbYWKDqUAcw"
-
-
+   "sk_I9LbeRaewORSMEdm2ontKkJEHgimbE1v",
+   "pk_ZQ4XnvfBU2tu6riY"
 ];
 // let currentApiKeyIndex = 0; // 這個變數不再需要，可以刪除或註解掉
-const API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-const MODEL = "glm-4.7-flash";
+const API_URL = "https://gen.pollinations.ai/v1/chat/completions";
+const MODEL = "openai";
 
 // 懸浮窗狀態管理
 let isFloatingEnabled = true;
@@ -3404,6 +3410,75 @@ oscillator.stop(now + 0.4);
 }
 
 });
+</script>
+
+<!-- ===== 預設文章選擇 + localStorage 自動填充 ===== -->
+<script>
+(function() {
+    // 載入預設文章列表
+    fetch('essays.json')
+        .then(function(r) { return r.json(); })
+        .then(function(essays) {
+            var sel = document.getElementById('preset-essay-select');
+            if (!sel) return;
+            // Group by category
+            var groups = {};
+            essays.forEach(function(e) {
+                var cat = e.category || '其他';
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(e);
+            });
+            Object.keys(groups).forEach(function(cat) {
+                var og = document.createElement('optgroup');
+                og.label = cat;
+                groups[cat].forEach(function(e) {
+                    var opt = document.createElement('option');
+                    opt.value = e.id;
+                    opt.textContent = e.title + ' — ' + e.author + '（' + e.dynasty + '）';
+                    opt.dataset.content = e.content;
+                    opt.dataset.title = e.title;
+                    og.appendChild(opt);
+                });
+                sel.appendChild(og);
+            });
+            sel._essays = essays;
+
+            sel.addEventListener('change', function() {
+                if (!this.value) return;
+                var found = essays.find(function(e) { return String(e.id) === sel.value; });
+                if (found) {
+                    var ct = document.getElementById('classical-text');
+                    if (ct) {
+                        ct.value = found.content;
+                        ct.dispatchEvent(new Event('input'));
+                        ct.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        })
+        .catch(function(e) { console.warn('預設文章載入失敗:', e); });
+
+    // localStorage 自動填充（從學習關卡頁跳轉過來時）
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            var autoEssay = localStorage.getItem('mensyu_auto_essay');
+            if (autoEssay) {
+                localStorage.removeItem('mensyu_auto_essay');
+                var data = JSON.parse(autoEssay);
+                var ct = document.getElementById('classical-text');
+                if (ct && data.content) {
+                    ct.value = data.content;
+                    ct.dispatchEvent(new Event('input'));
+                }
+                // Auto trigger translation
+                setTimeout(function() {
+                    var btn = document.getElementById('translate-btn');
+                    if (btn && !btn.disabled) btn.click();
+                }, 400);
+            }
+        } catch(e) {}
+    });
+})();
 </script>
 
 <!-- ===== 新增：文言文輸入懸浮視窗 ===== -->

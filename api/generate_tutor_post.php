@@ -85,7 +85,7 @@ $promptContent = buildTutorPostPrompt($tutor);
 $aiContent = callAiDirectly([
     ['role' => 'system', 'content' => '你是一個角色扮演 AI。嚴格按照指示直接輸出角色的社交媒體動態內容，絕對不要輸出任何思考過程、分析說明或前置解釋。'],
     ['role' => 'user', 'content' => $promptContent],
-], 512, 0.8);
+], 800, 0.9);
 
 if ($aiContent === null) {
     jsonResponse(['success' => false, 'message' => 'AI 生成失敗，請稍後再試'], 503);
@@ -158,12 +158,13 @@ function stripAiReasoning(string $text): string
             foreach ($reasoningStarts as $s) {
                 if (mb_strpos($line, $s) === 0) { $isReasoning = true; break; }
             }
-            if (!$isReasoning && mb_strlen($line) >= 10 && mb_strlen($line) <= 150) {
+            if (!$isReasoning && mb_strlen($line) >= 10 && mb_strlen($line) <= 300) {
                 $candidates[] = $line;
             }
         }
         if (!empty($candidates)) {
-            return trim(end($candidates));
+            // Join all candidate lines to preserve full post content
+            return trim(implode("\n", $candidates));
         }
     }
 
@@ -179,13 +180,34 @@ function buildTutorPostPrompt(array $tutor): string
     $personality = $tutor['personality'] ?? '性格鮮明';
     $style       = $tutor['language_style'] ?? '語言生動';
 
+    // Random topics to ensure post variety
+    $topics = [
+        '對現代科技的感想（手機、網絡、社交媒體）',
+        '對現代飲食文化的觀察',
+        '對現代教育或學習的反思',
+        '對都市生活節奏的感受',
+        '對自然景物（天氣、花草、月亮）的感悟',
+        '分享一段經典詩文並聯繫現代生活',
+        '對現代年輕人的鼓勵或感嘆',
+        '對友情、愛情、親情的感悟',
+        '對時間流逝或人生哲理的思考',
+        '分享今日心情或小事',
+        '對某種現代娛樂（電視、電影、音樂）的看法',
+        '對現代交通（地鐵、飛機）的奇妙感受',
+        '對環境保護或氣候的感嘆',
+        '對香港本地文化或飲食的體驗',
+    ];
+    $topic = $topics[array_rand($topics)];
+    $seed  = mt_rand(1000, 9999);
+
     return "你現在是{$name}，請以{$name}的身份在現代社交媒體發布一條動態。
 
 性格特點：{$personality}
 語言風格：{$style}
+今日話題方向：{$topic}（創作代號{$seed}，請確保這次動態與之前不同）
 
 嚴格要求：
-1. 不超過70字，用繁體中文
+1. 不超過100字，用繁體中文
 2. 只有引用詩文時才用文言文，其他情況一概用生活化的香港粵語
 3. 體現{$name}的性格，展現對現代生活的思考與感受
 4. 絕對不要在內容後加入任何括號解釋、「（註：...）」或「注：」

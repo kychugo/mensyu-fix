@@ -34,12 +34,6 @@ if (empty($content)) {
     jsonResponse(['success' => false, 'message' => '缺少文章內容'], 400);
 }
 
-// ── Session 快取（同一請求週期不重複呼叫 AI）───────────────────────────────
-$cacheKey = 'quiz_questions_' . $levelId;
-if ($levelId > 0 && !empty($_SESSION[$cacheKey])) {
-    jsonResponse(['success' => true, 'questions' => $_SESSION[$cacheKey], 'cached' => true]);
-}
-
 // ── 呼叫 AI 生成題目 ────────────────────────────────────────────────────────
 $prompt    = buildQuizPrompt($title, $content);
 $rawResult = callAiForQuiz([['role' => 'user', 'content' => $prompt]]);
@@ -53,19 +47,16 @@ if (empty($questions)) {
     jsonResponse(['success' => false, 'message' => '題目解析失敗，請重試'], 500);
 }
 
-// 快取至 Session
-if ($levelId > 0) {
-    $_SESSION[$cacheKey] = $questions;
-}
-
+// 每次生成新題目（不使用快取，確保每次測驗題目不同）
 jsonResponse(['success' => true, 'questions' => $questions, 'cached' => false]);
 
 // ════════════════════════════════════════════════════════════════════════════
 
 function buildQuizPrompt(string $title, string $content): string
 {
-    $t = $title ? "《{$title}》" : '以下文言文';
-    return "根據{$t}，生成 5 道文言文理解選擇題，用於測試學生的閱讀理解能力。
+    $t    = $title ? "《{$title}》" : '以下文言文';
+    $seed = mt_rand(1, 9999); // Random seed to ensure unique questions each time
+    return "根據{$t}，生成 5 道文言文理解選擇題（題目組合#{$seed}），用於測試學生的閱讀理解能力。每次生成的題目和選項必須不同。
 
 文章內容：
 {$content}
@@ -86,7 +77,8 @@ function buildQuizPrompt(string $title, string $content): string
 3. 題目考核字詞含義、句子理解、文章大意等不同面向
 4. 難度適中，適合中學生
 5. 使用繁體中文
-6. 只輸出 JSON 陣列，不要 markdown code block";
+6. 只輸出 JSON 陣列，不要 markdown code block
+7. 正確答案的位置（A/B/C/D）要隨機分佈，不要固定在同一位置";
 }
 
 /**

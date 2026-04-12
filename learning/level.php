@@ -179,9 +179,8 @@ require __DIR__ . '/../includes/partials/header.php';
                 <p style="font-size:0.85rem;color:var(--dark-color);margin-bottom:16px;">
                     點擊下方按鈕，AI 將為你提供逐字解析及現代白話翻譯。
                 </p>
-                <div id="translation-area" style="display:none;" class="alert alert-info" style="white-space:pre-wrap;"></div>
                 <button class="btn btn-outline" id="translate-btn"
-                        onclick="loadTranslation(<?= $levelId ?>, <?= json_encode($level['essay_title']) ?>, <?= json_encode($level['essay_content']) ?>)">
+                        onclick="goToTranslate(<?= json_encode($level['essay_title']) ?>, <?= json_encode($level['essay_content']) ?>)">
                     <i class="fas fa-magic"></i> AI 解析此文
                 </button>
             </div>
@@ -205,38 +204,11 @@ require __DIR__ . '/../includes/partials/header.php';
 </div>
 
 <script>
-async function loadTranslation(levelId, title, content) {
-    const btn  = document.getElementById('translate-btn');
-    const area = document.getElementById('translation-area');
-
-    btn.disabled  = true;
-    btn.innerHTML = '<span class="spinner"></span> AI 解析中，請稍候…';
-    area.style.display = 'block';
-    area.textContent   = '正在生成逐字解析，可能需要數十秒，請耐心等待…';
-
+function goToTranslate(title, content) {
     try {
-        const res = await fetch('<?= BASE_URL ?>/api/translate.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ level_id: levelId, title: title, content: content })
-        });
-        const data = await res.json();
-
-        if (data.success) {
-            area.style.whiteSpace = 'pre-wrap';
-            area.innerHTML = data.html || data.content.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-            area.className = 'alert alert-info';
-        } else {
-            area.className  = 'alert alert-error';
-            area.textContent = '翻譯失敗：' + (data.message || '請稍後再試');
-        }
-    } catch (e) {
-        area.className  = 'alert alert-error';
-        area.textContent = '網絡錯誤，請重試。';
-    }
-
-    btn.disabled  = false;
-    btn.innerHTML = '<i class="fas fa-magic"></i> 重新解析';
+        localStorage.setItem('mensyu_auto_essay', JSON.stringify({ title: title, content: content }));
+    } catch(e) {}
+    window.location.href = '<?= BASE_URL ?>/mensyu.html';
 }
 </script>
 

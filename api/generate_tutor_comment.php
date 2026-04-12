@@ -76,7 +76,7 @@ if (!$tutor) {
 $stRecent = $db->prepare(
     'SELECT COUNT(*) FROM social_comments
      WHERE post_id = ? AND tutor_id = ? AND author_type = "tutor"
-       AND created_at >= DATE_SUB(NOW(), INTERVAL 60 SECOND)'
+       AND created_at >= DATE_SUB(NOW(), INTERVAL 10 SECOND)'
 );
 $stRecent->execute([$postId, $tutor['id']]);
 if ((int)$stRecent->fetchColumn() > 0) {
